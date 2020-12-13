@@ -1,23 +1,29 @@
-#include <SFML/Graphics.hpp>
+#include "Game.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    LogOptions options;
+    options.fileAppend = false;
+    options.filePath = "game.log";
+    options.loggingPattern = "[{type}] {date} {time} - {message}";
+    options.outputStream = LogOptions::LogOutput::CONSOLE;
+#ifdef NDEBUG
+    options.ignoredTypes["DEBUG"] = true;
+#endif
 
-    while (window.isOpen())
+    Logger logger(options);
+
+    Game game(&logger, sf::VideoMode(1024, 576), "It's a game");
+    game.Start();
+
+    while (game.isRunning())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+        game.EventUpdate();
+        game.Update();
 
-        window.clear();
-        window.draw(shape);
-        window.display();
+        game.Clear();
+        game.Draw();
+        game.Display();
     }
 
     return 0;
