@@ -1,22 +1,18 @@
 #include "Logger.h"
 
-Logger::Logger(LogOptions options)
+Logger* Logger::_logger = nullptr;
+
+Logger* Logger::GetInstance(const LogOptions& options)
 {
-	_options = options;
-	_typeStringMap[LogType::DEBUG] = "DEBUG";
-	_typeStringMap[LogType::ERROR] = "ERROR";
-	_typeStringMap[LogType::INFO] = "INFO";
-	_typeStringMap[LogType::WARNING] = "WARNING";
-
-	_typeColorMap[LogType::DEBUG] = "36"; //FG - cyan, BG - black
-	_typeColorMap[LogType::ERROR] = "1;41;37"; //FG - white, BG - red
-	_typeColorMap[LogType::INFO] = "92"; //FG - b. green, BG - black
-	_typeColorMap[LogType::WARNING] = "33"; //FG - yellow, BG - black
-
-	if (_options.outputStream == LogOptions::LogOutput::FILE || _options.outputStream == LogOptions::LogOutput::BOTH)
-	{
-		_outputStream.open(_options.filePath, (_options.fileAppend) ? std::ios::app : std::ios::out);
+	if (_logger == nullptr) {
+		_logger = new Logger(options);
 	}
+	return _logger;
+}
+
+Logger* Logger::GetInstance()
+{
+	return _logger;
 }
 
 Logger::~Logger()

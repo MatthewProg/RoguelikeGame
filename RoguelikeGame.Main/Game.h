@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Logger.h"
+#include "TilesManager.h"
 
 class Game
 {
@@ -20,9 +21,8 @@ private:
 	void SetDelta();
 
 	void Close();
-
 public:
-	Game(Logger* logger, sf::VideoMode vmode, std::string title);
+	Game(sf::VideoMode vmode, std::string title);
 	~Game();
 
 	void Start();

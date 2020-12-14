@@ -11,9 +11,9 @@ int main()
     options.ignoredTypes["DEBUG"] = true;
 #endif
 
-    Logger logger(options);
-
-    Game game(&logger, sf::VideoMode(1024, 576), "It's a game");
+    Logger::GetInstance(options);
+    
+    Game game(sf::VideoMode(1024, 576), "It's a game");
     game.Start();
 
     while (game.isRunning())

@@ -1,9 +1,9 @@
 #include "Game.h"
 
 
-Game::Game(Logger* logger, sf::VideoMode vmode, std::string title)
+Game::Game(sf::VideoMode vmode, std::string title)
 {
-	_logger = logger;
+	_logger = Logger::GetInstance();
 	_window.create(vmode, title);
 	_window.setFramerateLimit(60);
 	_delta = 1.0000000;
@@ -60,6 +60,7 @@ void Game::Clear()
 
 void Game::Draw()
 {
+	_window.draw(test);
 }
 
 void Game::Display()
