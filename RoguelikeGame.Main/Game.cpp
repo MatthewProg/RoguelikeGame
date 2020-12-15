@@ -7,21 +7,34 @@ Game::Game(sf::VideoMode vmode, std::string title)
 	_window.create(vmode, title);
 	_window.setFramerateLimit(60);
 	_delta = 1.0000000;
-	_gameSpeed = 20;
+	_tickCounter = 0.0;
+	_gameSpeed = 40;
 	_lastFrameTime = std::chrono::steady_clock::now();
 }
 
-void Game::SetDelta()
+void Game::SetDeltaAndTick()
 {
+	if (_tickCounter >= 1)
+		_tickCounter -= 1;
+
 	std::chrono::steady_clock::time_point newFrame = std::chrono::steady_clock::now();
 	auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(newFrame - _lastFrameTime).count();
 	_lastFrameTime = newFrame;
 
 	_delta = (dur / 1000000000.000) * _gameSpeed;
+	_tickCounter += _delta;
+
 #ifndef NDEBUG
 	_window.setTitle("FPS: " + std::to_string(1000000000 / dur));
 #endif
 
+}
+
+bool Game::Tick()
+{
+	if (_tickCounter >= 1)
+		return true;
+	return false;
 }
 
 void Game::Close()
@@ -37,6 +50,8 @@ Game::~Game()
 void Game::Start()
 {
 	_logger->Log(Logger::LogType::INFO, "Start() was called");
+	if (_gameTiles.loadFromFile("./res/img/tiles.png") == false)
+		_logger->Log(Logger::LogType::ERROR, "Unable to load game tiles!");
 }
 
 void Game::EventUpdate()
@@ -50,7 +65,7 @@ void Game::EventUpdate()
 
 void Game::Update()
 {
-	SetDelta();
+	SetDeltaAndTick();
 }
 
 void Game::Clear()
@@ -60,7 +75,6 @@ void Game::Clear()
 
 void Game::Draw()
 {
-	_window.draw(test);
 }
 
 void Game::Display()

@@ -17,6 +17,16 @@ sf::Texture TilesManager::GetStandardTile(sf::Image img, int width, int height, 
 	return output;
 }
 
+sf::IntRect TilesManager::GetTileRect(sf::Vector2u imgSize, int width, int height, int id)
+{
+	int cols = imgSize.x / width;
+	int rows = imgSize.y / height;
+
+	int row = id / cols;
+	int col = id % cols;
+	return sf::IntRect(col * width, row * height, width, height);
+}
+
 sf::Texture TilesManager::GetCustomTile(sf::Image img, int left, int top, int width, int height)
 {
 	sf::Texture output;

@@ -12,7 +12,7 @@ int main()
 #endif
 
     Logger::GetInstance(options);
-    
+
     Game game(sf::VideoMode(1024, 576), "It's a game");
     game.Start();
 

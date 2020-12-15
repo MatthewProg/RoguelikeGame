@@ -16,6 +16,12 @@
     <Filter Include="Helpers">
       <UniqueIdentifier>{0c9525a6-8f2c-48e4-909f-f94ad9d5b6be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{e9aca5bb-d995-409a-9c27-195a4383cb0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{a45f7bbe-3395-4d3e-94f7-e3b2455769a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -31,7 +37,10 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="TilesManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +54,10 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="TilesManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
