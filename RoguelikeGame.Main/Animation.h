@@ -35,6 +35,7 @@ namespace sf
 		void RemoveAllFrames();
 		void GetNoOfFrames();
 		void SetFrames(std::vector<sf::IntRect> frames);
+		void RefreshTexture();
 
 		//Animation setters
 		void SetChangeFrameEvery(unsigned int ticks);
@@ -77,6 +78,8 @@ namespace sf
 		FloatRect GetGlobalBounds();
 		FloatRect GetLocalBounds();
 		Transform GetTransform();
+		const Texture* GetSpriteTexture();
+		const IntRect GetSpriteTextureRect();
 	};
 }
 

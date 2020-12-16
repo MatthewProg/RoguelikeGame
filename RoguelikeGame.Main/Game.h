@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "Logger.h"
 #include "TilesManager.h"
+#include "AnimationContainer.h"
 
 class Game
 {

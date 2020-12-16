@@ -149,15 +149,19 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="AnimationContainer.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TilesManager.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="AnimationContainer.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="TilesManager.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\tiles.png">

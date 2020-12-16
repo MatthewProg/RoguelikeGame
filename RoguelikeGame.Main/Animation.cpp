@@ -69,6 +69,11 @@ void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 	NextFrame();
 }
 
+void sf::Animation::RefreshTexture()
+{
+	_mainSprite.setTexture(_mainTexture);
+}
+
 void sf::Animation::SetChangeFrameEvery(unsigned int ticks)
 {
 	_changeEveryTicks = ticks;
@@ -87,6 +92,16 @@ unsigned int sf::Animation::GetChangeFrameEvery()
 float sf::Animation::GetAnimationSpeed()
 {
 	return _animationSpeed;
+}
+
+const sf::Texture* sf::Animation::GetSpriteTexture()
+{
+	return _mainSprite.getTexture();
+}
+
+const sf::IntRect sf::Animation::GetSpriteTextureRect()
+{
+	return _mainSprite.getTextureRect();
 }
 
 bool sf::Animation::LoadFromFile(const std::string& path)
