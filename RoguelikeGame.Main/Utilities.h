@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SFML/Graphics.hpp"
 #include <vector>
+#include "SFML/Graphics/Image.hpp"
 
 class Utilities
 {

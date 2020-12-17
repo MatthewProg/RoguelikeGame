@@ -2,17 +2,18 @@
 
 #include <chrono>
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Window.hpp"
+#include "SFML/Graphics/RenderWindow.hpp"
 
-#include "Animation.h"
-#include "Logger.h"
 #include "TilesManager.h"
-#include "AnimationContainer.h"
+#include "Player.h"
 
 class Game
 {
 private:
 	Logger* _logger;
+
+	bool _drawHitboxes;
 
 	double _delta = 1.000000000;
 	double _tickCounter = 0.0;
@@ -20,7 +21,9 @@ private:
 	sf::RenderWindow _window;
 	sf::Event _event;
 
-	sf::Image _gameTiles;
+	std::map<std::string, sf::Image> _gameTiles;
+
+	Player _player;
 
 	std::chrono::steady_clock::time_point _lastFrameTime;
 	void SetDeltaAndTick();

@@ -1,10 +1,7 @@
 #pragma once
 
 #include <map>
-
-#include "SFML/Graphics.hpp"
 #include "Animation.h"
-#include "Utilities.h"
 
 namespace sf
 {
@@ -29,6 +26,7 @@ namespace sf
 		~AnimationContainer();
 
 		void Tick(bool tick);
+		void RefreshAnimationTextures();
 
 		//AnimationContainer setters
 		void SetStateAnimation(std::string state, sf::Animation animation);

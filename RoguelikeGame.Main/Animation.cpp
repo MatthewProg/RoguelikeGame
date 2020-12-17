@@ -10,6 +10,8 @@ sf::Animation::Animation()
 	_currentFrame = 0;
 
 	_mainSprite.setTexture(_mainTexture);
+	_noTexture.loadFromImage(Utilities::GetInstance()->NoTexture16x16());
+	_noSprite.setTexture(_noTexture);
 }
 
 sf::Animation::~Animation()
@@ -72,6 +74,7 @@ void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 void sf::Animation::RefreshTexture()
 {
 	_mainSprite.setTexture(_mainTexture);
+	_noSprite.setTexture(_noTexture);
 }
 
 void sf::Animation::SetChangeFrameEvery(unsigned int ticks)
@@ -152,36 +155,43 @@ void sf::Animation::SetColor(const Color& color)
 void sf::Animation::SetOrigin(const Vector2f& origin)
 {
 	_mainSprite.setOrigin(origin);
+	_noSprite.setOrigin(origin);
 }
 
 void sf::Animation::SetOrigin(float x, float y)
 {
 	_mainSprite.setOrigin(x, y);
+	_noSprite.setOrigin(x, y);
 }
 
 void sf::Animation::SetPosition(const Vector2f& position)
 {
 	_mainSprite.setPosition(position);
+	_noSprite.setPosition(position);
 }
 
 void sf::Animation::SetPosition(float x, float y)
 {
 	_mainSprite.setPosition(x, y);
+	_noSprite.setPosition(x, y);
 }
 
 void sf::Animation::SetRotation(float angle)
 {
 	_mainSprite.setRotation(angle);
+	_noSprite.setRotation(angle);
 }
 
 void sf::Animation::SetScale(const Vector2f& factors)
 {
 	_mainSprite.setScale(factors);
+	_noSprite.setScale(factors);
 }
 
 void sf::Animation::SetScale(float factorX, float factorY)
 {
 	_mainSprite.setScale(factorX, factorY);
+	_noSprite.setScale(factorX, factorY);
 }
 
 sf::Color sf::Animation::GetColor()
@@ -226,5 +236,8 @@ sf::Transform sf::Animation::GetTransform()
 
 void sf::Animation::draw(RenderTarget& target, RenderStates states) const
 {
-	target.draw(_mainSprite);
+	if (_mainSprite.getTexture() == nullptr || _mainSprite.getTexture()->getSize() == sf::Vector2u(0, 0))
+		target.draw(_noSprite);
+	else
+		target.draw(_mainSprite);
 }

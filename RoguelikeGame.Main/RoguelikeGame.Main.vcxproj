@@ -147,26 +147,36 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AnimationContainer.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TilesManager.cpp" />
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameMap.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="AnimationContainer.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="TilesManager.h" />
     <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\img\players.png" />
     <Image Include="res\img\tiles.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="res\img\tiles2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\maps\map1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

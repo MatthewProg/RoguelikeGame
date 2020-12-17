@@ -1,8 +1,12 @@
 #pragma once
 
 #include <vector>
+#include "Utilities.h"
 
-#include "SFML/Graphics.hpp"
+#include "SFML/Graphics/Drawable.hpp"
+#include "SFML/Graphics/Texture.hpp"
+#include "SFML/Graphics/Sprite.hpp"
+#include "SFML/Graphics/RenderTarget.hpp"
 
 namespace sf
 {
@@ -19,6 +23,8 @@ namespace sf
 
 		Texture _mainTexture;
 		Sprite _mainSprite;
+		Texture _noTexture;
+		Sprite _noSprite;
 
 		void NextFrame();
 

@@ -22,6 +22,12 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{a45f7bbe-3395-4d3e-94f7-e3b2455769a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\img">
+      <UniqueIdentifier>{59fb7c0c-0864-4e51-a66d-df3866d8a558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\maps">
+      <UniqueIdentifier>{4efaf58b-0c29-46eb-99c0-afe8c4de45f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,6 +54,12 @@
     <ClCompile Include="AnimationContainer.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -71,10 +83,30 @@
     <ClInclude Include="AnimationContainer.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="GameMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\img\tiles.png">
-      <Filter>Resource Files</Filter>
+    <Image Include="res\img\players.png">
+      <Filter>Resource Files\img</Filter>
     </Image>
+    <Image Include="res\img\tiles.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+    <Image Include="res\img\tiles2.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\maps\map1.txt">
+      <Filter>Resource Files\maps</Filter>
+    </Text>
   </ItemGroup>
 </Project>

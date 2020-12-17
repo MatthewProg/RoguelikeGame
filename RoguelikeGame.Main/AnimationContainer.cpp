@@ -30,6 +30,12 @@ namespace sf
 		Update();
 	}
 
+	void AnimationContainer::RefreshAnimationTextures()
+	{
+		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
+			iter->second.RefreshTexture();
+	}
+
 	void AnimationContainer::Update()
 	{
 		auto it = _animationStates.find(_currentState);
