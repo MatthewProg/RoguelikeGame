@@ -43,6 +43,7 @@ protected:
 	}
     static Logger* _logger;
     LogOptions _options;
+	std::string _lastMessage;
 public:
 	enum class LogType{ DEBUG, INFO, WARNING, ERROR };
 	
@@ -56,7 +57,7 @@ public:
     }
 	~Logger();
 
-	void Log(LogType type, std::string message);
+	void Log(LogType type, std::string message, bool ignoreDuplicants = false);
 	static std::string CurrentDate();
 	static std::string CurrentTime();
 private:

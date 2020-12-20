@@ -7,13 +7,16 @@ Game::Game(sf::VideoMode vmode, std::string title)
 	_camera.setCenter(0, 0);
 	_camera.setSize(vmode.width / 4, vmode.height / 4);
 	_window.create(vmode, title);
-	_window.setFramerateLimit(60);
+	//_window.setFramerateLimit(60);
 	//_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
 	_gameSpeed = 60;
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_drawHitboxes = false;
+#ifndef NDEBUG
+	_debug.SetDebug(true);
+#endif
 }
 
 void Game::SetDeltaAndTick()
@@ -27,11 +30,6 @@ void Game::SetDeltaAndTick()
 
 	_delta = (dur / 1000000000.000) * _gameSpeed;
 	_tickCounter += _delta;
-
-#ifndef NDEBUG
-	_window.setTitle("FPS: " + std::to_string(1000000000 / dur));
-#endif
-
 }
 
 bool Game::Tick()
@@ -82,7 +80,7 @@ void Game::Start()
 	else
 		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
 
-	//_gameMap.SetActionMapVisibility(true);
+	_gameMap.SetActionMapVisibility(true);
 	_gameMap.SetActionMapOpacity(0.12);
 
 	auto mapTiles = _gameMap.GetLayersTilesNames();
@@ -163,6 +161,7 @@ void Game::EventUpdate()
 void Game::Update()
 {
 	SetDeltaAndTick();
+	_debug.Status(Game::Tick());
 	_player.Tick(Game::Tick());
 	//_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	//_window.setView(_camera);

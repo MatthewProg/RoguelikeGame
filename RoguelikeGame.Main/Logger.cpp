@@ -38,16 +38,21 @@ std::string Logger::MessageBuilder(LogType type, std::string message, bool color
 	return pattern;
 }
 
-void Logger::Log(LogType type, std::string message)
+void Logger::Log(LogType type, std::string message, bool ignoreDuplicants)
 {
 	if (_options.ignoredTypes[_typeStringMap[type]]) return; //exit if type is ignored
+	if (ignoreDuplicants && _lastMessage == message) return;
+
+	_lastMessage = message;
 
 	if (_options.outputStream == LogOptions::LogOutput::FILE || _options.outputStream == LogOptions::LogOutput::BOTH)
 	{
+		if (ignoreDuplicants) message += "  [IGNORE DUPLICANTS]";
 		_outputStream << MessageBuilder(type, message, false) << std::endl;
 	}
 	if (_options.outputStream == LogOptions::LogOutput::CONSOLE || _options.outputStream == LogOptions::LogOutput::BOTH)
 	{
+		if (ignoreDuplicants) message += "  \033[33m[IGNORE DUPLICANTS]\033[0m";
 		std::cout << MessageBuilder(type, message, true) << std::endl;
 	}
 }
