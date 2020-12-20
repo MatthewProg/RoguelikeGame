@@ -16,9 +16,6 @@
     <Filter Include="Helpers">
       <UniqueIdentifier>{0c9525a6-8f2c-48e4-909f-f94ad9d5b6be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers">
-      <UniqueIdentifier>{e9aca5bb-d995-409a-9c27-195a4383cb0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{a45f7bbe-3395-4d3e-94f7-e3b2455769a6}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Resource Files\maps">
       <UniqueIdentifier>{4efaf58b-0c29-46eb-99c0-afe8c4de45f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{e9aca5bb-d995-409a-9c27-195a4383cb0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
       <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="TilesManager.cpp">
-      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Utilities</Filter>
@@ -60,6 +57,15 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TilesHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapLayerModel.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -70,9 +76,6 @@
     </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="TilesManager.h">
-      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Utilities</Filter>
@@ -92,6 +95,15 @@
     <ClInclude Include="Collision.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="TilesHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapLayerModel.h">
+      <Filter>Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png">
@@ -108,5 +120,8 @@
     <Text Include="res\maps\map1.txt">
       <Filter>Resource Files\maps</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -53,6 +53,7 @@ public:
 	void SetHitboxColor(const sf::Color& color);
 	void SetHitboxOutlineThickness(float thickness);
 	void SetHitboxOutlineColor(const sf::Color& color);
+	void MoveBy(float x, float y, float deltaTime);
 
 	// Inherited via Collision
 	virtual sf::FloatRect GetCollisionBox() override;

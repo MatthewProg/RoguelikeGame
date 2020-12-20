@@ -1,9 +1,10 @@
 #pragma once
 
 #include "SFML/Graphics/Texture.hpp"
+#include "Utilities.h"
 #include "Logger.h"
 
-class TilesManager
+class TilesHelper
 {
 private:
 public:

@@ -5,7 +5,8 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
-#include "TilesManager.h"
+#include "ViewHelper.h"
+#include "GameMap.h"
 #include "Player.h"
 
 class Game
@@ -18,10 +19,13 @@ private:
 	double _delta = 1.000000000;
 	double _tickCounter = 0.0;
 	unsigned int _gameSpeed = 20;
+
 	sf::RenderWindow _window;
 	sf::Event _event;
+	sf::View _camera;
 
 	std::map<std::string, sf::Image> _gameTiles;
+	GameMap<unsigned char> _gameMap;
 
 	Player _player;
 

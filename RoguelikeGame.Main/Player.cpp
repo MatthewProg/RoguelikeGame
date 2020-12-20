@@ -138,6 +138,11 @@ void Player::SetHitboxOutlineColor(const sf::Color& color)
 	_hitboxRectangle.setOutlineColor(color);
 }
 
+void Player::MoveBy(float x, float y, float deltaTime)
+{
+	SetPlayerPosition(_playerPosition.x + (x * deltaTime * _playerSpeed), _playerPosition.y + (y * deltaTime * _playerSpeed));
+}
+
 sf::FloatRect Player::GetCollisionBox()
 {
 	return _hitboxRectangle.getGlobalBounds();
