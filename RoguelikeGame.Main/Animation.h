@@ -3,14 +3,15 @@
 #include <vector>
 #include "Utilities.h"
 
+#include "SFML/Graphics/Transformable.hpp"
+#include "SFML/Graphics/RenderTarget.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Texture.hpp"
-#include "SFML/Graphics/Sprite.hpp"
-#include "SFML/Graphics/RenderTarget.hpp"
 
 namespace sf
 {
-	class Animation : public Drawable
+	class Animation : public Drawable, public Transformable
 	{
 	private:
 		unsigned int _changeEveryTicks;
@@ -21,10 +22,13 @@ namespace sf
 
 		std::vector<sf::IntRect> _rectFrames;
 
-		Texture _mainTexture;
-		Sprite _mainSprite;
-		Texture _noTexture;
-		Sprite _noSprite;
+		Texture* _texture;
+		Texture* _noTexture;
+
+		sf::VertexArray _vertices;
+		sf::RenderStates _renderStates;
+
+		std::vector<sf::Color> _frameColor;
 
 		void NextFrame();
 
@@ -36,56 +40,33 @@ namespace sf
 
 		//Animation
 		void Tick(bool tick);
+		void UpdateVertices();
 		void AddNewFrame(sf::IntRect rect);
 		void RemoveFrame(int index);
 		void RemoveAllFrames();
-		void GetNoOfFrames();
+		size_t GetNoOfFrames();
 		void SetFrames(std::vector<sf::IntRect> frames);
-		void RefreshTexture();
 
 		//Animation setters
 		void SetChangeFrameEvery(unsigned int ticks);
 		void SetAnimationSpeed(float speed);
+		void SetTexture(sf::Texture* texture);
+		void SetFrameColor(unsigned int frame, sf::Color color);
 
 		//Animation getters
 		unsigned int GetChangeFrameEvery();
 		float GetAnimationSpeed();
-
-		//Texture
-		bool LoadFromFile(const std::string& path);
-		bool LoadFromMemory(const void* data, size_t size);
-		bool LoadFromStream(sf::InputStream& stream);
-		bool LoadFromImage(const sf::Image& img, const sf::IntRect& area = sf::IntRect());
-
-		//Texture setters
-		void SetRepeated(bool repeateTexture);
-		void SetSmooth(bool smooth);
+		sf::IntRect GetCurrentRect();
+		const sf::Texture* GetTexture();
+		sf::Color GetFrameColor(unsigned int frame);
 
 		//Texture getteres
 		bool IsRepeated();
 		bool IsSmooth();
 
-		//Sprite setters
-		void SetColor(const Color& color);
-		void SetOrigin(const Vector2f& origin);
-		void SetOrigin(float x, float y);
-		void SetPosition(const Vector2f& position);
-		void SetPosition(float x, float y);
-		void SetRotation(float angle);
-		void SetScale(const Vector2f& factors);
-		void SetScale(float factorX, float factorY);
-
-		//Sprite getters
-		Color GetColor();
-		Vector2f GetOrigin();
-		Vector2f GetPosition();
-		float GetRotation();
-		Vector2f GetScale();
+		//Frame getters
 		FloatRect GetGlobalBounds();
 		FloatRect GetLocalBounds();
-		Transform GetTransform();
-		const Texture* GetSpriteTexture();
-		const IntRect GetSpriteTextureRect();
 	};
 }
 

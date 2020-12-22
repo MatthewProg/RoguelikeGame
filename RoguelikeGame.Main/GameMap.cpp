@@ -9,7 +9,7 @@ GameMap<T>::GameMap()
 	_actionMap.opacity = 0.5;
 	_actionMap.tilesName = "special";
 	_logger = Logger::GetInstance();
-	_noTexture.loadFromImage(Utilities::GetInstance()->NoTexture16x16());
+	//_noTexture.loadFromFile("./res/img/special.png");
 }
 
 template<typename T>
@@ -286,18 +286,24 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		tile.setColor(sf::Color(255, 255, 255, (255 * opacity)));
 		auto texture = _tilesTextures.find(tilesName);
 
+		bool noTex = true;
 		if (texture == _tilesTextures.end())
 			tile.setTexture(_noTexture);
 		else if (texture->second.getSize() == sf::Vector2u(0, 0))
 			tile.setTexture(_noTexture);
 		else
+		{
 			tile.setTexture(texture->second);
+			noTex = false;
+		}
 
 		for (size_t no = 0; no < layer->second.data.size(); no++)
 		{
 			if (layer->second.data[no] == 0) continue;
 
-			tile.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), tileWidth, tileHeight, layer->second.data[no]-1));
+			if(noTex == false)
+				tile.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), tileWidth, tileHeight, layer->second.data[no]-1));
+
 			tile.setPosition((no % width)*tileWidth + offsetX, (no / width)*tileHeight + offsetY);
 			target.draw(tile);
 		}
@@ -310,18 +316,23 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	auto texture = _tilesTextures.find(_actionMap.tilesName);
 
+	bool noTex = true;
 	if (texture == _tilesTextures.end())
 		act.setTexture(_noTexture);
 	else if (texture->second.getSize() == sf::Vector2u(0, 0))
 		act.setTexture(_noTexture);
 	else
+	{
 		act.setTexture(texture->second);
+		noTex = false;
+	}
 
 	for (size_t no = 0; no < _actionMap.data.size(); no++)
 	{
 		if (_actionMap.data[no] == 0) continue;
 
-		act.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), _actionMap.tileWidth, _actionMap.tileHeight, _actionMap.data[no]-1));
+		if(noTex == false)
+			act.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), _actionMap.tileWidth, _actionMap.tileHeight, _actionMap.data[no]-1));
 		act.setPosition((no % _actionMap.width) * _actionMap.tileWidth + _actionMap.offsetX, (no / _actionMap.width) * _actionMap.tileHeight + _actionMap.offsetY);
 		target.draw(act);
 	}

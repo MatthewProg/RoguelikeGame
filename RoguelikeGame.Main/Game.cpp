@@ -54,24 +54,20 @@ void Game::Start()
 	_logger->Log(Logger::LogType::INFO, "Starting...");
 
 	//Game
-	_logger->Log(Logger::LogType::INFO, "Loading game components");
-	if (_gameTiles["tiles1"].loadFromFile("./res/img/tiles.png") == false)
-		_logger->Log(Logger::LogType::ERROR, "Graphics (1/4): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (1/4): OK");
-	if (_gameTiles["tiles2"].loadFromFile("./res/img/tiles2.png") == false)
-		_logger->Log(Logger::LogType::ERROR, "Graphics (2/4): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (2/4): OK");
-	if (_gameTiles["players"].loadFromFile("./res/img/players.png") == false)
-		_logger->Log(Logger::LogType::ERROR, "Graphics (3/4): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (3/4): OK");
-	if (_gameTiles["special"].loadFromFile("./res/img/special.png") == false)
-		_logger->Log(Logger::LogType::ERROR, "Graphics (4/4): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (4/4): OK");
+	_textures.SetExpectedSize(4);
+	_textures.LoadFromFile("tiles1", "./res/img/tiles.png");
+	_textures.LoadFromFile("tiles2", "./res/img/tiles2.png");
+	_textures.LoadFromFile("players", "./res/img/players.png");
+	_textures.LoadFromFile("special", "./res/img/special.png");
+	_textures.ApplySmooth(false);
+	_textures.ApplyRepeat(false);
 
+	///DELETE/////////////////////
+	_gameTiles["tiles1"].loadFromFile("./res/img/tiles.png");
+	_gameTiles["tiles2"].loadFromFile("./res/img/tiles2.png");
+	_gameTiles["players"].loadFromFile("./res/img/players.png");
+	_gameTiles["special"].loadFromFile("./res/img/special.png");
+	//////////////////////////////
 
 	//Game map
 	_logger->Log(Logger::LogType::INFO, "Loading map components");
@@ -107,32 +103,26 @@ void Game::Start()
 	_logger->Log(Logger::LogType::INFO, "Loading player components");
 
 	sf::AnimationContainer playerAnimations;
+
 	sf::Animation idle;
-	if(!idle.LoadFromImage(_gameTiles["players"]))
-		_logger->Log(Logger::LogType::ERROR, "Graphics (1/2): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (1/2): OK");
-	idle.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 8));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 9));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 10));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 11));
+	idle.SetTexture(_textures.GetTexture("players"));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 8));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 9));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 10));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 11));
 	idle.SetChangeFrameEvery(7);
 	
 	sf::Animation move;
-	if (!move.LoadFromImage(_gameTiles["players"]))
-		_logger->Log(Logger::LogType::ERROR, "Graphics (2/2): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Graphics (2/2): OK");
-	move.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 12));
-	move.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 13));
-	move.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 14));
-	move.AddNewFrame(TilesHelper::GetTileRect(_gameTiles["players"].getSize(), 16, 22, 15));
+	move.SetTexture(_textures.GetTexture("players"));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 12));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 13));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 14));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 15));
 	move.SetChangeFrameEvery(3);
 
 	playerAnimations.SetStateAnimation("idle", idle);
 	playerAnimations.SetStateAnimation("move", move);
 	playerAnimations.ApplySetScale(1, 1);
-	playerAnimations.ApplySetSmooth(false);
 
 	_player.SetPlayerAnimations(playerAnimations);
 	_player.SetPlayerState("idle");

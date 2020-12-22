@@ -63,17 +63,17 @@
     <ClCompile Include="TilesHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ViewHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MapLayerModel.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="DebugHelper.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ViewHelper.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="TexturesManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugHelper.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,17 +107,17 @@
     <ClInclude Include="TilesHelper.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ViewHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MapLayerModel.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="DebugHelper.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ViewHelper.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="TexturesManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugHelper.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

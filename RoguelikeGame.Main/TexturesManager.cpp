@@ -79,6 +79,13 @@ sf::Texture* TexturesManager::GetTexture(std::string name)
 		return nullptr;
 }
 
+bool TexturesManager::Exists(std::string name)
+{
+	if (_textures.find(name) != _textures.end())
+		return true;
+	return false;
+}
+
 void TexturesManager::SetExpectedSize(unsigned short size)
 {
 	_expectedSize = size;

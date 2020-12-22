@@ -9,13 +9,92 @@ sf::Animation::Animation()
 	_currentTick = 0;
 	_currentFrame = 0;
 
-	_mainSprite.setTexture(_mainTexture);
-	_noTexture.loadFromImage(Utilities::GetInstance()->NoTexture16x16());
-	_noSprite.setTexture(_noTexture);
+	_noTexture = Utilities::GetInstance()->NoTexture16x16();
+	_texture = nullptr;
+
+	_vertices.setPrimitiveType(sf::Quads);
+	_vertices.resize(4);
 }
 
 sf::Animation::~Animation()
 {
+}
+
+void sf::Animation::SetTexture(sf::Texture* texture)
+{
+	_texture = texture;
+}
+
+void sf::Animation::SetFrameColor(unsigned int frame, sf::Color color)
+{
+	if (frame >= _frameColor.size())
+		return;
+	_frameColor[frame] = color;
+}
+
+const sf::Texture* sf::Animation::GetTexture()
+{
+	return _texture;
+}
+
+sf::Color sf::Animation::GetFrameColor(unsigned int frame)
+{
+	if(frame >= _frameColor.size())
+		return sf::Color();
+	return _frameColor[frame];
+}
+
+bool sf::Animation::IsRepeated()
+{
+	return _texture->isRepeated();
+}
+
+bool sf::Animation::IsSmooth()
+{
+	return _texture->isSmooth();
+}
+
+sf::IntRect sf::Animation::GetCurrentRect()
+{
+	return _rectFrames[_currentFrame];
+}
+
+void sf::Animation::UpdateVertices()
+{
+	_vertices[0].position = sf::Vector2f(0, 0);
+	_vertices[1].position = sf::Vector2f(_rectFrames[_currentFrame].width, 0);
+	_vertices[2].position = sf::Vector2f(_rectFrames[_currentFrame].width, _rectFrames[_currentFrame].height);
+	_vertices[3].position = sf::Vector2f(0, _rectFrames[_currentFrame].height);
+
+	int x = 0;
+	int y = 0;
+
+	if (_texture == nullptr)
+	{
+		x = 0;
+		y = 0;
+	}
+	else if (_texture->getSize() == sf::Vector2u())
+	{
+		x = 0;
+		y = 0;
+	}
+	else
+	{
+		x = _rectFrames[_currentFrame].left;
+		y = _rectFrames[_currentFrame].top;
+	}
+
+
+	_vertices[0].texCoords = sf::Vector2f(x, y);
+	_vertices[1].texCoords = sf::Vector2f(x + _rectFrames[_currentFrame].width, y);
+	_vertices[2].texCoords = sf::Vector2f(x + _rectFrames[_currentFrame].width, y + _rectFrames[_currentFrame].height);
+	_vertices[3].texCoords = sf::Vector2f(x, y + _rectFrames[_currentFrame].height);
+
+	_vertices[0].color = _frameColor[_currentFrame];
+	_vertices[1].color = _frameColor[_currentFrame];
+	_vertices[2].color = _frameColor[_currentFrame];
+	_vertices[3].color = _frameColor[_currentFrame];
 }
 
 void sf::Animation::NextFrame()
@@ -23,12 +102,12 @@ void sf::Animation::NextFrame()
 	_currentFrame++;
 	if (_currentFrame > _rectFrames.size() - 1)
 		_currentFrame = 0;
-
-	_mainSprite.setTextureRect(_rectFrames[_currentFrame]);
 }
 
 void sf::Animation::Tick(bool tick)
 {
+	UpdateVertices();
+
 	if (tick == false) return;
 
 	if (_currentTick > _changeEveryTicks * _animationSpeed)
@@ -46,35 +125,35 @@ void sf::Animation::Tick(bool tick)
 void sf::Animation::AddNewFrame(sf::IntRect rect)
 {
 	_rectFrames.push_back(rect);
+	_frameColor.push_back(sf::Color(255, 255, 255, 255));
 	NextFrame();
 }
 
 void sf::Animation::RemoveFrame(int index)
 {
 	_rectFrames.erase(_rectFrames.begin() + index);
+	_frameColor.erase(_frameColor.begin() + index);
 }
 
 void sf::Animation::RemoveAllFrames()
 {
 	_rectFrames.clear();
+	_frameColor.clear();
 }
 
-void sf::Animation::GetNoOfFrames()
+size_t sf::Animation::GetNoOfFrames()
 {
-	_rectFrames.size();
+	return _rectFrames.size();
 }
 
 void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 {
 	_rectFrames.clear();
 	_rectFrames = frames;
+	_frameColor.clear();
+	for (size_t i = 0; i < _rectFrames.size(); i++)
+		_frameColor.push_back(sf::Color(255, 255, 255, 255));
 	NextFrame();
-}
-
-void sf::Animation::RefreshTexture()
-{
-	_mainSprite.setTexture(_mainTexture);
-	_noSprite.setTexture(_noTexture);
 }
 
 void sf::Animation::SetChangeFrameEvery(unsigned int ticks)
@@ -97,147 +176,32 @@ float sf::Animation::GetAnimationSpeed()
 	return _animationSpeed;
 }
 
-const sf::Texture* sf::Animation::GetSpriteTexture()
-{
-	return _mainSprite.getTexture();
-}
-
-const sf::IntRect sf::Animation::GetSpriteTextureRect()
-{
-	return _mainSprite.getTextureRect();
-}
-
-bool sf::Animation::LoadFromFile(const std::string& path)
-{
-	return _mainTexture.loadFromFile(path);
-}
-
-bool sf::Animation::LoadFromMemory(const void* data, size_t size)
-{
-	return _mainTexture.loadFromMemory(data, size);
-}
-
-bool sf::Animation::LoadFromStream(sf::InputStream& stream)
-{
-	return _mainTexture.loadFromStream(stream);
-}
-
-bool sf::Animation::LoadFromImage(const sf::Image& img, const sf::IntRect& area)
-{
-	return _mainTexture.loadFromImage(img, area);
-}
-
-void sf::Animation::SetRepeated(bool repeateTexture)
-{
-	_mainTexture.setRepeated(repeateTexture);
-}
-
-void sf::Animation::SetSmooth(bool smooth)
-{
-	_mainTexture.setSmooth(smooth);
-}
-
-bool sf::Animation::IsRepeated()
-{
-	return _mainTexture.isRepeated();
-}
-
-bool sf::Animation::IsSmooth()
-{
-	return _mainTexture.isSmooth();
-}
-
-void sf::Animation::SetColor(const Color& color)
-{
-	_mainSprite.setColor(color);
-}
-
-void sf::Animation::SetOrigin(const Vector2f& origin)
-{
-	_mainSprite.setOrigin(origin);
-	_noSprite.setOrigin(origin);
-}
-
-void sf::Animation::SetOrigin(float x, float y)
-{
-	_mainSprite.setOrigin(x, y);
-	_noSprite.setOrigin(x, y);
-}
-
-void sf::Animation::SetPosition(const Vector2f& position)
-{
-	_mainSprite.setPosition(position);
-	_noSprite.setPosition(position);
-}
-
-void sf::Animation::SetPosition(float x, float y)
-{
-	_mainSprite.setPosition(x, y);
-	_noSprite.setPosition(x, y);
-}
-
-void sf::Animation::SetRotation(float angle)
-{
-	_mainSprite.setRotation(angle);
-	_noSprite.setRotation(angle);
-}
-
-void sf::Animation::SetScale(const Vector2f& factors)
-{
-	_mainSprite.setScale(factors);
-	_noSprite.setScale(factors);
-}
-
-void sf::Animation::SetScale(float factorX, float factorY)
-{
-	_mainSprite.setScale(factorX, factorY);
-	_noSprite.setScale(factorX, factorY);
-}
-
-sf::Color sf::Animation::GetColor()
-{
-	return _mainSprite.getColor();
-}
-
-sf::Vector2f sf::Animation::GetOrigin()
-{
-	return _mainSprite.getOrigin();
-}
-
-sf::Vector2f sf::Animation::GetPosition()
-{
-	return _mainSprite.getPosition();
-}
-
-float sf::Animation::GetRotation()
-{
-	return _mainSprite.getRotation();
-}
-
-sf::Vector2f sf::Animation::GetScale()
-{
-	return _mainSprite.getScale();
-}
-
 sf::FloatRect sf::Animation::GetGlobalBounds()
 {
-	return _mainSprite.getGlobalBounds();
+	sf::FloatRect output;
+	output.height = _rectFrames[_currentFrame].height;
+	output.width = _rectFrames[_currentFrame].width;
+	output.left = _rectFrames[_currentFrame].left;
+	output.top = _rectFrames[_currentFrame].top;
+	return getTransform().transformRect(output);
 }
 
 sf::FloatRect sf::Animation::GetLocalBounds()
 {
-	return _mainSprite.getLocalBounds();
+	return sf::FloatRect(0, 0, _rectFrames[_currentFrame].width, _rectFrames[_currentFrame].height);
 }
 
-sf::Transform sf::Animation::GetTransform()
-{
-	return _mainSprite.getTransform();
-}
 
 void sf::Animation::draw(RenderTarget& target, RenderStates states) const
 {
-	if (_mainSprite.getTexture() == nullptr || _mainSprite.getTexture()->getSize() == sf::Vector2u(0, 0))
-		target.draw(_noSprite);
+	if (_texture == nullptr)
+		states.texture = _noTexture;
+	else if (_texture->getSize() == sf::Vector2u())
+		states.texture = _noTexture;
 	else
-		target.draw(_mainSprite);
+		states.texture = _texture;
+
+	states.transform *= getTransform();
+
+	target.draw(_vertices, states);
 }

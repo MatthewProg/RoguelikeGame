@@ -13,8 +13,9 @@ namespace sf
 		std::string _currentState;
 		sf::Animation* _currentAnimation;
 
-		sf::Texture _noTexture;
-		sf::Sprite _noSprite;
+		sf::Texture* _noTexture;
+		sf::VertexArray _noTextureVertex;
+		sf::Transformable _noTextureTransform;
 
 		bool HasStateAndAnimation();
 		void Update();
@@ -26,7 +27,6 @@ namespace sf
 		~AnimationContainer();
 
 		void Tick(bool tick);
-		void RefreshAnimationTextures();
 
 		//AnimationContainer setters
 		void SetStateAnimation(std::string state, sf::Animation animation);
@@ -42,8 +42,6 @@ namespace sf
 		//Animation setters
 		void ApplySetChangeFrameEvery(unsigned int ticks);
 		void ApplySetAnimationSpeed(float speed);
-		void ApplySetRepeated(bool repeateTexture);
-		void ApplySetSmooth(bool smooth);
 		void ApplySetColor(const Color& color);
 		void ApplySetOrigin(const Vector2f& origin);
 		void ApplySetOrigin(float x, float y);

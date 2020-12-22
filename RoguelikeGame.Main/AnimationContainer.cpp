@@ -14,8 +14,18 @@ namespace sf
 	AnimationContainer::AnimationContainer()
 	{
 		_currentAnimation = nullptr;
-		_noTexture.loadFromImage(Utilities::GetInstance()->NoTexture16x16());
-		_noSprite.setTexture(_noTexture);
+		_noTexture = Utilities::GetInstance()->NoTexture16x16();
+
+		_noTextureVertex.resize(4);
+		_noTextureVertex.setPrimitiveType(sf::Quads);
+		_noTextureVertex[0].position = sf::Vector2f(0, 0);
+		_noTextureVertex[1].position = sf::Vector2f(0, 16);
+		_noTextureVertex[2].position = sf::Vector2f(16, 16);
+		_noTextureVertex[3].position = sf::Vector2f(16, 0);
+		_noTextureVertex[0].texCoords = sf::Vector2f(0, 0);
+		_noTextureVertex[1].texCoords = sf::Vector2f(0, 16);
+		_noTextureVertex[2].texCoords = sf::Vector2f(16, 16);
+		_noTextureVertex[3].texCoords = sf::Vector2f(16, 0);
 	}
 
 	AnimationContainer::~AnimationContainer()
@@ -30,12 +40,6 @@ namespace sf
 		Update();
 	}
 
-	void AnimationContainer::RefreshAnimationTextures()
-	{
-		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.RefreshTexture();
-	}
-
 	void AnimationContainer::Update()
 	{
 		auto it = _animationStates.find(_currentState);
@@ -48,14 +52,11 @@ namespace sf
 	void AnimationContainer::SetStateAnimation(std::string state, sf::Animation animation)
 	{
 		_animationStates[state] = animation;
-		_animationStates[state].RefreshTexture();
 	}
 
 	void AnimationContainer::SetAnimationStates(std::map<std::string, sf::Animation> animationStates)
 	{
 		_animationStates = animationStates;
-		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.RefreshTexture();
 	}
 
 	void AnimationContainer::SetCurrentState(std::string state)
@@ -99,64 +100,72 @@ namespace sf
 			iter->second.SetAnimationSpeed(speed);
 	}
 
-	void AnimationContainer::ApplySetRepeated(bool repeateTexture)
-	{
-		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetRepeated(repeateTexture);
-	}
-
-	void AnimationContainer::ApplySetSmooth(bool smooth)
-	{
-		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetSmooth(smooth);
-	}
-
 	void AnimationContainer::ApplySetColor(const Color& color)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetColor(color);
+			for (auto i = 0; i < iter->second.GetNoOfFrames(); i++)
+				iter->second.SetFrameColor(i, color);
+
+		_noTextureVertex[0].color = color;
+		_noTextureVertex[1].color = color;
+		_noTextureVertex[2].color = color;
+		_noTextureVertex[3].color = color;
 	}
 
 	void AnimationContainer::ApplySetOrigin(const Vector2f& origin)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetOrigin(origin);
+			iter->second.setOrigin(origin);
+
+		_noTextureTransform.setOrigin(origin);
 	}
 
 	void AnimationContainer::ApplySetOrigin(float x, float y)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetOrigin(x, y);
+			iter->second.setOrigin(x, y);
+
+		_noTextureTransform.setOrigin(x, y);
 	}
 
 	void AnimationContainer::ApplySetPosition(const Vector2f& position)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetPosition(position);
+			iter->second.setPosition(position);
+
+		_noTextureTransform.setPosition(position);
 	}
 
 	void AnimationContainer::ApplySetPosition(float x, float y)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetPosition(x, y);
+			iter->second.setPosition(x, y);
+
+		_noTextureTransform.setPosition(x, y);
 	}
 
 	void AnimationContainer::ApplySetRotation(float angle)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetRotation(angle);
+			iter->second.setRotation(angle);
+
+		_noTextureTransform.setRotation(angle);
 	}
 
 	void AnimationContainer::ApplySetScale(const Vector2f& factors)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetScale(factors);
+			iter->second.setScale(factors);
+
+		_noTextureTransform.setScale(factors);
 	}
 
 	void AnimationContainer::ApplySetScale(float factorX, float factorY)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			iter->second.SetScale(factorX, factorY);
+			iter->second.setScale(factorX, factorY);
+
+		_noTextureTransform.setScale(factorX, factorY);
 	}
 
 	sf::Animation* AnimationContainer::GetStateAnimation(std::string state)
@@ -175,7 +184,11 @@ namespace sf
 	void AnimationContainer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		if (_currentAnimation == nullptr)
-			target.draw(_noSprite);
+		{
+			states.texture = _noTexture;
+			states.transform *= _noTextureTransform.getTransform();
+			target.draw(_noTextureVertex);
+		}
 		else
 			target.draw(*_currentAnimation);
 	}

@@ -24,6 +24,8 @@ public:
 	void LoadFromStream(const std::string& name, sf::InputStream& stream, const sf::IntRect& area = sf::IntRect());
 
 	sf::Texture* GetTexture(std::string name);
+	
+	bool Exists(std::string name);
 
 	void SetExpectedSize(unsigned short size);
 

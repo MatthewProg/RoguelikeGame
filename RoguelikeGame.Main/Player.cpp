@@ -105,7 +105,6 @@ void Player::SetPlayerState(std::string state)
 void Player::SetPlayerAnimations(sf::AnimationContainer container)
 {
 	_playerAnimation = container;
-	_playerAnimation.RefreshAnimationTextures();
 }
 
 void Player::SetPlayerLives(short lives)

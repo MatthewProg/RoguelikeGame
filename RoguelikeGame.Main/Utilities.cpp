@@ -1,6 +1,6 @@
 #include "Utilities.h"
 
-sf::Image Utilities::Generate(unsigned int width, unsigned int height)
+void Utilities::Generate(unsigned int width, unsigned int height)
 {
 	std::vector<sf::Uint8> pixels;
 	for (unsigned int i = 0; i < width * height; i++)
@@ -23,12 +23,12 @@ sf::Image Utilities::Generate(unsigned int width, unsigned int height)
 
 	sf::Image img;
 	img.create(width, height, pixels.data());
-	return img;
+	_noTxt16x16.loadFromImage(img);
 }
 
-sf::Image Utilities::NoTexture16x16()
+sf::Texture* Utilities::NoTexture16x16()
 {
-	return _noTxt16x16;
+	return &_noTxt16x16;
 }
 
 Utilities* Utilities::GetInstance()
