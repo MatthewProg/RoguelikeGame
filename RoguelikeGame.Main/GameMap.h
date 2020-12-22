@@ -1,31 +1,34 @@
 #pragma once
 
 #include <fstream>
-#include <map>
+#include <unordered_map>
 
+#include "SFML/Graphics/Transformable.hpp"
 #include "SFML/Graphics/RenderTarget.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Texture.hpp"
-#include "SFML/Graphics/Sprite.hpp"
-#include "SFML/Graphics/Image.hpp"
-#include "SFML/System/Vector2.hpp"
 #include "nlohmann/json.hpp"
 
 #include "Logger.h"
 #include "Utilities.h"
 #include "TilesHelper.h"
 #include "MapLayerModel.h"
+#include "TexturesManager.h"
 
 template<typename T>
 class GameMap : public sf::Drawable
 {
 private:
-	std::map<unsigned int, MapLayerModel<T>> _map;
+	std::unordered_map<unsigned int, MapLayerModel<T>> _map;
 	std::vector<unsigned int> _layersIds;
 	MapLayerModel<unsigned char> _actionMap;
 
-	std::map<std::string, sf::Texture> _tilesTextures;
-	sf::Texture _noTexture;
+	std::unordered_map<std::string, sf::Texture*> _tilesTextures;
+	sf::Texture* _noTexture;
+
+	std::unordered_map<unsigned int, sf::VertexArray> _layerVertices;
+	std::unordered_map<unsigned int, sf::Transformable> _layerTransform;
 
 	sf::Vector2u _mapSize;
 
@@ -33,14 +36,22 @@ private:
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+	void SetLayerVertexOpacity(unsigned int layerId, float opacity);
+	void SetLayerVertexOffset(unsigned int layerId, sf::Vector2f offset);
 public:
 
 	GameMap();
 	~GameMap();
 
+
 	bool LoadFromFile(std::string path);
 
-	bool SetTilesTexture(std::string tilesName, const sf::Image& img);
+	void PrepareFrame();
+	void Update(bool tick);
+
+	void SetTilesTexture(std::string tilesName, sf::Texture* texture);
+	bool AutoSetTilesTextures(TexturesManager* manager);
 
 	//Map getters
 	sf::Vector2u GetMapSize();

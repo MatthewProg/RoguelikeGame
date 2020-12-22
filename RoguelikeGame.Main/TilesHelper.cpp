@@ -9,8 +9,8 @@ sf::Texture TilesHelper::GetStandardTile(sf::Image img, int width, int height, i
 	if (size.x <= 0 || size.y <= 0 || height <= 0 || width <= 0)
 	{
 		Logger::GetInstance()->Log(Logger::LogType::ERROR, "GetStandardTile(), one of the parameters were equal to 0!");
-		//output = sf::Texture(*Utilities::GetInstance()->NoTexture16x16());
-		return sf::Texture();
+		output = *Utilities::GetInstance()->NoTexture16x16();
+		return output;
 	}
 
 	int cols = size.x / width;
@@ -52,8 +52,8 @@ sf::Texture TilesHelper::GetCustomTile(sf::Image img, int left, int top, int wid
 	if (size.x <= 0 || size.y <= 0 || height <= 0 || width <= 0 || top <= 0 || left <= 0)
 	{
 		Logger::GetInstance()->Log(Logger::LogType::ERROR, "GetCustomTile(), one of the parameters were equal to 0!");
-		//output = sf::Texture(*Utilities::GetInstance()->NoTexture16x16());
-		return sf::Texture();
+		output = *Utilities::GetInstance()->NoTexture16x16();
+		return output;
 	}
 
 	if (left + width > size.x || top + height > size.y)

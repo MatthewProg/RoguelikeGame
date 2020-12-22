@@ -3,7 +3,6 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
-#include "TexturesManager.h"
 #include "DebugHelper.h"
 #include "ViewHelper.h"
 #include "GameMap.h"
@@ -25,7 +24,6 @@ private:
 	sf::Event _event;
 	sf::View _camera;
 
-	std::map<std::string, sf::Image> _gameTiles;
 	TexturesManager _textures;
 	GameMap<unsigned char> _gameMap;
 

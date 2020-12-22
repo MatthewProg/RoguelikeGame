@@ -9,7 +9,7 @@ GameMap<T>::GameMap()
 	_actionMap.opacity = 0.5;
 	_actionMap.tilesName = "special";
 	_logger = Logger::GetInstance();
-	//_noTexture.loadFromFile("./res/img/special.png");
+	_noTexture = Utilities::GetInstance()->NoTexture16x16();
 }
 
 template<typename T>
@@ -65,18 +65,41 @@ bool GameMap<T>::LoadFromFile(std::string path)
 		_actionMap.data.push_back(dat.get<unsigned char>());
 
 	std::sort(_layersIds.begin(), _layersIds.end());
+
 	return true;
 }
 
 template<typename T>
-bool GameMap<T>::SetTilesTexture(std::string tilesName, const sf::Image& img)
+void GameMap<T>::Update(bool tick)
 {
-	if (!_tilesTextures[tilesName].loadFromImage(img))
+}
+
+template<typename T>
+void GameMap<T>::SetTilesTexture(std::string tilesName, sf::Texture* texture)
+{
+	_tilesTextures[tilesName] = texture;
+}
+
+template<typename T>
+bool GameMap<T>::AutoSetTilesTextures(TexturesManager* manager)
+{
+	bool allOk = true;
+	auto mapTiles = GetLayersTilesNames();
+	for (size_t tile = 0; tile < mapTiles.size(); tile++)
 	{
-		_logger->Log(Logger::LogType::ERROR, "Unable to set tiles texture in game map!");
-		return false;
+		if (manager->Exists(mapTiles[tile]) == false)
+		{
+			_logger->Log(Logger::LogType::ERROR, "Graphics (" + std::to_string(tile + 1) + "/" + std::to_string(mapTiles.size()) + "): ERROR");
+			allOk = false;
+			continue;
+		}
+		else
+		{
+			SetTilesTexture(mapTiles[tile], manager->GetTexture(mapTiles[tile]));
+			_logger->Log(Logger::LogType::INFO, "Graphics (" + std::to_string(tile + 1) + "/" + std::to_string(mapTiles.size()) + "): OK");
+		}
 	}
-	return true;
+	return allOk;
 }
 
 template<typename T>
@@ -174,7 +197,10 @@ void GameMap<T>::SetLayerOpacity(unsigned int layerId, float opacity)
 	if (opacity < 0) opa = 0;
 
 	if (_map.find(layerId) != _map.end())
+	{
 		_map[layerId].opacity = opa;
+		SetLayerVertexOpacity(layerId, opa);
+	}
 	return;
 }
 
@@ -185,6 +211,7 @@ void GameMap<T>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset)
 	{
 		_map[layerId].offsetX = offset.x;
 		_map[layerId].offsetY = offset.y;
+		SetLayerVertexOffset(layerId, offset);
 	}
 	return;
 }
@@ -212,7 +239,10 @@ void GameMap<T>::ApplyLayerOpacity(float opacity)
 	if (opacity < 0) opa = 0;
 
 	for (auto iter = _map.begin(); iter != _map.end(); ++iter)
+	{
 		iter->second.opacity = opa;
+		SetLayerVertexOpacity(iter->first, opa);
+	}
 }
 
 template<typename T>
@@ -222,6 +252,7 @@ void GameMap<T>::ApplyLayerOffset(sf::Vector2f offset)
 	{
 		iter->second.offsetX = offset.x;
 		iter->second.offsetY = offset.y;
+		SetLayerVertexOffset(iter->first, offset);
 	}
 }
 
@@ -264,13 +295,43 @@ void GameMap<T>::SetActionMapTilesName(std::string tilesName)
 template<typename T>
 void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	for (size_t i = 0; i < _layersIds.size(); i++)
+	for (auto id : _layersIds)
 	{
-		auto id = _layersIds[i];
-		auto layer = _map.find(id);
+		auto found = _map.find(id);
+		if (found == _map.end()) continue;
+		if (found->second.visible == false) continue;
 
-		if (layer == _map.end()) continue;
-		if (layer->second.visible == false) continue;
+		states.texture = _tilesTextures.find(found->second.tilesName)->second;
+		states.transform *= _layerTransform.find(id)->second.getTransform();
+
+		target.draw(_layerVertices.find(id)->second, states);
+	}
+}
+
+template<typename T>
+void GameMap<T>::PrepareFrame()
+{
+	if (_layerVertices.size() != _layersIds.size())
+		_layerVertices.clear();
+	if (_layerTransform.size() != _layersIds.size())
+		_layerTransform.clear();
+
+	for (auto id : _layersIds)
+	{
+		auto vertex = &_layerVertices[id];
+		vertex->setPrimitiveType(sf::Quads);
+
+		auto layer = _map.find(id);
+		if (layer == _map.end())
+		{
+			vertex->resize(0);
+			continue;
+		}
+		if (layer->second.visible == false)
+		{
+			vertex->resize(0);
+			continue;
+		}
 
 		auto height = layer->second.height;
 		auto width = layer->second.width;
@@ -279,71 +340,76 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		auto tileWidth = layer->second.tileWidth;
 		auto tileHeight = layer->second.tileHeight;
 
-		auto opacity = layer->second.opacity;
 		auto tilesName = layer->second.tilesName;
+		sf::Color opacity = sf::Color(255, 255, 255, (layer->second.opacity * 255));
 
-		sf::Sprite tile;
-		tile.setColor(sf::Color(255, 255, 255, (255 * opacity)));
-		auto texture = _tilesTextures.find(tilesName);
-
-		bool noTex = true;
-		if (texture == _tilesTextures.end())
-			tile.setTexture(_noTexture);
-		else if (texture->second.getSize() == sf::Vector2u(0, 0))
-			tile.setTexture(_noTexture);
+		sf::Texture* texture = nullptr;
+		if (_tilesTextures.find(tilesName) == _tilesTextures.end())
+			texture = _noTexture;
+		else if (_tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
+			texture = _noTexture;
 		else
+			texture = _tilesTextures[tilesName];
+
+		vertex->resize(height * width * 4);
+		for (size_t no = 0; no < _map[id].data.size(); no++)
 		{
-			tile.setTexture(texture->second);
-			noTex = false;
+			vertex->operator[]((no * 4) + 0).position = sf::Vector2f((no % width) * tileWidth, (no / width) * tileHeight);
+			vertex->operator[]((no * 4) + 1).position = sf::Vector2f((no % width) * tileWidth + tileWidth, (no / width) * tileHeight);
+			vertex->operator[]((no * 4) + 2).position = sf::Vector2f((no % width) * tileWidth + tileWidth, (no / width) * tileHeight + tileHeight);
+			vertex->operator[]((no * 4) + 3).position = sf::Vector2f((no % width) * tileWidth, (no / width) * tileHeight + tileHeight);
+
+			if (layer->second.data[no] == 0) continue; //if empty tile
+			sf::IntRect rect;
+			if (texture == _noTexture)
+				rect = TilesHelper::GetTileRect(sf::Vector2u(16, 16), 16, 16, 0);
+			else
+				rect = TilesHelper::GetTileRect(texture->getSize(), layer->second.tileWidth, layer->second.tileHeight, layer->second.data[no] - 1);
+
+			vertex->operator[]((no * 4) + 0).texCoords = sf::Vector2f(rect.left, rect.top);
+			vertex->operator[]((no * 4) + 1).texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
+			vertex->operator[]((no * 4) + 2).texCoords = sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
+			vertex->operator[]((no * 4) + 3).texCoords = sf::Vector2f(rect.left, rect.top + rect.height);
+
+			vertex->operator[]((no * 4) + 0).color = opacity;
+			vertex->operator[]((no * 4) + 1).color = opacity;
+			vertex->operator[]((no * 4) + 2).color = opacity;
+			vertex->operator[]((no * 4) + 3).color = opacity;
+
+			_layerTransform[id].setPosition(offsetX, offsetY);
 		}
-
-		for (size_t no = 0; no < layer->second.data.size(); no++)
-		{
-			if (layer->second.data[no] == 0) continue;
-
-			if(noTex == false)
-				tile.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), tileWidth, tileHeight, layer->second.data[no]-1));
-
-			tile.setPosition((no % width)*tileWidth + offsetX, (no / width)*tileHeight + offsetY);
-			target.draw(tile);
-		}
 	}
+}
 
-	if (_actionMap.visible == false) return;
+template<typename T>
+void GameMap<T>::SetLayerVertexOpacity(unsigned int layerId, float opacity)
+{
+	auto layer = _layerVertices.find(layerId);
+	if (layer == _layerVertices.end()) return;
 
-	sf::Sprite act;
-	act.setColor(sf::Color(255, 255, 255, (255 * _actionMap.opacity)));
+	sf::Color color = sf::Color(255, 255, 255, opacity * 255);
+	for (size_t no = 0; no < layer->second.getVertexCount(); no++)
+		layer->second[no].color = color;
+}
 
-	auto texture = _tilesTextures.find(_actionMap.tilesName);
+template<typename T>
+void GameMap<T>::SetLayerVertexOffset(unsigned int layerId, sf::Vector2f offset)
+{
+	auto layer = _layerTransform.find(layerId);
+	if (layer == _layerTransform.end()) return;
 
-	bool noTex = true;
-	if (texture == _tilesTextures.end())
-		act.setTexture(_noTexture);
-	else if (texture->second.getSize() == sf::Vector2u(0, 0))
-		act.setTexture(_noTexture);
-	else
-	{
-		act.setTexture(texture->second);
-		noTex = false;
-	}
-
-	for (size_t no = 0; no < _actionMap.data.size(); no++)
-	{
-		if (_actionMap.data[no] == 0) continue;
-
-		if(noTex == false)
-			act.setTextureRect(TilesHelper::GetTileRect(texture->second.getSize(), _actionMap.tileWidth, _actionMap.tileHeight, _actionMap.data[no]-1));
-		act.setPosition((no % _actionMap.width) * _actionMap.tileWidth + _actionMap.offsetX, (no / _actionMap.width) * _actionMap.tileHeight + _actionMap.offsetY);
-		target.draw(act);
-	}
+	layer->second.setPosition(offset);
 }
 
 #pragma region TemplateImplementationSigned
 template void GameMap<int>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<int>::GameMap();
 template GameMap<int>::~GameMap();
+template void GameMap<int>::PrepareFrame();
+template void GameMap<int>::Update(bool tick);
 template bool GameMap<int>::LoadFromFile(std::string path);
-template bool GameMap<int>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<int>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<int>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<int>::GetMapSize();
 template unsigned int GameMap<int>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<int>::GetLayersIds();
@@ -370,8 +436,11 @@ template void GameMap<int>::SetActionMapTilesName(std::string tilesName);
 template void GameMap<char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<char>::GameMap();
 template GameMap<char>::~GameMap();
+template void GameMap<char>::PrepareFrame();
+template void GameMap<char>::Update(bool tick);
 template bool GameMap<char>::LoadFromFile(std::string path);
-template bool GameMap<char>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<char>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<char>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<char>::GetMapSize();
 template unsigned int GameMap<char>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<char>::GetLayersIds();
@@ -398,8 +467,11 @@ template void GameMap<char>::SetActionMapTilesName(std::string tilesName);
 template void GameMap<short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<short>::GameMap();
 template GameMap<short>::~GameMap();
+template void GameMap<short>::PrepareFrame();
+template void GameMap<short>::Update(bool tick);
 template bool GameMap<short>::LoadFromFile(std::string path);
-template bool GameMap<short>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<short>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<short>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<short>::GetMapSize();
 template unsigned int GameMap<short>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<short>::GetLayersIds();
@@ -428,8 +500,11 @@ template void GameMap<short>::SetActionMapTilesName(std::string tilesName);
 template void GameMap<unsigned int>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned int>::GameMap();
 template GameMap<unsigned int>::~GameMap();
+template void GameMap<unsigned int>::PrepareFrame();
+template void GameMap<unsigned int>::Update(bool tick);
 template bool GameMap<unsigned int>::LoadFromFile(std::string path);
-template bool GameMap<unsigned int>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<unsigned int>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<unsigned int>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<unsigned int>::GetMapSize();
 template unsigned int GameMap<unsigned int>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<unsigned int>::GetLayersIds();
@@ -456,8 +531,11 @@ template void GameMap<unsigned int>::SetActionMapTilesName(std::string tilesName
 template void GameMap<unsigned char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned char>::GameMap();
 template GameMap<unsigned char>::~GameMap();
+template void GameMap<unsigned char>::PrepareFrame();
+template void GameMap<unsigned char>::Update(bool tick);
 template bool GameMap<unsigned char>::LoadFromFile(std::string path);
-template bool GameMap<unsigned char>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<unsigned char>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<unsigned char>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<unsigned char>::GetMapSize();
 template unsigned int GameMap<unsigned char>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<unsigned char>::GetLayersIds();
@@ -484,8 +562,11 @@ template void GameMap<unsigned char>::SetActionMapTilesName(std::string tilesNam
 template void GameMap<unsigned short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned short>::GameMap();
 template GameMap<unsigned short>::~GameMap();
+template void GameMap<unsigned short>::PrepareFrame();
+template void GameMap<unsigned short>::Update(bool tick);
 template bool GameMap<unsigned short>::LoadFromFile(std::string path);
-template bool GameMap<unsigned short>::SetTilesTexture(std::string tilesName, const sf::Image& img);
+template void GameMap<unsigned short>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
+template bool GameMap<unsigned short>::AutoSetTilesTextures(TexturesManager* manager);
 template sf::Vector2u GameMap<unsigned short>::GetMapSize();
 template unsigned int GameMap<unsigned short>::GetNoOfLayers();
 template std::vector<unsigned int> GameMap<unsigned short>::GetLayersIds();
