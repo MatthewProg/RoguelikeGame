@@ -5,7 +5,7 @@ Game::Game(sf::VideoMode vmode, std::string title)
 {
 	_logger = Logger::GetInstance();
 	_camera.setCenter(0, 0);
-	_camera.setSize(vmode.width / 4, vmode.height / 4);
+	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
 	//_window.setFramerateLimit(144);
 	//_window.setView(_camera);
@@ -14,6 +14,7 @@ Game::Game(sf::VideoMode vmode, std::string title)
 	_gameSpeed = 60;
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_drawHitboxes = false;
+	_event = sf::Event();
 #ifndef NDEBUG
 	_debug.SetDebug(true);
 #endif
@@ -69,10 +70,10 @@ void Game::Start()
 	else
 		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
 
-	_gameMap.SetActionMapVisibility(false);
-	_gameMap.SetActionMapOpacity(0.12);
-
 	_gameMap.AutoSetTilesTextures(&_textures);
+
+	_gameMap.SetActionMapVisibility(true);
+	_gameMap.SetActionMapOpacity(0.25);
 
 	_gameMap.PrepareFrame();
 		
@@ -120,7 +121,7 @@ void Game::EventUpdate()
 		if (_event.type == sf::Event::KeyPressed)
 		{
 			_player.SetPlayerState("move");
-			_player.MoveBy(10, 0, _delta);
+			_player.MoveBy(10, 0, (float)_delta);
 		}
 		if(_event.type == sf::Event::KeyReleased)
 			_player.SetPlayerState("idle");

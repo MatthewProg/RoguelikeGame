@@ -63,7 +63,7 @@ bool GameMap<T>::LoadFromFile(std::string path)
 	_actionMap.tileWidth = doc["actionLayer"]["tileWidth"].get<unsigned int>();
 	for (auto& dat : doc["actionLayer"]["data"])
 		_actionMap.data.push_back(dat.get<unsigned char>());
-
+		
 	std::sort(_layersIds.begin(), _layersIds.end());
 
 	return true;
@@ -85,6 +85,11 @@ bool GameMap<T>::AutoSetTilesTextures(TexturesManager* manager)
 {
 	bool allOk = true;
 	auto mapTiles = GetLayersTilesNames();
+	
+	auto exist = std::find(mapTiles.begin(), mapTiles.end(), _actionMap.tilesName);
+	if (exist == mapTiles.end())
+		mapTiles.push_back(_actionMap.tilesName);
+
 	for (size_t tile = 0; tile < mapTiles.size(); tile++)
 	{
 		if (manager->Exists(mapTiles[tile]) == false)
@@ -267,6 +272,7 @@ template<typename T>
 void GameMap<T>::SetActionMapVisibility(bool visibility)
 {
 	_actionMap.visible = visibility;
+	PrepareActionMapLayer();
 }
 
 template<typename T>
@@ -277,6 +283,10 @@ void GameMap<T>::SetActionMapOpacity(float opacity)
 	if (opacity < 0) opa = 0;
 
 	_actionMap.opacity = opa;
+
+	sf::Color color = sf::Color(255, 255, 255, (sf::Uint8)(opacity * 255));
+	for (size_t no = 0; no < _actionMapVertices.getVertexCount(); no++)
+		_actionMapVertices[no].color = color;
 }
 
 template<typename T>
@@ -284,6 +294,7 @@ void GameMap<T>::SetActionMapOffset(sf::Vector2f offset)
 {
 	_actionMap.offsetX = offset.x;
 	_actionMap.offsetY = offset.y;
+	_actionMapTransform.setPosition(offset);
 }
 
 template<typename T>
@@ -301,10 +312,32 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		if (found == _map.end()) continue;
 		if (found->second.visible == false) continue;
 
-		states.texture = _tilesTextures.find(found->second.tilesName)->second;
+		auto texture = _tilesTextures.find(found->second.tilesName);
+		if (texture == _tilesTextures.end())
+			states.texture = _noTexture;
+		else if (texture->second->getSize() == sf::Vector2u())
+			states.texture = _noTexture;
+		else
+			states.texture = texture->second;
+
 		states.transform *= _layerTransform.find(id)->second.getTransform();
 
 		target.draw(_layerVertices.find(id)->second, states);
+	}
+
+	//Action map
+	if (_actionMap.visible)
+	{
+		auto texture = _tilesTextures.find(_actionMap.tilesName);
+		if (texture == _tilesTextures.end())
+			states.texture = _noTexture;
+		else if (texture->second->getSize() == sf::Vector2u())
+			states.texture = _noTexture;
+		else
+			states.texture = texture->second;
+
+		states.transform *= _actionMapTransform.getTransform();
+		target.draw(_actionMapVertices, states);
 	}
 }
 
@@ -341,7 +374,7 @@ void GameMap<T>::PrepareFrame()
 		auto tileHeight = layer->second.tileHeight;
 
 		auto tilesName = layer->second.tilesName;
-		sf::Color opacity = sf::Color(255, 255, 255, (layer->second.opacity * 255));
+		sf::Color opacity = sf::Color(255, 255, 255, (sf::Uint8)(layer->second.opacity * 255));
 
 		sf::Texture* texture = nullptr;
 		if (_tilesTextures.find(tilesName) == _tilesTextures.end())
@@ -354,22 +387,23 @@ void GameMap<T>::PrepareFrame()
 		vertex->resize(height * width * 4);
 		for (size_t no = 0; no < _map[id].data.size(); no++)
 		{
-			vertex->operator[]((no * 4) + 0).position = sf::Vector2f((no % width) * tileWidth, (no / width) * tileHeight);
-			vertex->operator[]((no * 4) + 1).position = sf::Vector2f((no % width) * tileWidth + tileWidth, (no / width) * tileHeight);
-			vertex->operator[]((no * 4) + 2).position = sf::Vector2f((no % width) * tileWidth + tileWidth, (no / width) * tileHeight + tileHeight);
-			vertex->operator[]((no * 4) + 3).position = sf::Vector2f((no % width) * tileWidth, (no / width) * tileHeight + tileHeight);
-
 			if (layer->second.data[no] == 0) continue; //if empty tile
+
+			vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+			vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+			vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+			vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+
 			sf::IntRect rect;
 			if (texture == _noTexture)
 				rect = TilesHelper::GetTileRect(sf::Vector2u(16, 16), 16, 16, 0);
 			else
 				rect = TilesHelper::GetTileRect(texture->getSize(), layer->second.tileWidth, layer->second.tileHeight, layer->second.data[no] - 1);
 
-			vertex->operator[]((no * 4) + 0).texCoords = sf::Vector2f(rect.left, rect.top);
-			vertex->operator[]((no * 4) + 1).texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
-			vertex->operator[]((no * 4) + 2).texCoords = sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
-			vertex->operator[]((no * 4) + 3).texCoords = sf::Vector2f(rect.left, rect.top + rect.height);
+			vertex->operator[]((no * 4) + 0).texCoords = sf::Vector2f((float)rect.left, (float)rect.top);
+			vertex->operator[]((no * 4) + 1).texCoords = sf::Vector2f((float)rect.left + (float)rect.width, (float)rect.top);
+			vertex->operator[]((no * 4) + 2).texCoords = sf::Vector2f((float)rect.left + (float)rect.width, (float)rect.top + (float)rect.height);
+			vertex->operator[]((no * 4) + 3).texCoords = sf::Vector2f((float)rect.left, (float)rect.top + (float)rect.height);
 
 			vertex->operator[]((no * 4) + 0).color = opacity;
 			vertex->operator[]((no * 4) + 1).color = opacity;
@@ -382,12 +416,73 @@ void GameMap<T>::PrepareFrame()
 }
 
 template<typename T>
+void GameMap<T>::PrepareActionMapLayer()
+{
+	auto vertex = &_actionMapVertices;
+	vertex->setPrimitiveType(sf::Quads);
+
+	auto layer = &_actionMap;
+	if (layer->visible == false)
+	{
+		vertex->resize(0);
+		return;;
+	}
+
+	auto height = layer->height;
+	auto width = layer->width;
+	auto offsetX = layer->offsetX;
+	auto offsetY = layer->offsetY;
+	auto tileWidth = layer->tileWidth;
+	auto tileHeight = layer->tileHeight;
+
+	auto tilesName = layer->tilesName;
+	sf::Color opacity = sf::Color(255, 255, 255, (sf::Uint8)(layer->opacity * 255));
+
+	sf::Texture* texture = nullptr;
+	if (_tilesTextures.find(tilesName) == _tilesTextures.end())
+		texture = _noTexture;
+	else if (_tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
+		texture = _noTexture;
+	else
+		texture = _tilesTextures[tilesName];
+
+	vertex->resize(height * width * 4);
+	for (size_t no = 0; no < _actionMap.data.size(); no++)
+	{
+		if (layer->data[no] == 0) continue; //if empty tile
+
+		vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+		vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+		vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+		vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+
+		sf::IntRect rect;
+		if (texture == _noTexture)
+			rect = TilesHelper::GetTileRect(sf::Vector2u(16, 16), 16, 16, 0);
+		else
+			rect = TilesHelper::GetTileRect(texture->getSize(), layer->tileWidth, layer->tileHeight, layer->data[no] - 1);
+
+		vertex->operator[]((no * 4) + 0).texCoords = sf::Vector2f((float)rect.left, (float)rect.top);
+		vertex->operator[]((no * 4) + 1).texCoords = sf::Vector2f((float)rect.left + (float)rect.width, (float)rect.top);
+		vertex->operator[]((no * 4) + 2).texCoords = sf::Vector2f((float)rect.left + (float)rect.width, (float)rect.top + (float)rect.height);
+		vertex->operator[]((no * 4) + 3).texCoords = sf::Vector2f((float)rect.left, (float)rect.top + (float)rect.height);
+
+		vertex->operator[]((no * 4) + 0).color = opacity;
+		vertex->operator[]((no * 4) + 1).color = opacity;
+		vertex->operator[]((no * 4) + 2).color = opacity;
+		vertex->operator[]((no * 4) + 3).color = opacity;
+
+		_actionMapTransform.setPosition(offsetX, offsetY);
+	}
+}
+
+template<typename T>
 void GameMap<T>::SetLayerVertexOpacity(unsigned int layerId, float opacity)
 {
 	auto layer = _layerVertices.find(layerId);
 	if (layer == _layerVertices.end()) return;
 
-	sf::Color color = sf::Color(255, 255, 255, opacity * 255);
+	sf::Color color = sf::Color(255, 255, 255, (sf::Uint8)(opacity * 255));
 	for (size_t no = 0; no < layer->second.getVertexCount(); no++)
 		layer->second[no].color = color;
 }
@@ -400,6 +495,7 @@ void GameMap<T>::SetLayerVertexOffset(unsigned int layerId, sf::Vector2f offset)
 
 	layer->second.setPosition(offset);
 }
+
 
 #pragma region TemplateImplementationSigned
 template void GameMap<int>::draw(sf::RenderTarget& target, sf::RenderStates states) const;

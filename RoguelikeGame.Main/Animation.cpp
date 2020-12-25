@@ -62,12 +62,12 @@ sf::IntRect sf::Animation::GetCurrentRect()
 void sf::Animation::UpdateVertices()
 {
 	_vertices[0].position = sf::Vector2f(0, 0);
-	_vertices[1].position = sf::Vector2f(_rectFrames[_currentFrame].width, 0);
-	_vertices[2].position = sf::Vector2f(_rectFrames[_currentFrame].width, _rectFrames[_currentFrame].height);
-	_vertices[3].position = sf::Vector2f(0, _rectFrames[_currentFrame].height);
+	_vertices[1].position = sf::Vector2f((float)_rectFrames[_currentFrame].width, 0);
+	_vertices[2].position = sf::Vector2f((float)_rectFrames[_currentFrame].width, (float)_rectFrames[_currentFrame].height);
+	_vertices[3].position = sf::Vector2f(0, (float)_rectFrames[_currentFrame].height);
 
-	int x = 0;
-	int y = 0;
+	float x = 0;
+	float y = 0;
 
 	if (_texture == nullptr)
 	{
@@ -81,15 +81,15 @@ void sf::Animation::UpdateVertices()
 	}
 	else
 	{
-		x = _rectFrames[_currentFrame].left;
-		y = _rectFrames[_currentFrame].top;
+		x = (float)_rectFrames[_currentFrame].left;
+		y = (float)_rectFrames[_currentFrame].top;
 	}
 
 
 	_vertices[0].texCoords = sf::Vector2f(x, y);
-	_vertices[1].texCoords = sf::Vector2f(x + _rectFrames[_currentFrame].width, y);
-	_vertices[2].texCoords = sf::Vector2f(x + _rectFrames[_currentFrame].width, y + _rectFrames[_currentFrame].height);
-	_vertices[3].texCoords = sf::Vector2f(x, y + _rectFrames[_currentFrame].height);
+	_vertices[1].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y);
+	_vertices[2].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y + (float)_rectFrames[_currentFrame].height);
+	_vertices[3].texCoords = sf::Vector2f(x, y + (float)_rectFrames[_currentFrame].height);
 
 	_vertices[0].color = _frameColor[_currentFrame];
 	_vertices[1].color = _frameColor[_currentFrame];
@@ -179,16 +179,16 @@ float sf::Animation::GetAnimationSpeed()
 sf::FloatRect sf::Animation::GetGlobalBounds()
 {
 	sf::FloatRect output;
-	output.height = _rectFrames[_currentFrame].height;
-	output.width = _rectFrames[_currentFrame].width;
-	output.left = _rectFrames[_currentFrame].left;
-	output.top = _rectFrames[_currentFrame].top;
+	output.height = (float)_rectFrames[_currentFrame].height;
+	output.width = (float)_rectFrames[_currentFrame].width;
+	output.left = (float)_rectFrames[_currentFrame].left;
+	output.top = (float)_rectFrames[_currentFrame].top;
 	return getTransform().transformRect(output);
 }
 
 sf::FloatRect sf::Animation::GetLocalBounds()
 {
-	return sf::FloatRect(0, 0, _rectFrames[_currentFrame].width, _rectFrames[_currentFrame].height);
+	return sf::FloatRect(0, 0, (float)_rectFrames[_currentFrame].width, (float)_rectFrames[_currentFrame].height);
 }
 
 

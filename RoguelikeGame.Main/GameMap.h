@@ -30,6 +30,9 @@ private:
 	std::unordered_map<unsigned int, sf::VertexArray> _layerVertices;
 	std::unordered_map<unsigned int, sf::Transformable> _layerTransform;
 
+	sf::VertexArray _actionMapVertices;
+	sf::Transformable _actionMapTransform;
+
 	sf::Vector2u _mapSize;
 
 	Logger* _logger;
@@ -39,6 +42,8 @@ private:
 
 	void SetLayerVertexOpacity(unsigned int layerId, float opacity);
 	void SetLayerVertexOffset(unsigned int layerId, sf::Vector2f offset);
+
+	void PrepareActionMapLayer();
 public:
 
 	GameMap();

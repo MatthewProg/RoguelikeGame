@@ -103,7 +103,7 @@ namespace sf
 	void AnimationContainer::ApplySetColor(const Color& color)
 	{
 		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
-			for (auto i = 0; i < iter->second.GetNoOfFrames(); i++)
+			for (size_t i = 0; i < iter->second.GetNoOfFrames(); i++)
 				iter->second.SetFrameColor(i, color);
 
 		_noTextureVertex[0].color = color;

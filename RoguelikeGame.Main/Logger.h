@@ -13,10 +13,10 @@ struct LogOptions
 	enum class LogOutput { CONSOLE, FILE, BOTH };
 
 	std::string loggingPattern;
-	LogOutput outputStream;
+	LogOutput outputStream = LogOutput::CONSOLE;
 
 	std::string filePath;
-	bool fileAppend;
+	bool fileAppend = false;
 	std::map<std::string, bool> ignoredTypes;
 };
 

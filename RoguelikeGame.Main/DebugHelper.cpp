@@ -30,7 +30,7 @@ void DebugHelper::Status(bool tick)
 	auto fpsDur = std::chrono::duration_cast<std::chrono::nanoseconds>(now - _fpsTime).count();
 	auto measureDur = std::chrono::duration_cast<std::chrono::milliseconds>(now - _measureTime).count();
 
-	unsigned short fps = 1000000000 / fpsDur;
+	unsigned short fps = (uint16_t)(1000000000 / fpsDur);
 	if (fps < _minFPS) _minFPS = fps;
 	if (fps > _maxFPS) _maxFPS = fps;
 	
@@ -39,8 +39,8 @@ void DebugHelper::Status(bool tick)
 
 	if (measureDur > _measureEvery.count())
 	{
-		float avgFPS = _fpsCounter / (measureDur / 1000.00);
-		float avgTPS = _tickCounter / (measureDur / 1000.00);
+		float avgFPS = (float)(_fpsCounter / ((float)measureDur / 1000.00));
+		float avgTPS = (float)(_tickCounter / ((float)measureDur / 1000.00));
 		std::stringstream ss;
 		ss << std::fixed << std::setprecision(2) << "FPS: avg(" << avgFPS << ")  min(" << _minFPS <<  ")  max(" << _maxFPS << ")  TPS: " << avgTPS;
 		_logger->Log(Logger::LogType::DEBUG, ss.str());
