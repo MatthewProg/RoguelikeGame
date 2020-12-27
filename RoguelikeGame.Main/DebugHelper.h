@@ -34,5 +34,7 @@ public:
 
 	std::chrono::milliseconds GetMeasureEvery();
 	bool GetDebug();
+
+	void ToggleFPSInfo();
 };
 

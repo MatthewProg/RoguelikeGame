@@ -3,6 +3,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
+#include "KeyboardEventHandler.h"
 #include "DebugHelper.h"
 #include "ViewHelper.h"
 #include "GameMap.h"
@@ -14,15 +15,15 @@ private:
 	Logger* _logger;
 	DebugHelper _debug;
 
-	bool _drawHitboxes;
-
 	double _delta = 1.000000000;
 	double _tickCounter = 0.0;
 	unsigned int _gameSpeed = 20;
 
 	sf::RenderWindow _window;
-	sf::Event _event;
 	sf::View _camera;
+
+	sf::Event _event;
+	KeyboardEventHandler<Game> _keyboardHandler;
 
 	TexturesManager _textures;
 	GameMap<unsigned char> _gameMap;
@@ -35,6 +36,14 @@ private:
 	bool Tick();
 
 	void Close();
+
+#pragma region Events
+	void ToggleGridVisibility();
+	void ToggleActionMapVisibility();
+	void ToggleHitboxVisibility();
+	void ToggleConsoleInfo();
+#pragma endregion
+
 public:
 	Game(sf::VideoMode vmode, std::string title);
 	~Game();

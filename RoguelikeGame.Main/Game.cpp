@@ -1,7 +1,7 @@
 #include "Game.h"
 
 
-Game::Game(sf::VideoMode vmode, std::string title)
+Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 {
 	_logger = Logger::GetInstance();
 	_camera.setCenter(0, 0);
@@ -13,11 +13,7 @@ Game::Game(sf::VideoMode vmode, std::string title)
 	_tickCounter = 0.0;
 	_gameSpeed = 60;
 	_lastFrameTime = std::chrono::steady_clock::now();
-	_drawHitboxes = false;
 	_event = sf::Event();
-#ifndef NDEBUG
-	_debug.SetDebug(true);
-#endif
 }
 
 void Game::SetDeltaAndTick()
@@ -72,11 +68,7 @@ void Game::Start()
 
 	_gameMap.AutoSetTilesTextures(&_textures);
 
-	_gameMap.SetActionMapVisibility(true);
-	_gameMap.SetActionMapOpacity(0.25);
-
-	_gameMap.PrepareFrame();
-		
+	_gameMap.PrepareFrame();	
 
 
 	//Player
@@ -107,9 +99,19 @@ void Game::Start()
 	_player.SetPlayerAnimations(playerAnimations);
 	_player.SetPlayerState("idle");
 	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
+	_player.SetPlayerPosition(sf::Vector2f(496, 272));
 
 	//Debug
-	_drawHitboxes = true;
+	_gameMap.SetActionMapOpacity(0.25);
+
+	sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true };
+	sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
+	sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
+	sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
+	_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
+	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
+	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
+	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
 }
 
 void Game::EventUpdate()
@@ -120,6 +122,7 @@ void Game::EventUpdate()
 			Close();	
 		if (_event.type == sf::Event::KeyPressed)
 		{
+			_keyboardHandler.Rise(_event.key);
 			_player.SetPlayerState("move");
 			_player.MoveBy(10, 0, (float)_delta);
 		}
@@ -147,8 +150,6 @@ void Game::Draw()
 {
 	_window.draw(_gameMap);
 	_window.draw(_player);
-	if (_drawHitboxes)
-		_window.draw(_player.GetHitboxRect());
 }
 
 void Game::Display()
@@ -160,3 +161,27 @@ bool Game::isRunning()
 {
 	return _window.isOpen();
 }
+
+#pragma region Events
+void Game::ToggleGridVisibility()
+{
+	_gameMap.ToggleGridVisibility();
+}
+
+void Game::ToggleActionMapVisibility()
+{
+	_gameMap.ToggleActionMapVisibility();
+}
+
+void Game::ToggleHitboxVisibility()
+{
+	_player.ToggleHitboxVisibility();
+}
+
+void Game::ToggleConsoleInfo()
+{
+	_debug.ToggleFPSInfo();
+}
+
+#pragma endregion
+

@@ -3,6 +3,8 @@
 #include "AnimationContainer.h"
 #include "Collision.h"
 
+#include "Logger.h"
+
 class Player : public sf::Drawable, public sf::Collision
 {
 private:
@@ -14,10 +16,14 @@ private:
 	unsigned short _attackCooldown;
 	unsigned int _cooldownCounter;
 
+	bool _showHitbox;
+
 	sf::FloatRect _playerHitboxOffset;
 	sf::RectangleShape _hitboxRectangle;
 
 	sf::Vector2f _playerPosition;
+
+	Logger* _logger;
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -41,6 +47,7 @@ public:
 	sf::Color GetHitboxColor();
 	float GetHitboxOutlineThickness();
 	sf::Color GetHitboxOutlineColor();
+	bool GetHitboxVisibility();
 
 	//Player setters
 	void SetPlayerPosition(const sf::Vector2f& position);
@@ -53,7 +60,10 @@ public:
 	void SetHitboxColor(const sf::Color& color);
 	void SetHitboxOutlineThickness(float thickness);
 	void SetHitboxOutlineColor(const sf::Color& color);
+	void SetHitboxVisibility(bool visible);
 	void MoveBy(float x, float y, float deltaTime);
+
+	void ToggleHitboxVisibility();
 
 	// Inherited via Collision
 	virtual sf::FloatRect GetCollisionBox() override;

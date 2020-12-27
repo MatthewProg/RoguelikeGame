@@ -70,3 +70,10 @@ bool DebugHelper::GetDebug()
 {
 	return _debug;
 }
+
+void DebugHelper::ToggleFPSInfo()
+{
+	std::string status = (!_debug) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Show debug info: " + status);
+	SetDebug(!_debug);
+}

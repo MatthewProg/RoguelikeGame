@@ -31,6 +31,9 @@
     <Filter Include="Managers">
       <UniqueIdentifier>{9c653128-d319-4158-a4d0-12f035f59a8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Handlers">
+      <UniqueIdentifier>{48f89be3-3f1c-4b50-9ac4-94a4c997dfe1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="DebugHelper.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardEventHandler.h">
+      <Filter>Handlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,10 @@ private:
 	sf::VertexArray _actionMapVertices;
 	sf::Transformable _actionMapTransform;
 
+	sf::VertexArray _actionMapGrid;
+	sf::Color _actionMapGridColor;
+	bool _showGrid;
+
 	sf::Vector2u _mapSize;
 
 	Logger* _logger;
@@ -44,11 +48,11 @@ private:
 	void SetLayerVertexOffset(unsigned int layerId, sf::Vector2f offset);
 
 	void PrepareActionMapLayer();
+	void PrepareActionMapGrid();
 public:
 
 	GameMap();
 	~GameMap();
-
 
 	bool LoadFromFile(std::string path);
 
@@ -69,6 +73,8 @@ public:
 	sf::Vector2f GetLayerOffset(unsigned int layerId);
 	std::string GetLayerTilesName(unsigned int layerId);
 	MapLayerModel<unsigned char>* GetActionMap();
+	sf::Color GetActionMapGridColor();
+	bool GetActionMapGridVisibility();
 	
 	//Map setters
 	void SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -83,5 +89,10 @@ public:
 	void SetActionMapOpacity(float opacity);
 	void SetActionMapOffset(sf::Vector2f offset);
 	void SetActionMapTilesName(std::string tilesName);
+	void SetActionMapGridColor(sf::Color col);
+	void SetActionMapGridVisibility(bool visible);
+
+	void ToggleGridVisibility();
+	void ToggleActionMapVisibility();
 };
 

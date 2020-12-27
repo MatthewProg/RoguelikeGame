@@ -10,6 +10,8 @@ GameMap<T>::GameMap()
 	_actionMap.tilesName = "special";
 	_logger = Logger::GetInstance();
 	_noTexture = Utilities::GetInstance()->NoTexture16x16();
+	_showGrid = false;
+	_actionMapGridColor = sf::Color(0, 0, 0, 255);
 }
 
 template<typename T>
@@ -187,6 +189,18 @@ MapLayerModel<unsigned char>* GameMap<T>::GetActionMap()
 }
 
 template<typename T>
+sf::Color GameMap<T>::GetActionMapGridColor()
+{
+	return _actionMapGridColor;
+}
+
+template<typename T>
+bool GameMap<T>::GetActionMapGridVisibility()
+{
+	return _showGrid;
+}
+
+template<typename T>
 void GameMap<T>::SetLayerVisibility(unsigned int layerId, bool visibility)
 {
 	if (_map.find(layerId) != _map.end())
@@ -304,6 +318,37 @@ void GameMap<T>::SetActionMapTilesName(std::string tilesName)
 }
 
 template<typename T>
+void GameMap<T>::SetActionMapGridColor(sf::Color col)
+{
+	_actionMapGridColor = col;
+	for (size_t i = 0; i < _actionMapGrid.getVertexCount(); i++)
+		_actionMapGrid[i].color = col;
+}
+
+template<typename T>
+void GameMap<T>::SetActionMapGridVisibility(bool visible)
+{
+	_showGrid = visible;
+	if (_showGrid) PrepareActionMapGrid();
+}
+
+template<typename T>
+void GameMap<T>::ToggleGridVisibility()
+{
+	std::string status = (!_showGrid) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Show grid: " + status);
+	SetActionMapGridVisibility(!_showGrid);
+}
+
+template<typename T>
+void GameMap<T>::ToggleActionMapVisibility()
+{
+	std::string status = (!_actionMap.visible) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Show action map: " + status);
+	SetActionMapVisibility(!_actionMap.visible);
+}
+
+template<typename T>
 void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (auto id : _layersIds)
@@ -320,7 +365,7 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		else
 			states.texture = texture->second;
 
-		states.transform *= _layerTransform.find(id)->second.getTransform();
+		states.transform = _layerTransform.find(id)->second.getTransform();
 
 		target.draw(_layerVertices.find(id)->second, states);
 	}
@@ -336,8 +381,16 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		else
 			states.texture = texture->second;
 
-		states.transform *= _actionMapTransform.getTransform();
+		states.transform = _actionMapTransform.getTransform();
 		target.draw(_actionMapVertices, states);
+	}
+
+	//Grid
+	if (_showGrid)
+	{
+		states.transform = _actionMapTransform.getTransform();
+		states.texture = nullptr;
+		target.draw(_actionMapGrid, states);
 	}
 }
 
@@ -409,9 +462,8 @@ void GameMap<T>::PrepareFrame()
 			vertex->operator[]((no * 4) + 1).color = opacity;
 			vertex->operator[]((no * 4) + 2).color = opacity;
 			vertex->operator[]((no * 4) + 3).color = opacity;
-
-			_layerTransform[id].setPosition(offsetX, offsetY);
 		}
+		_layerTransform[id].setPosition(offsetX, offsetY);
 	}
 }
 
@@ -425,7 +477,7 @@ void GameMap<T>::PrepareActionMapLayer()
 	if (layer->visible == false)
 	{
 		vertex->resize(0);
-		return;;
+		return;
 	}
 
 	auto height = layer->height;
@@ -471,8 +523,46 @@ void GameMap<T>::PrepareActionMapLayer()
 		vertex->operator[]((no * 4) + 1).color = opacity;
 		vertex->operator[]((no * 4) + 2).color = opacity;
 		vertex->operator[]((no * 4) + 3).color = opacity;
+	}
+	_actionMapTransform.setPosition(layer->offsetX, layer->offsetY);
+}
 
-		_actionMapTransform.setPosition(offsetX, offsetY);
+template<typename T>
+void GameMap<T>::PrepareActionMapGrid()
+{
+	_actionMapTransform.setPosition(_actionMap.offsetX, _actionMap.offsetY);
+
+	_actionMapGrid.setPrimitiveType(sf::Lines);
+	_actionMapGrid.resize(_actionMap.height * _actionMap.width * 8);
+
+	auto height = _actionMap.height;
+	auto width = _actionMap.width;
+	auto tileWidth = _actionMap.tileWidth;
+	auto tileHeight = _actionMap.tileHeight;
+	for (size_t no = 0; no < _actionMap.data.size(); no++)
+	{
+		auto pos1 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+		auto pos2 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
+		auto pos3 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+		auto pos4 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+
+		_actionMapGrid[(no * 8) + 0].position = pos1;
+		_actionMapGrid[(no * 8) + 1].position = pos2;
+		_actionMapGrid[(no * 8) + 2].position = pos2;
+		_actionMapGrid[(no * 8) + 3].position = pos3;
+		_actionMapGrid[(no * 8) + 4].position = pos3;
+		_actionMapGrid[(no * 8) + 5].position = pos4;
+		_actionMapGrid[(no * 8) + 6].position = pos4;
+		_actionMapGrid[(no * 8) + 7].position = pos1;
+
+		_actionMapGrid[(no * 8) + 0].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 1].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 2].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 3].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 4].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 5].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 6].color = _actionMapGridColor;
+		_actionMapGrid[(no * 8) + 7].color = _actionMapGridColor;
 	}
 }
 
@@ -516,6 +606,8 @@ template sf::Vector2u GameMap<int>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<int>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<int>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<int>::GetActionMap();
+template sf::Color GameMap<int>::GetActionMapGridColor();
+template bool GameMap<int>::GetActionMapGridVisibility();
 template void GameMap<int>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<int>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<int>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -528,6 +620,10 @@ template void GameMap<int>::SetActionMapVisibility(bool visibility);
 template void GameMap<int>::SetActionMapOpacity(float opacity);
 template void GameMap<int>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<int>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<int>::SetActionMapGridColor(sf::Color col);
+template void GameMap<int>::SetActionMapGridVisibility(bool visible);
+template void GameMap<int>::ToggleGridVisibility();
+template void GameMap<int>::ToggleActionMapVisibility();
 
 template void GameMap<char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<char>::GameMap();
@@ -547,6 +643,8 @@ template sf::Vector2u GameMap<char>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<char>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<char>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<char>::GetActionMap();
+template sf::Color GameMap<char>::GetActionMapGridColor();
+template bool GameMap<char>::GetActionMapGridVisibility();
 template void GameMap<char>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<char>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<char>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -559,6 +657,10 @@ template void GameMap<char>::SetActionMapVisibility(bool visibility);
 template void GameMap<char>::SetActionMapOpacity(float opacity);
 template void GameMap<char>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<char>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<char>::SetActionMapGridColor(sf::Color col);
+template void GameMap<char>::SetActionMapGridVisibility(bool visible);
+template void GameMap<char>::ToggleGridVisibility();
+template void GameMap<char>::ToggleActionMapVisibility();
 
 template void GameMap<short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<short>::GameMap();
@@ -578,6 +680,8 @@ template sf::Vector2u GameMap<short>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<short>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<short>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<short>::GetActionMap();
+template sf::Color GameMap<short>::GetActionMapGridColor();
+template bool GameMap<short>::GetActionMapGridVisibility();
 template void GameMap<short>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<short>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<short>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -590,6 +694,10 @@ template void GameMap<short>::SetActionMapVisibility(bool visibility);
 template void GameMap<short>::SetActionMapOpacity(float opacity);
 template void GameMap<short>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<short>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<short>::SetActionMapGridColor(sf::Color col);
+template void GameMap<short>::SetActionMapGridVisibility(bool visible);
+template void GameMap<short>::ToggleGridVisibility();
+template void GameMap<short>::ToggleActionMapVisibility();
 #pragma endregion
 
 #pragma region TemplateImplementationUnsigned
@@ -611,6 +719,8 @@ template sf::Vector2u GameMap<unsigned int>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<unsigned int>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned int>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned int>::GetActionMap();
+template sf::Color GameMap<unsigned int>::GetActionMapGridColor();
+template bool GameMap<unsigned int>::GetActionMapGridVisibility();
 template void GameMap<unsigned int>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<unsigned int>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<unsigned int>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -623,6 +733,10 @@ template void GameMap<unsigned int>::SetActionMapVisibility(bool visibility);
 template void GameMap<unsigned int>::SetActionMapOpacity(float opacity);
 template void GameMap<unsigned int>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<unsigned int>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<unsigned int>::SetActionMapGridColor(sf::Color col);
+template void GameMap<unsigned int>::SetActionMapGridVisibility(bool visible);
+template void GameMap<unsigned int>::ToggleGridVisibility();
+template void GameMap<unsigned int>::ToggleActionMapVisibility();
 
 template void GameMap<unsigned char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned char>::GameMap();
@@ -642,6 +756,8 @@ template sf::Vector2u GameMap<unsigned char>::GetLayerSize(unsigned int layerId)
 template sf::Vector2f GameMap<unsigned char>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned char>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned char>::GetActionMap();
+template sf::Color GameMap<unsigned char>::GetActionMapGridColor();
+template bool GameMap<unsigned char>::GetActionMapGridVisibility();
 template void GameMap<unsigned char>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<unsigned char>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<unsigned char>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -654,6 +770,10 @@ template void GameMap<unsigned char>::SetActionMapVisibility(bool visibility);
 template void GameMap<unsigned char>::SetActionMapOpacity(float opacity);
 template void GameMap<unsigned char>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<unsigned char>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<unsigned char>::SetActionMapGridColor(sf::Color col);
+template void GameMap<unsigned char>::SetActionMapGridVisibility(bool visible);
+template void GameMap<unsigned char>::ToggleGridVisibility();
+template void GameMap<unsigned char>::ToggleActionMapVisibility();
 
 template void GameMap<unsigned short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned short>::GameMap();
@@ -673,6 +793,8 @@ template sf::Vector2u GameMap<unsigned short>::GetLayerSize(unsigned int layerId
 template sf::Vector2f GameMap<unsigned short>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned short>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned short>::GetActionMap();
+template sf::Color GameMap<unsigned short>::GetActionMapGridColor();
+template bool GameMap<unsigned short>::GetActionMapGridVisibility();
 template void GameMap<unsigned short>::SetLayerVisibility(unsigned int layerId, bool visibility);
 template void GameMap<unsigned short>::SetLayerOpacity(unsigned int layerId, float opacity);
 template void GameMap<unsigned short>::SetLayerOffset(unsigned int layerId, sf::Vector2f offset);
@@ -685,4 +807,8 @@ template void GameMap<unsigned short>::SetActionMapVisibility(bool visibility);
 template void GameMap<unsigned short>::SetActionMapOpacity(float opacity);
 template void GameMap<unsigned short>::SetActionMapOffset(sf::Vector2f offset);
 template void GameMap<unsigned short>::SetActionMapTilesName(std::string tilesName);
+template void GameMap<unsigned short>::SetActionMapGridColor(sf::Color col);
+template void GameMap<unsigned short>::SetActionMapGridVisibility(bool visible);
+template void GameMap<unsigned short>::ToggleGridVisibility();
+template void GameMap<unsigned short>::ToggleActionMapVisibility();
 #pragma endregion

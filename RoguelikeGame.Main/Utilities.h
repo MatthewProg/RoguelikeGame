@@ -3,6 +3,7 @@
 #include <vector>
 #include "SFML/Graphics/Image.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/Window/Event.hpp"
 
 class Utilities
 {
@@ -19,5 +20,35 @@ public:
 	void operator=(const Utilities&) = delete;
 
 	static Utilities* GetInstance();
+};
+
+struct EventKeyMapKey : public sf::Event::KeyEvent
+{	
+	bool operator== (const EventKeyMapKey& other) const
+	{
+		return (alt == other.alt &&
+				code == other.code &&
+				control == other.control &&
+				shift == other.shift &&
+				system == other.system);
+	}
+};
+
+struct EventKeyMapKeyHasher
+{
+	std::size_t operator()(const EventKeyMapKey& k) const
+	{
+		using std::size_t;
+		using std::hash;
+		using std::string;
+
+		std::size_t output = 17;
+		output = output * 31 + hash<bool>()(k.alt);
+		output = output * 31 + hash<bool>()(k.control);
+		output = output * 31 + hash<bool>()(k.shift);
+		output = output * 31 + hash<bool>()(k.system);
+		output = output * 31 + hash<int>()(k.code);
+		return output;
+	}
 };
 

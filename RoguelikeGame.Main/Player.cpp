@@ -2,6 +2,7 @@
 
 Player::Player()
 {
+	_logger = Logger::GetInstance();
 	_playerState = "";
 	_playerPosition = sf::Vector2f(0, 0);
 	_playerLives = 3;
@@ -14,6 +15,7 @@ Player::Player()
 	_hitboxRectangle.setOutlineColor(sf::Color(64, 255, 64, 160));
 	_hitboxRectangle.setPosition(_playerHitboxOffset.left, _playerHitboxOffset.top);
 	_hitboxRectangle.setSize(sf::Vector2f(_playerHitboxOffset.width, _playerHitboxOffset.height));
+	_showHitbox = false;
 }
 
 Player::~Player()
@@ -70,6 +72,11 @@ float Player::GetHitboxOutlineThickness()
 sf::Color Player::GetHitboxOutlineColor()
 {
 	return _hitboxRectangle.getOutlineColor();
+}
+
+bool Player::GetHitboxVisibility()
+{
+	return _showHitbox;
 }
 
 bool Player::CanAttack()
@@ -137,9 +144,21 @@ void Player::SetHitboxOutlineColor(const sf::Color& color)
 	_hitboxRectangle.setOutlineColor(color);
 }
 
+void Player::SetHitboxVisibility(bool visible)
+{
+	_showHitbox = visible;
+}
+
 void Player::MoveBy(float x, float y, float deltaTime)
 {
 	SetPlayerPosition(_playerPosition.x + (x * deltaTime * _playerSpeed), _playerPosition.y + (y * deltaTime * _playerSpeed));
+}
+
+void Player::ToggleHitboxVisibility()
+{
+	std::string status = (!GetHitboxVisibility()) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Show player hitbox: " + status);
+	SetHitboxVisibility(!GetHitboxVisibility());
 }
 
 sf::FloatRect Player::GetCollisionBox()
@@ -169,4 +188,6 @@ void Player::SetCollisionBoxOffset(sf::FloatRect rect)
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_playerAnimation);
+	if(_showHitbox)
+		target.draw(_hitboxRectangle);
 }
