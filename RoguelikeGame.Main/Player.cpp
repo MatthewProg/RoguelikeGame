@@ -11,7 +11,7 @@ Player::Player()
 	_cooldownCounter = 0;
 	_playerHitboxOffset = sf::FloatRect(0, 0, 16, 16);
 	_hitboxRectangle.setFillColor(sf::Color(64, 255, 64, 64));
-	_hitboxRectangle.setOutlineThickness(1);
+	_hitboxRectangle.setOutlineThickness(-1);
 	_hitboxRectangle.setOutlineColor(sf::Color(64, 255, 64, 160));
 	_hitboxRectangle.setPosition(_playerHitboxOffset.left, _playerHitboxOffset.top);
 	_hitboxRectangle.setSize(sf::Vector2f(_playerHitboxOffset.width, _playerHitboxOffset.height));
@@ -79,6 +79,24 @@ bool Player::GetHitboxVisibility()
 	return _showHitbox;
 }
 
+sf::FloatRect Player::GetNextHitboxPosition(float deltaTime)
+{
+	float moveX = 0;
+	float moveY = 0;
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		moveX += (2 * deltaTime * _playerSpeed);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		moveX -= (2 * deltaTime * _playerSpeed);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		moveY += (2 * deltaTime * _playerSpeed);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		moveY -= (2 * deltaTime * _playerSpeed);
+
+	auto rect = _hitboxRectangle.getGlobalBounds();
+	return sf::FloatRect(rect.left + moveX, rect.top + moveY, rect.width, rect.height);
+}
+
 bool Player::CanAttack()
 {
 	return !(_cooldownCounter < _attackCooldown);
@@ -87,6 +105,29 @@ bool Player::CanAttack()
 void Player::ResetCooldown()
 {
 	_cooldownCounter = 0;
+}
+
+void Player::UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		SetPlayerState("move");
+		auto nextPos = GetNextHitboxPosition(delta);
+		auto currPos = GetCollisionBox();
+		auto hitbox = GetCollisionBoxOffset();
+		if (currPos.left > nextPos.left)
+			_playerAnimation.ApplySetHorizontalFlip(true);
+		else if(currPos.left < nextPos.left)
+			_playerAnimation.ApplySetHorizontalFlip(false);
+
+		auto pos = CollisionHelper::GetLimitPosition(currPos, nextPos, tiles, blockId);
+		SetPlayerPosition(sf::Vector2f(pos.x - hitbox.left, pos.y - hitbox.top));
+	}
+	else
+		SetPlayerState("idle");
 }
 
 void Player::SetPlayerPosition(const sf::Vector2f& position)

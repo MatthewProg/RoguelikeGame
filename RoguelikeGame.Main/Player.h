@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AnimationContainer.h"
+#include "CollisionHelper.h"
+#include "MapLayerModel.h"
 #include "Collision.h"
 
 #include "Logger.h"
@@ -36,6 +38,7 @@ public:
 	void Tick(bool tick);
 	bool CanAttack();
 	void ResetCooldown();
+	void UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId);
 
 	//Player getters
 	sf::AnimationContainer* GetPlayerAnimations();
@@ -48,6 +51,7 @@ public:
 	float GetHitboxOutlineThickness();
 	sf::Color GetHitboxOutlineColor();
 	bool GetHitboxVisibility();
+	sf::FloatRect GetNextHitboxPosition(float deltaTime);
 
 	//Player setters
 	void SetPlayerPosition(const sf::Vector2f& position);

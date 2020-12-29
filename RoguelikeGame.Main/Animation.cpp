@@ -12,6 +12,9 @@ sf::Animation::Animation()
 	_noTexture = Utilities::GetInstance()->NoTexture16x16();
 	_texture = nullptr;
 
+	_switchLeftRight = false;
+	_switchUpDown = false;
+
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(4);
 }
@@ -32,6 +35,16 @@ void sf::Animation::SetFrameColor(unsigned int frame, sf::Color color)
 	_frameColor[frame] = color;
 }
 
+void sf::Animation::SetHorizontalFlip(bool flip)
+{
+	_switchLeftRight = flip;
+}
+
+void sf::Animation::SetVerticalFlip(bool flip)
+{
+	_switchUpDown = flip;
+}
+
 const sf::Texture* sf::Animation::GetTexture()
 {
 	return _texture;
@@ -42,6 +55,16 @@ sf::Color sf::Animation::GetFrameColor(unsigned int frame)
 	if(frame >= _frameColor.size())
 		return sf::Color();
 	return _frameColor[frame];
+}
+
+bool sf::Animation::GetHorizontalFlip()
+{
+	return _switchLeftRight;
+}
+
+bool sf::Animation::GetVerticalFlip()
+{
+	return _switchUpDown;
 }
 
 bool sf::Animation::IsRepeated()
@@ -90,6 +113,27 @@ void sf::Animation::UpdateVertices()
 	_vertices[1].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y);
 	_vertices[2].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y + (float)_rectFrames[_currentFrame].height);
 	_vertices[3].texCoords = sf::Vector2f(x, y + (float)_rectFrames[_currentFrame].height);
+
+	if (_switchLeftRight) //horizontal
+	{
+		auto tmp = _vertices[0].texCoords;
+		_vertices[0].texCoords = _vertices[1].texCoords;
+		_vertices[1].texCoords = tmp;
+
+		tmp = _vertices[2].texCoords;
+		_vertices[2].texCoords = _vertices[3].texCoords;
+		_vertices[3].texCoords = tmp;
+	}
+	if (_switchUpDown) //vertical
+	{
+		auto tmp = _vertices[0].texCoords;
+		_vertices[0].texCoords = _vertices[3].texCoords;
+		_vertices[3].texCoords = tmp;
+
+		tmp = _vertices[1].texCoords;
+		_vertices[1].texCoords = _vertices[2].texCoords;
+		_vertices[2].texCoords = tmp;
+	}
 
 	_vertices[0].color = _frameColor[_currentFrame];
 	_vertices[1].color = _frameColor[_currentFrame];
@@ -154,6 +198,16 @@ void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 	for (size_t i = 0; i < _rectFrames.size(); i++)
 		_frameColor.push_back(sf::Color(255, 255, 255, 255));
 	NextFrame();
+}
+
+void sf::Animation::FlipHorizontally()
+{
+	_switchLeftRight = !_switchLeftRight;
+}
+
+void sf::Animation::FlipVertically()
+{
+	_switchUpDown = !_switchUpDown;
 }
 
 void sf::Animation::SetChangeFrameEvery(unsigned int ticks)

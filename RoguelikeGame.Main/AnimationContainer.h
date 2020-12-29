@@ -50,5 +50,9 @@ namespace sf
 		void ApplySetRotation(float angle);
 		void ApplySetScale(const Vector2f& factors);
 		void ApplySetScale(float factorX, float factorY);
+		void ApplyFlipHorizontally();
+		void ApplyFlipVertically();
+		void ApplySetHorizontalFlip(bool flip);
+		void ApplySetVerticalFlip(bool flip);
 	};
 }

@@ -4,6 +4,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 
 #include "KeyboardEventHandler.h"
+#include "CollisionHelper.h"
 #include "DebugHelper.h"
 #include "ViewHelper.h"
 #include "GameMap.h"

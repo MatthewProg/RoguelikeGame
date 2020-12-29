@@ -4,11 +4,11 @@
 Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 {
 	_logger = Logger::GetInstance();
-	_camera.setCenter(0, 0);
+	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
-	//_window.setFramerateLimit(144);
-	//_window.setView(_camera);
+	_window.setFramerateLimit(144);
+	_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
 	_gameSpeed = 60;
@@ -121,13 +121,7 @@ void Game::EventUpdate()
 		if (_event.type == sf::Event::Closed)
 			Close();	
 		if (_event.type == sf::Event::KeyPressed)
-		{
 			_keyboardHandler.Rise(_event.key);
-			_player.SetPlayerState("move");
-			_player.MoveBy(10, 0, (float)_delta);
-		}
-		if(_event.type == sf::Event::KeyReleased)
-			_player.SetPlayerState("idle");
 	}
 }
 
@@ -135,10 +129,14 @@ void Game::Update()
 {
 	SetDeltaAndTick();
 	_debug.Status(Game::Tick());
+
+	_player.UpdateMovement((float)_delta, _gameMap.GetActionMap(), 1);
 	_player.Tick(Game::Tick());
+
 	_gameMap.Update(Game::Tick());
-	//_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
-	//_window.setView(_camera);
+
+	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
+	_window.setView(_camera);
 }
 
 void Game::Clear()

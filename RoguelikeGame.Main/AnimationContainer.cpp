@@ -168,6 +168,30 @@ namespace sf
 		_noTextureTransform.setScale(factorX, factorY);
 	}
 
+	void AnimationContainer::ApplyFlipHorizontally()
+	{
+		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
+			iter->second.FlipHorizontally();
+	}
+
+	void AnimationContainer::ApplyFlipVertically()
+	{
+		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
+			iter->second.FlipVertically();
+	}
+
+	void AnimationContainer::ApplySetHorizontalFlip(bool flip)
+	{
+		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
+			iter->second.SetHorizontalFlip(flip);
+	}
+
+	void AnimationContainer::ApplySetVerticalFlip(bool flip)
+	{
+		for (auto iter = _animationStates.begin(); iter != _animationStates.end(); ++iter)
+			iter->second.SetVerticalFlip(flip);
+	}
+
 	sf::Animation* AnimationContainer::GetStateAnimation(std::string state)
 	{
 		if (_animationStates.size() > 0 && _animationStates.count(state))

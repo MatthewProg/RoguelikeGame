@@ -20,6 +20,9 @@ namespace sf
 		unsigned int _currentTick;
 		unsigned int _currentFrame;
 
+		bool _switchLeftRight;
+		bool _switchUpDown;
+
 		std::vector<sf::IntRect> _rectFrames;
 
 		Texture* _texture;
@@ -47,11 +50,16 @@ namespace sf
 		size_t GetNoOfFrames();
 		void SetFrames(std::vector<sf::IntRect> frames);
 
+		void FlipHorizontally();
+		void FlipVertically();
+
 		//Animation setters
 		void SetChangeFrameEvery(unsigned int ticks);
 		void SetAnimationSpeed(float speed);
 		void SetTexture(sf::Texture* texture);
 		void SetFrameColor(unsigned int frame, sf::Color color);
+		void SetHorizontalFlip(bool flip);
+		void SetVerticalFlip(bool flip);
 
 		//Animation getters
 		unsigned int GetChangeFrameEvery();
@@ -59,6 +67,8 @@ namespace sf
 		sf::IntRect GetCurrentRect();
 		const sf::Texture* GetTexture();
 		sf::Color GetFrameColor(unsigned int frame);
+		bool GetHorizontalFlip();
+		bool GetVerticalFlip();
 
 		//Texture getteres
 		bool IsRepeated();
