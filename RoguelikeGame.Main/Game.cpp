@@ -7,7 +7,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
-	_window.setFramerateLimit(144);
+	//_window.setFramerateLimit(144);
 	_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
@@ -59,16 +59,19 @@ void Game::Start()
 	_textures.ApplySmooth(false);
 	_textures.ApplyRepeat(false);
 
+	//Object manager
+	_objTemplates.SetTexturesManager(&_textures);
+
 	//Game map
 	_logger->Log(Logger::LogType::INFO, "Loading map components");
-	if(_gameMap.LoadFromFile("./res/maps/map1.json") == false)
+	if (_gameMap.LoadFromFile("./res/maps/map1.json") == false)
 		_logger->Log(Logger::LogType::ERROR, "Data (1/1): ERROR");
 	else
 		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
 
 	_gameMap.AutoSetTilesTextures(&_textures);
 
-	_gameMap.PrepareFrame();	
+	_gameMap.PrepareFrame();
 
 
 	//Player
@@ -83,7 +86,7 @@ void Game::Start()
 	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 10));
 	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 11));
 	idle.SetChangeFrameEvery(7);
-	
+
 	sf::Animation move;
 	move.SetTexture(_textures.GetTexture("players"));
 	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 12));
@@ -100,6 +103,7 @@ void Game::Start()
 	_player.SetPlayerState("idle");
 	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
 	_player.SetPlayerPosition(sf::Vector2f(496, 272));
+	_player.SetWeapon(_objTemplates.GetMeleeWeapon("sword"));
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -108,10 +112,12 @@ void Game::Start()
 	sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
 	sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
 	sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
+	sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
 	_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
 	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
 	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
+	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleWeaponHitboxVisibility);
 }
 
 void Game::EventUpdate()
@@ -122,6 +128,13 @@ void Game::EventUpdate()
 			Close();	
 		if (_event.type == sf::Event::KeyPressed)
 			_keyboardHandler.Rise(_event.key);
+		if (_event.type == sf::Event::MouseButtonPressed && _event.mouseButton.button == sf::Mouse::Left)
+			_player.GetWeapon()->Attack();
+		if (_event.type == sf::Event::MouseMoved)
+		{
+			auto coord = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
+			_player.GetWeapon()->SetCurrentAngle(MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player.GetCollisionBox()), sf::Vector2f(coord.x, coord.y)));
+		}
 	}
 }
 
@@ -131,9 +144,7 @@ void Game::Update()
 	_debug.Status(Game::Tick());
 
 	_player.UpdateMovement((float)_delta, _gameMap.GetActionMap(), 1);
-	_player.Tick(Game::Tick());
-
-	_gameMap.Update(Game::Tick());
+	_player.Update(Game::Tick(), (float)_delta);
 
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);
@@ -179,6 +190,11 @@ void Game::ToggleHitboxVisibility()
 void Game::ToggleConsoleInfo()
 {
 	_debug.ToggleFPSInfo();
+}
+
+void Game::ToggleWeaponHitboxVisibility()
+{
+	_player.ToggleWeaponHitboxVisibility();
 }
 
 #pragma endregion

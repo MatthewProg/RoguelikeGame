@@ -154,12 +154,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AnimationContainer.cpp" />
     <ClCompile Include="MapLayerModel.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="MeleeWeapon.cpp" />
+    <ClCompile Include="ObjectsManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TexturesManager.cpp" />
     <ClCompile Include="TilesHelper.cpp" />
+    <ClCompile Include="TransformAnimation.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="ViewHelper.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -172,12 +177,17 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="AnimationContainer.h" />
     <ClInclude Include="MapLayerModel.h" />
+    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="MeleeWeapon.h" />
+    <ClInclude Include="ObjectsManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="TexturesManager.h" />
     <ClInclude Include="TilesHelper.h" />
+    <ClInclude Include="TransformAnimation.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="ViewHelper.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png" />

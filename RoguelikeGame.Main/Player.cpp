@@ -7,8 +7,6 @@ Player::Player()
 	_playerPosition = sf::Vector2f(0, 0);
 	_playerLives = 3;
 	_playerSpeed = 1.0;
-	_attackCooldown = 1;
-	_cooldownCounter = 0;
 	_playerHitboxOffset = sf::FloatRect(0, 0, 16, 16);
 	_hitboxRectangle.setFillColor(sf::Color(64, 255, 64, 64));
 	_hitboxRectangle.setOutlineThickness(-1);
@@ -16,17 +14,20 @@ Player::Player()
 	_hitboxRectangle.setPosition(_playerHitboxOffset.left, _playerHitboxOffset.top);
 	_hitboxRectangle.setSize(sf::Vector2f(_playerHitboxOffset.width, _playerHitboxOffset.height));
 	_showHitbox = false;
+	_weapon = nullptr;
 }
 
 Player::~Player()
 {
+	if (_weapon != nullptr)
+		delete _weapon;
 }
 
-void Player::Tick(bool tick)
+void Player::Update(bool tick, float delta)
 {
 	_playerAnimation.Tick(tick);
-	if (tick && _cooldownCounter < _attackCooldown)
-		_cooldownCounter++;
+	_weapon->Update(tick, delta);
+	_weapon->setPosition(ViewHelper::GetRectCenter(GetCollisionBox()));
 }
 
 sf::AnimationContainer* Player::GetPlayerAnimations()
@@ -52,11 +53,6 @@ short Player::GetPlayerLives()
 float Player::GetPlayerSpeed()
 {
 	return _playerSpeed;
-}
-
-unsigned short Player::GetAttackCooldown()
-{
-	return _attackCooldown;
 }
 
 sf::Color Player::GetHitboxColor()
@@ -95,16 +91,6 @@ sf::FloatRect Player::GetNextHitboxPosition(float deltaTime)
 
 	auto rect = _hitboxRectangle.getGlobalBounds();
 	return sf::FloatRect(rect.left + moveX, rect.top + moveY, rect.width, rect.height);
-}
-
-bool Player::CanAttack()
-{
-	return !(_cooldownCounter < _attackCooldown);
-}
-
-void Player::ResetCooldown()
-{
-	_cooldownCounter = 0;
 }
 
 void Player::UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId)
@@ -165,11 +151,6 @@ void Player::SetPlayerSpeed(float speed)
 	_playerSpeed = speed;
 }
 
-void Player::SetAttackCooldown(unsigned short ticksCooldown)
-{
-	_attackCooldown = ticksCooldown;
-}
-
 void Player::SetHitboxColor(const sf::Color& color)
 {
 	_hitboxRectangle.setFillColor(color);
@@ -202,6 +183,30 @@ void Player::ToggleHitboxVisibility()
 	SetHitboxVisibility(!GetHitboxVisibility());
 }
 
+void Player::ToggleWeaponHitboxVisibility()
+{
+	if (_weapon != nullptr)
+	{
+		bool rev = _weapon->GetHitboxVisibility();
+		std::string status = (!rev) ? "true" : "false";
+		_logger->Log(Logger::LogType::INFO, "Show current weapon rays: " + status);
+		_weapon->SetHitboxVisibility(!rev);
+	}
+}
+
+Weapon* Player::GetWeapon()
+{
+	return _weapon;
+}
+
+void Player::SetWeapon(Weapon* weapon)
+{
+	if (_weapon != nullptr)
+		delete _weapon;
+
+	_weapon = weapon;
+}
+
 sf::FloatRect Player::GetCollisionBox()
 {
 	return _hitboxRectangle.getGlobalBounds();
@@ -231,4 +236,5 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(_playerAnimation);
 	if(_showHitbox)
 		target.draw(_hitboxRectangle);
+	_weapon->draw(target, states);
 }

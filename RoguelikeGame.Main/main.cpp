@@ -1,5 +1,4 @@
 #include "Game.h"
-
 int main()
 {
     LogOptions options;

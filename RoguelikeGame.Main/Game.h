@@ -4,7 +4,9 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 
 #include "KeyboardEventHandler.h"
+#include "TransformAnimation.h"
 #include "CollisionHelper.h"
+#include "ObjectsManager.h"
 #include "DebugHelper.h"
 #include "ViewHelper.h"
 #include "GameMap.h"
@@ -27,6 +29,7 @@ private:
 	KeyboardEventHandler<Game> _keyboardHandler;
 
 	TexturesManager _textures;
+	ObjectsManager _objTemplates;
 	GameMap<unsigned char> _gameMap;
 
 	Player _player;
@@ -43,6 +46,7 @@ private:
 	void ToggleActionMapVisibility();
 	void ToggleHitboxVisibility();
 	void ToggleConsoleInfo();
+	void ToggleWeaponHitboxVisibility();
 #pragma endregion
 
 public:

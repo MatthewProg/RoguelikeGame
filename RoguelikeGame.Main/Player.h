@@ -3,7 +3,9 @@
 #include "AnimationContainer.h"
 #include "CollisionHelper.h"
 #include "MapLayerModel.h"
+#include "ViewHelper.h"
 #include "Collision.h"
+#include "Weapon.h"
 
 #include "Logger.h"
 
@@ -15,8 +17,6 @@ private:
 
 	short _playerLives;
 	float _playerSpeed;
-	unsigned short _attackCooldown;
-	unsigned int _cooldownCounter;
 
 	bool _showHitbox;
 
@@ -24,6 +24,8 @@ private:
 	sf::RectangleShape _hitboxRectangle;
 
 	sf::Vector2f _playerPosition;
+
+	Weapon* _weapon;
 
 	Logger* _logger;
 
@@ -35,9 +37,7 @@ public:
 	~Player();
 
 	//Player
-	void Tick(bool tick);
-	bool CanAttack();
-	void ResetCooldown();
+	void Update(bool tick, float delta);
 	void UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId);
 
 	//Player getters
@@ -46,7 +46,6 @@ public:
 	std::string GetPlayerState();
 	short GetPlayerLives();
 	float GetPlayerSpeed();
-	unsigned short GetAttackCooldown();
 	sf::Color GetHitboxColor();
 	float GetHitboxOutlineThickness();
 	sf::Color GetHitboxOutlineColor();
@@ -60,7 +59,6 @@ public:
 	void SetPlayerAnimations(sf::AnimationContainer container);
 	void SetPlayerLives(short lives);
 	void SetPlayerSpeed(float speed);
-	void SetAttackCooldown(unsigned short ticksCooldown);
 	void SetHitboxColor(const sf::Color& color);
 	void SetHitboxOutlineThickness(float thickness);
 	void SetHitboxOutlineColor(const sf::Color& color);
@@ -68,6 +66,12 @@ public:
 	void MoveBy(float x, float y, float deltaTime);
 
 	void ToggleHitboxVisibility();
+	void ToggleWeaponHitboxVisibility();
+
+	//Weapon
+	Weapon* GetWeapon();
+	void SetWeapon(Weapon* weapon);
+	
 
 	// Inherited via Collision
 	virtual sf::FloatRect GetCollisionBox() override;

@@ -31,6 +31,8 @@ namespace sf
 		sf::VertexArray _vertices;
 		sf::RenderStates _renderStates;
 
+		sf::Transformable _externalTransform;
+
 		std::vector<sf::Color> _frameColor;
 
 		void NextFrame();
@@ -49,6 +51,8 @@ namespace sf
 		void RemoveAllFrames();
 		size_t GetNoOfFrames();
 		void SetFrames(std::vector<sf::IntRect> frames);
+
+		sf::Transformable* ExternalTransform();
 
 		void FlipHorizontally();
 		void FlipVertically();

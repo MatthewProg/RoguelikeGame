@@ -200,6 +200,11 @@ void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 	NextFrame();
 }
 
+sf::Transformable* sf::Animation::ExternalTransform()
+{
+	return &_externalTransform;
+}
+
 void sf::Animation::FlipHorizontally()
 {
 	_switchLeftRight = !_switchLeftRight;
@@ -256,6 +261,7 @@ void sf::Animation::draw(RenderTarget& target, RenderStates states) const
 		states.texture = _texture;
 
 	states.transform *= getTransform();
+	states.transform *= _externalTransform.getTransform();
 
 	target.draw(_vertices, states);
 }

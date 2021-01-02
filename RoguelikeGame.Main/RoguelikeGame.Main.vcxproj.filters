@@ -81,6 +81,21 @@
     <ClCompile Include="CollisionHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="MeleeWeapon.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformAnimation.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -130,6 +145,21 @@
     </ClInclude>
     <ClInclude Include="CollisionHelper.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeWeapon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformAnimation.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectsManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
