@@ -4,7 +4,7 @@ namespace sf
 {
 	bool AnimationContainer::HasStateAndAnimation()
 	{
-		if (_animationStates.size() == 0 && _currentState == "")
+		if (_animationStates.size() == 0 || _currentState == "")
 			return false;
 		if (_animationStates.count(_currentState) == 0)
 			return false;

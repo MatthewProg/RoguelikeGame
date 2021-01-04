@@ -146,8 +146,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionHelper.cpp" />
     <ClCompile Include="DebugHelper.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -171,6 +173,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionHelper.h" />
     <ClInclude Include="DebugHelper.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="KeyboardEventHandler.h" />

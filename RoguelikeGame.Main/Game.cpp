@@ -99,10 +99,10 @@ void Game::Start()
 	playerAnimations.SetStateAnimation("move", move);
 	playerAnimations.ApplySetScale(1, 1);
 
-	_player.SetPlayerAnimations(playerAnimations);
-	_player.SetPlayerState("idle");
+	_player.SetAnimations(playerAnimations);
+	_player.SetState("idle");
 	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
-	_player.SetPlayerPosition(sf::Vector2f(496, 272));
+	_player.SetPosition(sf::Vector2f(496, 272));
 	_player.SetWeapon(_objTemplates.GetMeleeWeapon("sword"));
 
 	//Debug

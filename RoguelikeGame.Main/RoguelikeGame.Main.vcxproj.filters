@@ -96,6 +96,12 @@
     <ClCompile Include="ObjectsManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -160,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="ObjectsManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
