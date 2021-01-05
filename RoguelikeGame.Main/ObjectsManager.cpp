@@ -1,5 +1,61 @@
 #include "ObjectsManager.h"
 
+void ObjectsManager::SetTexturesManager(TexturesManager* textures)
+{
+	_textures = textures;
+}
+
+ObjectsManager::ObjectsManager()
+{
+	_textures = nullptr;
+
+	_meleeWeapons["sword"] = nullptr;
+
+	_enemies["devil"] = nullptr;
+}
+ObjectsManager::~ObjectsManager()
+{
+	for (auto v : _meleeWeapons)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto v : _enemies)
+		if (v.second != nullptr)
+			delete v.second;
+}
+
+MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
+{
+	auto found = _meleeWeapons.find(name);
+	if (found != _meleeWeapons.end())
+	{
+		if (found->second == nullptr)
+		{
+			if(name == "sword") found->second = CreateMeleeWeaponSword();
+		}
+
+		auto obj = new MeleeWeapon(*(found->second));
+		obj->GetTransformAnimation()->SetTarget(obj->GetAnimation()->ExternalTransform());
+		return obj;
+	}
+	return new MeleeWeapon();
+}
+Enemy* ObjectsManager::GetEnemy(std::string name)
+{
+	auto found = _enemies.find(name);
+	if (found != _enemies.end())
+	{
+		if (found->second == nullptr)
+		{
+			if(name == "devil")found->second = CreateEnemyDevil();
+		}
+
+		auto obj = new Enemy(*(found->second));
+		return obj;
+	}
+	return new Enemy();
+}
+
 MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 {
 	MeleeWeapon* sword = new MeleeWeapon();
@@ -41,36 +97,40 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 	return sword;
 }
 
-MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
+Enemy* ObjectsManager::CreateEnemyDevil()
 {
-	auto found = _meleeWeapons.find(name);
-	if (found != _meleeWeapons.end())
-	{
-		if (found->second == nullptr)
-			found->second = CreateMeleeWeaponSword();
+	Enemy* devil = new Enemy();
 
-		auto obj = new MeleeWeapon(*(found->second));
-		obj->GetTransformAnimation()->SetTarget(obj->GetAnimation()->ExternalTransform());
-		return obj;
-	}
-	return new MeleeWeapon();
-}
+	sf::Animation idle;
+	idle.SetTexture(_textures->GetTexture("tiles2"));
+	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16, 32, 344));
+	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16, 32, 345));
+	idle.SetChangeFrameEvery(15);
 
-void ObjectsManager::SetTexturesManager(TexturesManager* textures)
-{
-	_textures = textures;
-}
+	sf::Animation move;
+	move.SetTexture(_textures->GetTexture("tiles2"));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 347));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 348));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 349));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 350));
+	move.SetChangeFrameEvery(3);
 
-ObjectsManager::ObjectsManager()
-{
-	_textures = nullptr;
+	sf::Animation attack;
+	attack.SetTexture(_textures->GetTexture("tiles2"));
+	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 346));
+	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 344));
+	attack.SetChangeFrameEvery(20);
 
-	_meleeWeapons["sword"] = nullptr;
-}
+	sf::AnimationContainer container;
+	container.SetStateAnimation("idle", idle);
+	container.SetStateAnimation("move", move);
+	container.SetStateAnimation("attack", attack);
 
-ObjectsManager::~ObjectsManager()
-{
-	for (auto v : _meleeWeapons)
-		if (v.second != nullptr)
-			delete v.second;
+	devil->SetAnimations(container);
+	devil->SetState("idle");
+	devil->SetScale(0.6F, 0.6F);
+	devil->SetCollisionBoxOffset(sf::FloatRect(3.F, 17.F, 10.F, 12.F));
+	devil->SetPosition(0.F, 0.F);
+
+	return devil;
 }

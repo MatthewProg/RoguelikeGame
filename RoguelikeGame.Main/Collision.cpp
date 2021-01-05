@@ -22,7 +22,13 @@ sf::FloatRect sf::Collision::GetCollisionBox()
 
 sf::FloatRect sf::Collision::GetCollisionBoxOffset()
 {
-	return _hitboxOffset;
+	auto out = _hitboxOffset;
+	auto scale = _hitboxRecangle.getScale();
+	out.top *= scale.y;
+	out.height *= scale.y;
+	out.left *= scale.x;
+	out.width *= scale.x;
+	return out;
 }
 
 sf::RectangleShape sf::Collision::GetHitboxRectangle()
@@ -58,8 +64,9 @@ sf::Vector2f sf::Collision::GetHitboxPosition()
 void sf::Collision::SetCollisionBoxOffset(sf::FloatRect rect)
 {
 	auto pos = _hitboxRecangle.getPosition();
+	auto scale = _hitboxRecangle.getScale();
 
-	_hitboxRecangle.setPosition(rect.left - _hitboxOffset.left + pos.x, rect.top - _hitboxOffset.top + pos.y);
+	_hitboxRecangle.setPosition(pos.x - (_hitboxOffset.left * scale.x) + (rect.left * scale.x), pos.y - (_hitboxOffset.top * scale.y) + (rect.top * scale.y));
 	_hitboxRecangle.setSize(sf::Vector2f(rect.width, rect.height));
 
 	_hitboxOffset = rect;
@@ -87,12 +94,27 @@ void sf::Collision::SetHitboxVisibility(bool visible)
 
 void sf::Collision::SetHitboxPosition(sf::Vector2f pos)
 {
-	_hitboxRecangle.setPosition(pos.x + _hitboxOffset.left, pos.y + _hitboxOffset.top);
+	auto scale = _hitboxRecangle.getScale();
+	_hitboxRecangle.setPosition(pos.x + (_hitboxOffset.left * scale.x), pos.y + (_hitboxOffset.top * scale.y));
 }
 
 void sf::Collision::SetHitboxPosition(float x, float y)
 {
-	_hitboxRecangle.setPosition(x + _hitboxOffset.left, y + _hitboxOffset.top);
+	auto scale = _hitboxRecangle.getScale();
+	_hitboxRecangle.setPosition(x + (_hitboxOffset.left * scale.x), y + (_hitboxOffset.top * scale.y));
+}
+
+void sf::Collision::SetHitboxScale(const sf::Vector2f& scale)
+{
+	_hitboxRecangle.setScale(scale);
+
+	auto acc = _hitboxRecangle.getPosition();
+	_hitboxRecangle.setPosition(acc.x - _hitboxOffset.left + (_hitboxOffset.left * scale.x), acc.y - _hitboxOffset.top + (_hitboxOffset.top * scale.y));
+}
+
+sf::Vector2f sf::Collision::GetHitboxScale()
+{
+	return _hitboxRecangle.getScale();
 }
 
 void sf::Collision::draw(sf::RenderTarget& target, sf::RenderStates states) const

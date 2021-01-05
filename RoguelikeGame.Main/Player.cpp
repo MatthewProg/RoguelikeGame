@@ -31,53 +31,6 @@ void Player::Update(bool tick, float delta)
 	_weapon->setPosition(ViewHelper::GetRectCenter(GetCollisionBox()));
 }
 
-sf::FloatRect Player::GetNextHitboxPosition(float deltaTime)
-{
-	float moveX = 0;
-	float moveY = 0;
-	
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		moveX += (2 * deltaTime * GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		moveX -= (2 * deltaTime * GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		moveY += (2 * deltaTime * GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		moveY -= (2 * deltaTime * GetSpeed());
-
-	auto rect = GetCollisionBox();
-	return sf::FloatRect(rect.left + moveX, rect.top + moveY, rect.width, rect.height);
-}
-
-void Player::UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId)
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		SetState("move");
-		auto nextPos = GetNextHitboxPosition(delta);
-		auto currPos = GetCollisionBox();
-		auto hitbox = GetCollisionBoxOffset();
-		if (currPos.left > nextPos.left)
-			GetAnimations()->ApplySetHorizontalFlip(true);
-		else if(currPos.left < nextPos.left)
-			GetAnimations()->ApplySetHorizontalFlip(false);
-
-		auto pos = CollisionHelper::GetLimitPosition(currPos, nextPos, tiles, blockId);
-		SetPosition(sf::Vector2f(pos.x - hitbox.left, pos.y - hitbox.top));
-	}
-	else
-		SetState("idle");
-}
-
-void Player::MoveBy(float x, float y, float deltaTime)
-{
-	auto pos = GetPosition();
-	SetPosition(pos.x + (x * deltaTime * GetSpeed()), pos.y + (y * deltaTime * GetSpeed()));
-}
-
 void Player::ToggleHitboxVisibility()
 {
 	std::string status = (!GetHitboxVisibility()) ? "true" : "false";
@@ -112,5 +65,6 @@ void Player::SetWeapon(Weapon* weapon)
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	Entity::draw(target, states);
-	_weapon->draw(target, states);
+	if(_weapon != nullptr)
+		_weapon->draw(target, states);
 }

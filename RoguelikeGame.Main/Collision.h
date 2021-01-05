@@ -14,6 +14,10 @@ namespace sf
 
 		bool _showHitbox;
 	protected:
+		void SetHitboxScale(const sf::Vector2f& scale);
+
+		sf::Vector2f GetHitboxScale();
+
 		// Inherited via Drawable
 		virtual void draw(RenderTarget& target, RenderStates states) const override;
 	public:

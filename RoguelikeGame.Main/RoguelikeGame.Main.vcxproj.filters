@@ -66,9 +66,6 @@
     <ClCompile Include="TilesHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="MapLayerModel.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
     <ClCompile Include="ViewHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
@@ -100,6 +97,15 @@
       <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -169,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityMovement.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

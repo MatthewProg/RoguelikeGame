@@ -130,12 +130,14 @@ void Entity::SetScale(const sf::Vector2f& factors)
 {
 	_animations.ApplySetScale(factors);
 	_transform.setScale(factors);
+	SetHitboxScale(factors);
 }
 
 void Entity::SetScale(float factorX, float factorY)
 {
 	_animations.ApplySetScale(factorX, factorY);
 	_transform.setScale(factorX, factorY);
+	SetHitboxScale(sf::Vector2f(factorX, factorY));
 }
 
 void Entity::SetTransform(const sf::Transformable& trans)
@@ -149,6 +151,7 @@ void Entity::SetTransform(const sf::Transformable& trans)
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_animations);
+	if(_isVisible)
+		target.draw(_animations);
 	Collision::draw(target, states);
 }

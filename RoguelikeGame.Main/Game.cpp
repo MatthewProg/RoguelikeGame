@@ -7,7 +7,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
-	//_window.setFramerateLimit(144);
+	_window.setFramerateLimit(144);
 	_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
@@ -73,6 +73,9 @@ void Game::Start()
 
 	_gameMap.PrepareFrame();
 
+	//Collisions
+	_collisionsManager.AddMap(*_gameMap.GetActionMap(), (unsigned char)1);
+	_collisionsManager.GenerateCommonMap();
 
 	//Player
 	_logger->Log(Logger::LogType::INFO, "Loading player components");
@@ -104,6 +107,12 @@ void Game::Start()
 	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
 	_player.SetPosition(sf::Vector2f(496, 272));
 	_player.SetWeapon(_objTemplates.GetMeleeWeapon("sword"));
+
+	//Player movement
+	_playerMovement.SetIdleStateName("idle");
+	_playerMovement.SetMoveStateName("move");
+	_playerMovement.SetEntity(&_player);
+	_playerMovement.SetCollisionsManager(&_collisionsManager);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -143,7 +152,7 @@ void Game::Update()
 	SetDeltaAndTick();
 	_debug.Status(Game::Tick());
 
-	_player.UpdateMovement((float)_delta, _gameMap.GetActionMap(), 1);
+	_playerMovement.Update((float)_delta);
 	_player.Update(Game::Tick(), (float)_delta);
 
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));

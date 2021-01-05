@@ -4,11 +4,9 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 
 #include "KeyboardEventHandler.h"
-#include "TransformAnimation.h"
-#include "CollisionHelper.h"
+#include "EntityMovement.h"
 #include "ObjectsManager.h"
 #include "DebugHelper.h"
-#include "ViewHelper.h"
 #include "GameMap.h"
 #include "Player.h"
 
@@ -31,8 +29,10 @@ private:
 	TexturesManager _textures;
 	ObjectsManager _objTemplates;
 	GameMap<unsigned char> _gameMap;
+	CollisionsManager _collisionsManager;
 
 	Player _player;
+	EntityMovement _playerMovement;
 
 	std::chrono::steady_clock::time_point _lastFrameTime;
 	void SetDeltaAndTick();

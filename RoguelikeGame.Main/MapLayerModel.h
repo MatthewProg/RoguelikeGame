@@ -13,7 +13,6 @@ public:
 	MapLayerModel();
 	~MapLayerModel();
 
-
 	unsigned int id;
 	unsigned int height;
 	unsigned int width;
@@ -32,3 +31,25 @@ public:
 
 	std::vector<T> data;
 };
+
+template<typename T>
+inline MapLayerModel<T>::MapLayerModel()
+{
+	id = 0;
+	height = 0;
+	width = 0;
+	offsetX = 0;
+	offsetY = 0;
+	tileHeight = 16;
+	tileWidth = 16;
+	visible = true;
+	opacity = 1;
+	tilesName = "";
+	data = std::vector<T>();
+	data.clear();
+}
+
+template<typename T>
+inline MapLayerModel<T>::~MapLayerModel()
+{
+}
