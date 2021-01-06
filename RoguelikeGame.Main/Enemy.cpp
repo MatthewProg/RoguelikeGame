@@ -9,8 +9,8 @@ Enemy::Enemy()
 	SetHitboxVisibility(false);
 
 	//Entity changes
-	SetHealth(.5F);
-	SetSpeed(2.F);
+	SetHealth(1.F);
+	SetSpeed(1.F);
 	SetVisibility(true);
 
 	_weapon = nullptr;

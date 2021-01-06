@@ -3,23 +3,34 @@
 #include "TransformAnimation.h"
 #include "Animation.h"
 
+enum class WeaponType
+{
+	NONE, MELEE, PROJECTILE, HITSCAN
+};
+
 class Weapon : public sf::Transformable, public sf::Drawable
 {
 protected:
 	unsigned int _cooldownCounter;
+
 	sf::Animation _weapon;
 	sf::TransformAnimation _attackAnimation;
-	float _range;
+
 	float _currentAngle;
+
 	sf::VertexArray _hitbox;
 private:
 	float _dmg;
 	unsigned short _attackCooldown;
+
 	bool _isVisible;
 	bool _showHitbox;
+
 	sf::Color _hitboxColor;
+
+	WeaponType _weaponType;
 public:
-	Weapon();
+	Weapon(WeaponType type);
 	~Weapon();
 
 	virtual bool CanAttack() = 0;
@@ -27,16 +38,15 @@ public:
 	virtual void Update(bool tick, float deltaTime) = 0;
 	void ResetCooldown();
 
-	float GetWeaponRange();
 	float GetWeaponDMG();
 	uint16_t GetWeaponCooldown();
 	bool GetVisibility() const;
 	float GetCurrentAngle();
 	bool GetHitboxVisibility() const;
 	sf::Color GetHitboxColor();
-	sf::VertexArray GetHitbox();
+	std::vector<sf::Vector2f> GetHitbox();
+	WeaponType GetWeaponType();
 
-	virtual void SetWeaponRange(float range) = 0;
 	void SetWeaponDMG(float dmg);
 	void SetWeaponCooldown(uint16_t cooldown);
 	void SetVisibility(bool visibility);

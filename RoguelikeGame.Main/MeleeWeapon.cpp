@@ -2,7 +2,16 @@
 
 void MeleeWeapon::PrepareHitbox()
 {
-	auto lu = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2), _range);
+	float step = _angle / (float)_hitboxAccuracy;
+	unsigned short p = 0;
+	for (size_t i = 0; i < _hitbox.getVertexCount(); i += 3)
+	{
+		_hitbox[i].position = getOrigin();
+		_hitbox[i + 1].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + (p * step), _range);
+		_hitbox[i + 2].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + ((p+1) * step), _range);
+		p++;
+	}
+	/*auto lu = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2), _range);
 	auto lm = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2), _range / 2);
 
 	auto mu = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle, _range);
@@ -19,7 +28,7 @@ void MeleeWeapon::PrepareHitbox()
 	_hitbox[5].position = mm;
 	_hitbox[6].position = rm;
 	_hitbox[7].position = mu;
-	_hitbox[8].position = ru;
+	_hitbox[8].position = ru;*/
 }
 
 void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -32,15 +41,16 @@ void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(_hitbox, states);
 }
 
-MeleeWeapon::MeleeWeapon() : Weapon()
+MeleeWeapon::MeleeWeapon() : Weapon(WeaponType::MELEE)
 {
 	_range = 20;
+	_hitboxAccuracy = 4;
 	_currentAngle = 0;
 	_cooldownCounter = 0;
 
 	_angle = 60;
-	_hitbox.setPrimitiveType(sf::PrimitiveType::TrianglesStrip);
-	_hitbox.resize(9);
+	_hitbox.setPrimitiveType(sf::PrimitiveType::Triangles);
+	_hitbox.resize(12);
 	_attackAnimation.SetTarget(this);
 
 	SetWeaponDMG(0.5);
@@ -83,11 +93,22 @@ void MeleeWeapon::Update(bool tick, float deltaTime)
 		SetVisibility(false);
 }
 
+void MeleeWeapon::SetHitboxAccuracy(unsigned short steps)
+{
+	_hitboxAccuracy = steps;
+	_hitbox.resize((size_t)_hitboxAccuracy * 3);
+}
+
 
 
 float MeleeWeapon::GetWeaponAngle()
 {
 	return _angle;
+}
+
+float MeleeWeapon::GetWeaponRange()
+{
+	return _range;
 }
 
 void MeleeWeapon::SetWeaponRange(float range)

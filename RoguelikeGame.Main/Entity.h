@@ -15,6 +15,10 @@ private:
 	sf::Transformable _transform;
 
 	bool _isVisible;
+
+	sf::Color _dmgColor;
+	unsigned short _dmgColorTick;
+	unsigned short _dmgColorCounter;
 protected:
 	void UpdateEntity(bool tick);
 
@@ -23,6 +27,9 @@ protected:
 public:
 	Entity();
 	~Entity();
+
+	void TakeDmg(float dmg);
+	bool IsDead();
 
 	sf::AnimationContainer* GetAnimations();
 	std::string GetState();
@@ -34,6 +41,8 @@ public:
 	sf::Vector2f GetOrigin();
 	sf::Vector2f GetScale();
 	sf::Transformable GetTransform();
+	sf::Color GetTakingDmgColor();
+	unsigned short GetTakingDmgColorTicks();
 
 	void SetState(std::string state);
 	void SetAnimations(sf::AnimationContainer container);
@@ -48,5 +57,7 @@ public:
 	void SetScale(const sf::Vector2f& factors);
 	void SetScale(float factorX, float factorY);
 	void SetTransform(const sf::Transformable& trans);
+	void SetTakingDmgColor(const sf::Color color);
+	void SetTakingDmgColorTicks(unsigned short ticks);
 };
 

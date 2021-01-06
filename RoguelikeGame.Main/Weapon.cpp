@@ -1,14 +1,14 @@
 #include "Weapon.h"
 
-Weapon::Weapon()
+Weapon::Weapon(WeaponType type)
 {
-	_range = 20;
 	_dmg = 0.5;
 	_attackCooldown = 20;
 	_cooldownCounter = 0;
 	_currentAngle = 0;
 	_isVisible = false;
 	_showHitbox = false;
+	_weaponType = type;
 }
 
 Weapon::~Weapon()
@@ -18,11 +18,6 @@ Weapon::~Weapon()
 void Weapon::ResetCooldown()
 {
 	_cooldownCounter = 0;
-}
-
-float Weapon::GetWeaponRange()
-{
-	return _range;
 }
 
 float Weapon::GetWeaponDMG()
@@ -55,9 +50,18 @@ sf::Color Weapon::GetHitboxColor()
 	return _hitboxColor;
 }
 
-sf::VertexArray Weapon::GetHitbox()
+std::vector<sf::Vector2f> Weapon::GetHitbox()
 {
-	return _hitbox;
+	auto &transform = getTransform();
+	std::vector<sf::Vector2f> output;
+	for (size_t i = 0; i < _hitbox.getVertexCount(); i++)
+		output.push_back(transform.transformPoint(_hitbox[i].position));
+	return output;
+}
+
+WeaponType Weapon::GetWeaponType()
+{
+	return _weaponType;
 }
 
 void Weapon::SetWeaponDMG(float dmg)

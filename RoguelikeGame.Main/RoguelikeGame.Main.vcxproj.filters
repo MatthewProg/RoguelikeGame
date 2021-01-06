@@ -99,14 +99,17 @@
     <ClCompile Include="Collision.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CollisionsManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="EntityMovement.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemiesManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,14 +179,17 @@
     <ClInclude Include="Entity.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionsManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EntityMovement.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemiesManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

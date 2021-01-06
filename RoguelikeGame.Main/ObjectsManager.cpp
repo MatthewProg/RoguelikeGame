@@ -132,5 +132,9 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	devil->SetCollisionBoxOffset(sf::FloatRect(3.F, 17.F, 10.F, 12.F));
 	devil->SetPosition(0.F, 0.F);
 
+	//Stats
+	devil->SetHealth(1.5F);
+	devil->SetSpeed(2.F);
+
 	return devil;
 }

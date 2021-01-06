@@ -29,7 +29,6 @@ namespace sf
 		Texture* _noTexture;
 
 		sf::VertexArray _vertices;
-		sf::RenderStates _renderStates;
 
 		sf::Transformable _externalTransform;
 

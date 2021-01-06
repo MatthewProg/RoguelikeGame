@@ -150,6 +150,7 @@
     <ClCompile Include="CollisionHelper.cpp" />
     <ClCompile Include="CollisionsManager.cpp" />
     <ClCompile Include="DebugHelper.cpp" />
+    <ClCompile Include="EnemiesManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="CollisionHelper.h" />
     <ClInclude Include="CollisionsManager.h" />
     <ClInclude Include="DebugHelper.h" />
+    <ClInclude Include="EnemiesManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />

@@ -3,6 +3,17 @@
 void Entity::UpdateEntity(bool tick)
 {
 	_animations.Tick(tick);
+
+	if (tick)
+	{
+		if (_dmgColorCounter == _dmgColorTick)
+		{
+			_animations.ApplySetColor(sf::Color::White);
+			if (_health <= 0) _isVisible = false;
+		}
+		else
+			_dmgColorCounter++;
+	}
 }
 
 Entity::Entity() : sf::Collision()
@@ -11,10 +22,25 @@ Entity::Entity() : sf::Collision()
 	_health = 3.F;
 	_speed = 1.F;
 	_isVisible = true;
+	_dmgColor = sf::Color(255, 32, 32, 192);
+	_dmgColorTick = 15;
+	_dmgColorCounter = 0;
 }
 
 Entity::~Entity()
 {
+}
+
+void Entity::TakeDmg(float dmg)
+{
+	_health -= dmg;
+	_animations.ApplySetColor(_dmgColor);
+	_dmgColorCounter = 0;
+}
+
+bool Entity::IsDead()
+{
+	return (_isVisible == false && _health <= 0);
 }
 
 sf::AnimationContainer* Entity::GetAnimations()
@@ -65,6 +91,16 @@ sf::Vector2f Entity::GetScale()
 sf::Transformable Entity::GetTransform()
 {
 	return _transform;
+}
+
+sf::Color Entity::GetTakingDmgColor()
+{
+	return _dmgColor;
+}
+
+unsigned short Entity::GetTakingDmgColorTicks()
+{
+	return _dmgColorTick;
 }
 
 void Entity::SetState(std::string state)
@@ -147,6 +183,16 @@ void Entity::SetTransform(const sf::Transformable& trans)
 	_animations.ApplySetRotation(trans.getRotation());
 	_animations.ApplySetOrigin(trans.getOrigin());
 	_animations.ApplySetScale(trans.getScale());
+}
+
+void Entity::SetTakingDmgColor(const sf::Color color)
+{
+	_dmgColor = color;
+}
+
+void Entity::SetTakingDmgColorTicks(unsigned short ticks)
+{
+	_dmgColorTick = ticks;
 }
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const

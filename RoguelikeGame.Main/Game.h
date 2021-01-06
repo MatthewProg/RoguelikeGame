@@ -5,6 +5,7 @@
 
 #include "KeyboardEventHandler.h"
 #include "EntityMovement.h"
+#include "EnemiesManager.h"
 #include "ObjectsManager.h"
 #include "DebugHelper.h"
 #include "GameMap.h"
@@ -33,6 +34,7 @@ private:
 
 	Player _player;
 	EntityMovement _playerMovement;
+	EnemiesManager _enemies;
 
 	std::chrono::steady_clock::time_point _lastFrameTime;
 	void SetDeltaAndTick();
@@ -47,6 +49,7 @@ private:
 	void ToggleHitboxVisibility();
 	void ToggleConsoleInfo();
 	void ToggleWeaponHitboxVisibility();
+	void ToggleEnemiesHitboxVisibility();
 #pragma endregion
 
 public:
