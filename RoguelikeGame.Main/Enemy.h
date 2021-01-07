@@ -8,13 +8,17 @@ class Enemy : public Entity
 private:
 	Weapon* _weapon;
 
+	float _tmpSpeed;
+	bool _inAttack;
+
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	Enemy();
 	~Enemy();
 
-	void Update(bool tick);
+	void Update(bool tick, float delta);
+	void Attack();
 	//void UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId);
 
 	//Weapon

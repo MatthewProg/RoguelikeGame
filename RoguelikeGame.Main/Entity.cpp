@@ -22,7 +22,7 @@ Entity::Entity() : sf::Collision()
 	_health = 3.F;
 	_speed = 1.F;
 	_isVisible = true;
-	_dmgColor = sf::Color(255, 32, 32, 192);
+	_dmgColor = sf::Color(255, 32, 32, 255);
 	_dmgColorTick = 15;
 	_dmgColorCounter = 0;
 }
@@ -50,6 +50,7 @@ sf::AnimationContainer* Entity::GetAnimations()
 
 std::string Entity::GetState()
 {
+	_state = _animations.GetCurrentState();
 	return _state;
 }
 

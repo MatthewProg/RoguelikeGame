@@ -23,6 +23,10 @@ namespace sf
 		bool _switchLeftRight;
 		bool _switchUpDown;
 
+		bool _loop;
+		bool _paused;
+		bool _ended;
+
 		std::vector<sf::IntRect> _rectFrames;
 
 		Texture* _texture;
@@ -43,6 +47,10 @@ namespace sf
 		~Animation();
 
 		//Animation
+		void Start();
+		void Pause();
+		void Reset();
+
 		void Tick(bool tick);
 		void UpdateVertices();
 		void AddNewFrame(sf::IntRect rect);
@@ -63,6 +71,7 @@ namespace sf
 		void SetFrameColor(unsigned int frame, sf::Color color);
 		void SetHorizontalFlip(bool flip);
 		void SetVerticalFlip(bool flip);
+		void SetLoop(bool loop);
 
 		//Animation getters
 		unsigned int GetChangeFrameEvery();
@@ -72,10 +81,13 @@ namespace sf
 		sf::Color GetFrameColor(unsigned int frame);
 		bool GetHorizontalFlip();
 		bool GetVerticalFlip();
+		bool GetLoop();
+		bool IsPaused();
+		bool IsEnded();
 
 		//Texture getteres
-		bool IsRepeated();
-		bool IsSmooth();
+		bool IsTextureRepeated();
+		bool IsTextureSmooth();
 
 		//Frame getters
 		FloatRect GetGlobalBounds();

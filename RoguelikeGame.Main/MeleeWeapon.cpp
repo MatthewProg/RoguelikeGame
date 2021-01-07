@@ -11,24 +11,6 @@ void MeleeWeapon::PrepareHitbox()
 		_hitbox[i + 2].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + ((p+1) * step), _range);
 		p++;
 	}
-	/*auto lu = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2), _range);
-	auto lm = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2), _range / 2);
-
-	auto mu = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle, _range);
-	auto mm = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle, _range / 2);
-
-	auto ru = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle + (_angle / 2), _range);
-	auto rm = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle + (_angle / 2), _range / 2);
-
-	_hitbox[0].position = lu;
-	_hitbox[1].position = mu;
-	_hitbox[2].position = lm;
-	_hitbox[3].position = mm;
-	_hitbox[4].position = getOrigin();
-	_hitbox[5].position = mm;
-	_hitbox[6].position = rm;
-	_hitbox[7].position = mu;
-	_hitbox[8].position = ru;*/
 }
 
 void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const

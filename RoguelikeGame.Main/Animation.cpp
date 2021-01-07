@@ -15,12 +15,34 @@ sf::Animation::Animation()
 	_switchLeftRight = false;
 	_switchUpDown = false;
 
+	_loop = true;
+	_paused = false;
+	_ended = false;
+
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(4);
 }
 
 sf::Animation::~Animation()
 {
+}
+
+void sf::Animation::Start()
+{
+	_paused = false;
+}
+
+void sf::Animation::Pause()
+{
+	_paused = true;
+}
+
+void sf::Animation::Reset()
+{
+	_ended = false;
+	_paused = true;
+	_currentFrame = 0;
+	UpdateVertices();
 }
 
 void sf::Animation::SetTexture(sf::Texture* texture)
@@ -33,16 +55,24 @@ void sf::Animation::SetFrameColor(unsigned int frame, sf::Color color)
 	if (frame >= _frameColor.size())
 		return;
 	_frameColor[frame] = color;
+	UpdateVertices();
 }
 
 void sf::Animation::SetHorizontalFlip(bool flip)
 {
 	_switchLeftRight = flip;
+	UpdateVertices();
 }
 
 void sf::Animation::SetVerticalFlip(bool flip)
 {
 	_switchUpDown = flip;
+	UpdateVertices();
+}
+
+void sf::Animation::SetLoop(bool loop)
+{
+	_loop = loop;
 }
 
 const sf::Texture* sf::Animation::GetTexture()
@@ -67,12 +97,27 @@ bool sf::Animation::GetVerticalFlip()
 	return _switchUpDown;
 }
 
-bool sf::Animation::IsRepeated()
+bool sf::Animation::GetLoop()
+{
+	return _loop;
+}
+
+bool sf::Animation::IsPaused()
+{
+	return _paused;
+}
+
+bool sf::Animation::IsEnded()
+{
+	return _ended;
+}
+
+bool sf::Animation::IsTextureRepeated()
 {
 	return _texture->isRepeated();
 }
 
-bool sf::Animation::IsSmooth()
+bool sf::Animation::IsTextureSmooth()
 {
 	return _texture->isSmooth();
 }
@@ -145,14 +190,23 @@ void sf::Animation::NextFrame()
 {
 	_currentFrame++;
 	if (_currentFrame > _rectFrames.size() - 1)
-		_currentFrame = 0;
+	{
+		if(_loop)
+			_currentFrame = 0;
+		else
+		{
+			_currentFrame--;
+			_ended = true;
+			_paused = true;
+		}
+	}
 }
 
 void sf::Animation::Tick(bool tick)
 {
-	UpdateVertices();
+	if (tick == false || _paused == true || (_ended && !_loop)) return;
 
-	if (tick == false) return;
+	UpdateVertices();
 
 	if (_currentTick > _changeEveryTicks * _animationSpeed)
 	{
@@ -170,7 +224,7 @@ void sf::Animation::AddNewFrame(sf::IntRect rect)
 {
 	_rectFrames.push_back(rect);
 	_frameColor.push_back(sf::Color(255, 255, 255, 255));
-	NextFrame();
+	Reset();
 }
 
 void sf::Animation::RemoveFrame(int index)
@@ -197,7 +251,7 @@ void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
 	_frameColor.clear();
 	for (size_t i = 0; i < _rectFrames.size(); i++)
 		_frameColor.push_back(sf::Color(255, 255, 255, 255));
-	NextFrame();
+	Reset();
 }
 
 sf::Transformable* sf::Animation::ExternalTransform()
@@ -208,11 +262,13 @@ sf::Transformable* sf::Animation::ExternalTransform()
 void sf::Animation::FlipHorizontally()
 {
 	_switchLeftRight = !_switchLeftRight;
+	UpdateVertices();
 }
 
 void sf::Animation::FlipVertically()
 {
 	_switchUpDown = !_switchUpDown;
+	UpdateVertices();
 }
 
 void sf::Animation::SetChangeFrameEvery(unsigned int ticks)

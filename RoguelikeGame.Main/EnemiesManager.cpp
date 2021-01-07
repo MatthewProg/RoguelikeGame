@@ -27,12 +27,13 @@ void EnemiesManager::Update(bool tick, float deltaTime)
 			}
 		}
 
-		it->Update(tick);
+		it->Update(tick, deltaTime);
 	}
 }
 
 void EnemiesManager::CheckForHit(Player* player)
 {
+	//Player -> Enemy
 	auto weapon = player->GetWeapon();
 	auto playerCenter = ViewHelper::GetRectCenter(player->GetCollisionBox());
 
@@ -49,6 +50,30 @@ void EnemiesManager::CheckForHit(Player* player)
 					obj->TakeDmg(wep->GetWeaponDMG());
 					break;
 				}
+			}
+		}
+	}
+}
+
+void EnemiesManager::CheckAttacks(Player* player)
+{
+	//Enemy -> Player
+	auto playerHitbox = player->GetCollisionBox();
+
+	for (auto enemy : _enemies)
+	{
+		auto enemyWeapon = enemy->GetWeapon();
+		if (enemyWeapon->CanAttack() == false)
+			continue;
+
+		if (enemyWeapon->GetWeaponType() == WeaponType::NONE) //Enemy attacks if hitboxes collide
+		{
+			auto enemyHitbox = enemy->GetCollisionBox();
+			if (CollisionHelper::CheckSimpleCollision(enemyHitbox, playerHitbox))
+			{
+				player->TakeDmg(enemyWeapon->GetWeaponDMG());
+				enemy->Attack();
+				continue;
 			}
 		}
 	}

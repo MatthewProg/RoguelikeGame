@@ -13,12 +13,14 @@ namespace sf
 		std::string _currentState;
 		sf::Animation* _currentAnimation;
 
+		std::string _smoothChangeState;
+		bool _smoothChangePrevLoop;
+
 		sf::Texture* _noTexture;
 		sf::VertexArray _noTextureVertex;
 		sf::Transformable _noTextureTransform;
 
 		bool HasStateAndAnimation();
-		void Update();
 
 		// Inherited via Drawable
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -27,17 +29,20 @@ namespace sf
 		~AnimationContainer();
 
 		void Tick(bool tick);
+		void UpdateCurrentAnimationPtr();
 
 		//AnimationContainer setters
 		void SetStateAnimation(std::string state, sf::Animation animation);
 		void SetAnimationStates(std::map<std::string, sf::Animation> animationStates);
 		void SetCurrentState(std::string state);
+		void SmoothStateChange(std::string state);
 		void RenameState(std::string oldName, std::string newName);
 		void RemoveState(std::string state);
 
 		//AnimationContainer getters
 		sf::Animation* GetStateAnimation(std::string state);
 		std::map<std::string, sf::Animation>* GetAnimationStates();
+		std::string GetCurrentState();
 
 		//Animation setters
 		void ApplySetChangeFrameEvery(unsigned int ticks);

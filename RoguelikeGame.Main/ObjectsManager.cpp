@@ -11,11 +11,17 @@ ObjectsManager::ObjectsManager()
 
 	_meleeWeapons["sword"] = nullptr;
 
+	_hitboxWeapons["bite"] = nullptr;
+
 	_enemies["devil"] = nullptr;
 }
 ObjectsManager::~ObjectsManager()
 {
 	for (auto v : _meleeWeapons)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto v : _hitboxWeapons)
 		if (v.second != nullptr)
 			delete v.second;
 
@@ -40,6 +46,21 @@ MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
 	}
 	return new MeleeWeapon();
 }
+HitboxWeapon* ObjectsManager::GetHitboxWeapon(std::string name)
+{
+	auto found = _hitboxWeapons.find(name);
+	if (found != _hitboxWeapons.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "bite") found->second = CreateHitboxWeaponBite();
+		}
+
+		auto obj = new HitboxWeapon(*(found->second));
+		return obj;
+	}
+	return new HitboxWeapon();
+}
 Enemy* ObjectsManager::GetEnemy(std::string name)
 {
 	auto found = _enemies.find(name);
@@ -51,6 +72,7 @@ Enemy* ObjectsManager::GetEnemy(std::string name)
 		}
 
 		auto obj = new Enemy(*(found->second));
+		obj->GetAnimations()->UpdateCurrentAnimationPtr();
 		return obj;
 	}
 	return new Enemy();
@@ -97,6 +119,16 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 	return sword;
 }
 
+HitboxWeapon* ObjectsManager::CreateHitboxWeaponBite()
+{
+	HitboxWeapon* bite = new HitboxWeapon();
+
+	bite->SetWeaponCooldown(60);
+	bite->SetWeaponDMG(0.25F);
+
+	return bite;
+}
+
 Enemy* ObjectsManager::CreateEnemyDevil()
 {
 	Enemy* devil = new Enemy();
@@ -133,8 +165,8 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	devil->SetPosition(0.F, 0.F);
 
 	//Stats
-	devil->SetHealth(1.5F);
-	devil->SetSpeed(2.F);
+	devil->SetHealth(.5F);
+	devil->SetSpeed(1.25F);
 
 	return devil;
 }

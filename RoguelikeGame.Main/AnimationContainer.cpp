@@ -13,8 +13,13 @@ namespace sf
 
 	AnimationContainer::AnimationContainer()
 	{
-		_currentAnimation = nullptr;
 		_noTexture = Utilities::GetInstance()->NoTexture16x16();
+
+		_currentState = "";
+		_currentAnimation = nullptr;
+
+		_smoothChangeState = "";
+		_smoothChangePrevLoop = true;
 
 		_noTextureVertex.resize(4);
 		_noTextureVertex.setPrimitiveType(sf::Quads);
@@ -35,12 +40,19 @@ namespace sf
 	void AnimationContainer::Tick(bool tick)
 	{
 		if (HasStateAndAnimation())
-			_animationStates[_currentState].Tick(tick);
+		{
+			_currentAnimation->Tick(tick);
 
-		Update();
+			if (_smoothChangeState != "" && _currentAnimation->IsEnded())
+			{
+				_currentAnimation->SetLoop(_smoothChangePrevLoop);
+				SetCurrentState(_smoothChangeState);		
+			}
+		}
+
 	}
 
-	void AnimationContainer::Update()
+	void AnimationContainer::UpdateCurrentAnimationPtr()
 	{
 		auto it = _animationStates.find(_currentState);
 		if (it == _animationStates.end())
@@ -61,7 +73,31 @@ namespace sf
 
 	void AnimationContainer::SetCurrentState(std::string state)
 	{
+		if (_currentState == state) return;
+
+		if (_smoothChangeState != "")
+		{
+			_currentAnimation->SetLoop(_smoothChangePrevLoop);
+			_smoothChangeState = "";
+		}
+
 		_currentState = state;
+
+		if (HasStateAndAnimation())
+		{
+			UpdateCurrentAnimationPtr();
+			_currentAnimation->Reset();
+			_currentAnimation->Start();
+		}
+	}
+
+	void AnimationContainer::SmoothStateChange(std::string state)
+	{
+		if(_smoothChangeState == "") //Not overriding real one
+			_smoothChangePrevLoop = _currentAnimation->GetLoop();
+
+		_smoothChangeState = state;
+		_currentAnimation->SetLoop(false);
 	}
 
 	void AnimationContainer::RenameState(std::string oldName, std::string newName)
@@ -203,6 +239,11 @@ namespace sf
 	std::map<std::string, sf::Animation>* AnimationContainer::GetAnimationStates()
 	{
 		return &_animationStates;
+	}
+
+	std::string AnimationContainer::GetCurrentState()
+	{
+		return _currentState;
 	}
 
 	void AnimationContainer::draw(sf::RenderTarget& target, sf::RenderStates states) const

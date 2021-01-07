@@ -155,6 +155,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="HitboxWeapon.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AnimationContainer.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMap.h" />
+    <ClInclude Include="HitboxWeapon.h" />
     <ClInclude Include="KeyboardEventHandler.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="AnimationContainer.h" />

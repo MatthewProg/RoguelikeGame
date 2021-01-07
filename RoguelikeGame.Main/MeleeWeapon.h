@@ -19,9 +19,9 @@ public:
 	MeleeWeapon();
 	~MeleeWeapon();
 
-	bool CanAttack();
-	void Attack();
-	void Update(bool tick, float deltaTime);
+	bool CanAttack() override;
+	void Attack() override;
+	void Update(bool tick, float deltaTime) override;
 
 	void SetHitboxAccuracy(unsigned short steps);
 

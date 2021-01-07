@@ -7,7 +7,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
-	//_window.setFramerateLimit(144);
+	_window.setFramerateLimit(144);
 	_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
@@ -119,6 +119,10 @@ void Game::Start()
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(0)->SetPosition(500, 310);
 	_enemies.GetEnemies()->at(1)->SetPosition(480, 300);
 	_enemies.GetEnemies()->at(1)->SetState("move");
@@ -176,7 +180,8 @@ void Game::Update()
 	_player.Update(Game::Tick(), (float)_delta);
 
 	_enemies.Update(Game::Tick(), (float)_delta);
-
+	_enemies.CheckAttacks(&_player);
+	
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);
 }

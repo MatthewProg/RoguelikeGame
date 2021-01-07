@@ -13,6 +13,9 @@ Enemy::Enemy()
 	SetSpeed(1.F);
 	SetVisibility(true);
 
+	_tmpSpeed = 1.F;
+	_inAttack = false;
+
 	_weapon = nullptr;
 }
 
@@ -22,9 +25,27 @@ Enemy::~Enemy()
 		delete _weapon;
 }
 
-void Enemy::Update(bool tick)
+void Enemy::Update(bool tick, float delta)
 {
 	Entity::UpdateEntity(tick);
+	_weapon->Update(tick, delta);
+
+	if (_inAttack && GetState() != "attack")
+	{
+		SetSpeed(_tmpSpeed);
+		_inAttack = false;
+	}
+}
+
+void Enemy::Attack()
+{
+	SetState("attack");
+	GetAnimations()->SmoothStateChange("idle");
+	_weapon->Attack();
+
+	_tmpSpeed = GetSpeed();
+	SetSpeed(0);
+	_inAttack = true;
 }
 
 Weapon* Enemy::GetWeapon()

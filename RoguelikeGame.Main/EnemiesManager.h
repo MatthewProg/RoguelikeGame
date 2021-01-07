@@ -22,6 +22,7 @@ public:
 
 	void Update(bool tick, float deltaTime);
 	void CheckForHit(Player* player);
+	void CheckAttacks(Player* player);
 
 	void SetEnemiesHitboxVisibility(bool visibility);
 	bool GetEnemiesHitboxVisibility();
