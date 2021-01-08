@@ -8,7 +8,7 @@ bool CollisionHelper::CheckSimpleCollision(const sf::FloatRect first, const sf::
 bool CollisionHelper::CheckCircleCollision(const sf::Vector2f point, const sf::Vector2f center, float radius, float arc, float angle)
 {
     auto pointAngle = MathHelper::GetAngleBetweenPoints(center, point);
-    auto pointRadius = MathHelper::GetLenghtBetweenPoints(center, point);
+    auto pointRadius = MathHelper::GetDistanceBetweenPoints(center, point);
     auto normalPointAngle = (pointAngle < 0) ? 360 + pointAngle : pointAngle;
     auto normalCircleAngleL = ((angle < 0) ? 360 + angle : angle) - (arc / 2);
     auto normalCircleAngleR = ((angle < 0) ? 360 + angle : angle) + (arc / 2);

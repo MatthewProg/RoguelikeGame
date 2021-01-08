@@ -2,7 +2,13 @@
 
 CollisionsManager::CollisionsManager()
 {
+	_logger = Logger::GetInstance();
 	_maps.clear();
+	_edges.clear();
+	_edgesLines.resize(0);
+	_edgesLines.setPrimitiveType(sf::PrimitiveType::Lines);
+	_linesColor = sf::Color::White;
+	_showCollisionLines = false;
 }
 
 CollisionsManager::~CollisionsManager()
@@ -34,6 +40,212 @@ void CollisionsManager::GenerateCommonMap()
 				_sumMap.data[(i / it->width) * _sumMap.width + (i % it->width)] = true;
 }
 
+void CollisionsManager::CovertTilesIntoEdges()
+{
+	_edges.clear();
+
+	struct Cell
+	{
+		int edge_id[4] = { 0,0,0,0 };
+		bool edge_exist[4] = { false,false,false,false };
+		bool exist = false;
+	};
+	std::vector<Cell> grid(_sumMap.width * _sumMap.height);
+
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		grid[i].exist = _sumMap.data[i];
+		for (int j = 0; j < 4; j++)
+		{
+			grid[i].edge_exist[j] = false;
+			grid[i].edge_id[j] = 0;
+		}
+	}
+
+	// Iterate through region from top left to bottom right
+	for (unsigned int x = 0; x < _sumMap.width; x++)
+		for (unsigned y = 0; y < _sumMap.height; y++)
+		{
+			// Create some convenient indices
+			int i = y * _sumMap.width + x;			// This
+			int n = (y - 1) * _sumMap.width + x;	// Northern Neighbour
+			int s = (y + 1) * _sumMap.width + x;	// Southern Neighbour
+			int w = y * _sumMap.width + (x - 1);	// Western Neighbour
+			int e = y * _sumMap.width + (x + 1);	// Eastern Neighbour
+
+			// If this cell exists, check if it needs edges
+			if (grid[i].exist)
+			{
+				if (x == 0 || !grid[w].exist) //Western neighbour or map end
+				{
+					if (y == 0 || grid[n].edge_exist[0] == false)
+					{
+						// Northern neighbour does not have one, so create one
+						std::tuple<sf::Vector2f, sf::Vector2f> edge;
+
+						float posX = (x * _sumMap.tileWidth) + _sumMap.offsetX;
+						float posY = (y * _sumMap.tileHeight) + _sumMap.offsetY;
+
+						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
+						std::get<1>(edge) = sf::Vector2f(posX, posY + _sumMap.tileHeight); //End pos
+
+						// Add edge to pool
+						int edge_id = _edges.size();
+						_edges.push_back(edge);
+
+						// Update tile information with edge information
+						grid[i].edge_id[0] = edge_id;
+						grid[i].edge_exist[0] = true;
+					}
+					else
+					{
+						// Northern neighbour has a western edge, so grow it downwards
+						std::get<1>(_edges[grid[n].edge_id[0]]).y += _sumMap.tileHeight;
+						grid[i].edge_id[0] = grid[n].edge_id[0];
+						grid[i].edge_exist[0] = true;
+					}
+				}
+
+				if (x == _sumMap.width - 1 || !grid[e].exist) //Eastern neignbour or map end
+				{
+					if (y == 0 || !grid[n].edge_exist[1])
+					{
+						// Northern neighbour does not have one, so create one
+						std::tuple<sf::Vector2f, sf::Vector2f> edge;
+
+						float posX = ((x + 1) * _sumMap.tileWidth) + _sumMap.offsetX; //!!!TEST THIS -1!!!!
+						float posY = (y * _sumMap.tileHeight) + _sumMap.offsetY;
+
+						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
+						std::get<1>(edge) = sf::Vector2f(posX, posY + _sumMap.tileHeight); //End pos
+
+						// Add edge to Polygon Pool
+						int edge_id = _edges.size();
+						_edges.push_back(edge);
+
+						// Update tile information with edge information
+						grid[i].edge_id[1] = edge_id;
+						grid[i].edge_exist[1] = true;			
+					}
+					else
+					{
+						// Northern neighbour has one, so grow it downwards
+						std::get<1>(_edges[grid[n].edge_id[1]]).y += _sumMap.tileHeight;
+						grid[i].edge_id[1] = grid[n].edge_id[1];
+						grid[i].edge_exist[1] = true;
+					}
+				}
+
+				if (y == 0 || !grid[n].exist) //Northern neignbour or map end
+				{
+					if (x == 0 || !grid[w].edge_exist[2])
+					{
+						// Western neighbour does not have one, so create one
+						std::tuple<sf::Vector2f, sf::Vector2f> edge;
+
+						float posX = (x * _sumMap.tileWidth) + _sumMap.offsetX;
+						float posY = (y * _sumMap.tileHeight) + _sumMap.offsetY;
+
+						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
+						std::get<1>(edge) = sf::Vector2f(posX + _sumMap.tileWidth, posY); //End pos
+
+						// Add edge to Polygon Pool
+						int edge_id = _edges.size();
+						_edges.push_back(edge);
+
+						// Update tile information with edge information
+						grid[i].edge_id[2] = edge_id;
+						grid[i].edge_exist[2] = true;				
+					}
+					else
+					{
+						// Western neighbour has one, so grow it eastwards
+						std::get<1>(_edges[grid[w].edge_id[2]]).x += _sumMap.tileWidth;
+						grid[i].edge_id[2] = grid[w].edge_id[2];
+						grid[i].edge_exist[2] = true;
+					}
+				}
+
+				if (y == _sumMap.height - 1 || !grid[s].exist) //Southern neignbour or map end
+				{
+					if (x == 0 || !grid[w].edge_exist[3])
+					{
+						// Western neighbour does not have one, so I need to create one
+						std::tuple<sf::Vector2f, sf::Vector2f> edge;
+
+						float posX = (x * _sumMap.tileWidth) + _sumMap.offsetX;
+						float posY = ((y + 1) * _sumMap.tileHeight) + _sumMap.offsetY; //!!!TEST THIS -1!!!!
+
+						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
+						std::get<1>(edge) = sf::Vector2f(posX + _sumMap.tileWidth, posY); //End pos
+
+						// Add edge to Polygon Pool
+						int edge_id = _edges.size();
+						_edges.push_back(edge);
+
+						// Update tile information with edge information
+						grid[i].edge_id[3] = edge_id;
+						grid[i].edge_exist[3] = true;		
+					}
+					else
+					{
+						// Western neighbour has one, so grow it eastwards
+						std::get<1>(_edges[grid[w].edge_id[3]]).x += _sumMap.tileWidth;
+						grid[i].edge_id[3] = grid[w].edge_id[3];
+						grid[i].edge_exist[3] = true;
+					}
+				}
+			}
+		}
+
+		//Pass points to VertexArray
+		_edgesLines.clear();
+		_edgesLines.setPrimitiveType(sf::PrimitiveType::Lines);
+		_edgesLines.resize(_edges.size() * 2);
+		for (size_t i = 0; i < _edges.size(); i++)
+		{
+			_edgesLines[(i * 2) + 0].position = std::get<0>(_edges[i]);
+			_edgesLines[(i * 2) + 1].position = std::get<1>(_edges[i]);
+
+			_edgesLines[(i * 2) + 0].color = _linesColor;
+			_edgesLines[(i * 2) + 1].color = _linesColor;
+		}
+}
+
+std::vector<std::tuple<sf::Vector2f, sf::Vector2f>> CollisionsManager::GetEdges()
+{
+	return _edges;
+}
+
+void CollisionsManager::SetCollisionLinesColor(sf::Color color)
+{
+	_linesColor = color;
+	for (size_t i = 0; i < _edgesLines.getVertexCount(); i++)
+		_edgesLines[i].color = color;
+}
+
+void CollisionsManager::SetCollisionLinesVisibility(bool visible)
+{
+	_showCollisionLines = visible;
+}
+
+void CollisionsManager::ToggleCollisionLinesVisibility()
+{
+	std::string status = (!_showCollisionLines) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Show map collision lines: " + status);
+	SetCollisionLinesVisibility(!_showCollisionLines);
+}
+
+sf::Color CollisionsManager::GetCollisionLinesColor()
+{
+	return _linesColor;
+}
+
+bool CollisionsManager::GetCollisionLinesVisibility()
+{
+	return _showCollisionLines;
+}
+
 bool CollisionsManager::CheckCollision(const sf::FloatRect& rect)
 {
 	return CollisionHelper::CheckTileCollision(rect, &_sumMap);
@@ -44,6 +256,25 @@ sf::Vector2f CollisionsManager::GetLimitPosition(const sf::FloatRect& startPos, 
 	return CollisionHelper::GetTileLimitPosition(startPos, endPos, &_sumMap);
 }
 
+sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange)
+{
+	auto endPoint = MathHelper::GetPointFromAngle(center, angle, raycastRange);
+
+	sf::Vector2f closest = endPoint;
+	float currDst = raycastRange;
+	for (auto& l : _edges)
+	{
+		auto hitpoint = MathHelper::GetLinesIntersection(center, endPoint, std::get<0>(l), std::get<1>(l));
+		auto distance = MathHelper::GetDistanceBetweenPoints(center, hitpoint);
+		if (distance < currDst)
+		{
+			currDst = distance;
+			closest = hitpoint;
+		}
+	}
+	return closest;
+}
+
 std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps()
 {
 	return &_maps;
@@ -52,4 +283,10 @@ std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps()
 MapLayerModel<bool>* CollisionsManager::GetCommonMap()
 {
 	return &_sumMap;
+}
+
+void CollisionsManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	if(_showCollisionLines)
+		target.draw(_edgesLines);
 }

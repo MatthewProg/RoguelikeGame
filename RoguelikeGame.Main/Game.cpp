@@ -76,6 +76,7 @@ void Game::Start()
 	//Collisions
 	_collisionsManager.AddMap(*_gameMap.GetActionMap(), (unsigned char)1);
 	_collisionsManager.GenerateCommonMap();
+	_collisionsManager.CovertTilesIntoEdges();
 
 	//Player
 	_logger->Log(Logger::LogType::INFO, "Loading player components");
@@ -115,6 +116,7 @@ void Game::Start()
 	_playerMovement.SetCollisionsManager(&_collisionsManager);
 
 	//Enemies
+	_enemies.SetPlayer(&_player);
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
@@ -129,6 +131,7 @@ void Game::Start()
 	_enemies.GetEnemies()->at(2)->SetPosition(490, 310);
 	_enemies.GetEnemies()->at(2)->SetState("attack");
 	_enemies.GetEnemies()->at(3)->SetPosition(510, 300);
+	_enemies.SetCollisionsManager(&_collisionsManager);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -142,8 +145,10 @@ void Game::Start()
 	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleEnemiesHitboxVisibility);
+	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleMapCollisionLinesVisibility);
+	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleWeaponHitboxVisibility);
 	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
-	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleWeaponHitboxVisibility);
+	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
 }
 
 void Game::EventUpdate()
@@ -159,7 +164,7 @@ void Game::EventUpdate()
 			if (_player.GetWeapon()->CanAttack())
 			{
 				_player.GetWeapon()->Attack();
-				_enemies.CheckForHit(&_player);
+				_enemies.CheckForHit();
 			}
 		}
 		if (_event.type == sf::Event::MouseMoved)
@@ -167,6 +172,8 @@ void Game::EventUpdate()
 			auto coord = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
 			auto angle = MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player.GetCollisionBox()), sf::Vector2f(coord.x, coord.y));
 			_player.GetWeapon()->SetCurrentAngle(angle);
+
+			_player.GetWeapon()->SetRaycastHitpoint( _collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player.GetCollisionBox()), angle, 500));
 		}
 	}
 }
@@ -180,7 +187,8 @@ void Game::Update()
 	_player.Update(Game::Tick(), (float)_delta);
 
 	_enemies.Update(Game::Tick(), (float)_delta);
-	_enemies.CheckAttacks(&_player);
+	_enemies.CheckAttacks();
+	_enemies.UpdateRays();
 	
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);
@@ -194,6 +202,7 @@ void Game::Clear()
 void Game::Draw()
 {
 	_window.draw(_gameMap);
+	_window.draw(_collisionsManager);
 	_window.draw(_enemies);
 	_window.draw(_player);
 }
@@ -237,6 +246,17 @@ void Game::ToggleWeaponHitboxVisibility()
 void Game::ToggleEnemiesHitboxVisibility()
 {
 	_enemies.ToggleEnemiesHitboxVisibility();
+}
+
+void Game::ToggleMapCollisionLinesVisibility()
+{
+	_collisionsManager.ToggleCollisionLinesVisibility();
+}
+
+void Game::ToggleRaycastVisibility()
+{
+	_player.ToggleRaycastVisibility();
+	_enemies.ToggleEnemiesRaycastVisibility();
 }
 
 #pragma endregion

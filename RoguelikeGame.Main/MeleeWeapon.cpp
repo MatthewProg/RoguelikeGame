@@ -21,6 +21,8 @@ void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(_weapon, states);
 	if (GetHitboxVisibility())
 		target.draw(_hitbox, states);
+	if (GetRaycastVisibility())
+		target.draw(_raycast);
 }
 
 MeleeWeapon::MeleeWeapon() : Weapon(WeaponType::MELEE)

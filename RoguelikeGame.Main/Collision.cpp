@@ -4,7 +4,7 @@ sf::Collision::Collision()
 {
 	_showHitbox = false;
 	_hitboxRecangle.setFillColor(sf::Color(64, 255, 64, 64));
-	_hitboxRecangle.setOutlineThickness(-1);
+	_hitboxRecangle.setOutlineThickness(-.5F);
 	_hitboxRecangle.setOutlineColor(sf::Color(64, 255, 64, 160));
 	_hitboxRecangle.setSize(sf::Vector2f(16, 16));
 	_hitboxRecangle.setPosition(0, 0);

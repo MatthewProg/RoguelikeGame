@@ -5,7 +5,7 @@ Player::Player() : Entity()
 	//Collision changes
 	SetHitboxColor(sf::Color(64, 255, 64, 64));
 	SetHitboxOutlineColor(sf::Color(64, 255, 64, 160));
-	SetHitboxOutlineThickness(-1.F);
+	SetHitboxOutlineThickness(-.5F);
 	SetHitboxVisibility(false);
 
 	//Entity changes
@@ -46,6 +46,16 @@ void Player::ToggleWeaponHitboxVisibility()
 		std::string status = (!rev) ? "true" : "false";
 		_logger->Log(Logger::LogType::INFO, "Show current weapon rays: " + status);
 		_weapon->SetHitboxVisibility(!rev);
+	}
+}
+
+void Player::ToggleRaycastVisibility()
+{
+	if (_weapon != nullptr)
+	{
+		std::string status = (!_weapon->GetRaycastVisibility()) ? "true" : "false";
+		_logger->Log(Logger::LogType::INFO, "Show player weapon raycast: " + status);
+		_weapon->SetRaycastVisibility(!_weapon->GetRaycastVisibility());
 	}
 }
 

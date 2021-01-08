@@ -36,5 +36,7 @@ void HitboxWeapon::SetCurrentAngle(float angle)
 
 void HitboxWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	if (GetRaycastVisibility())
+		target.draw(_raycast);
 }
 

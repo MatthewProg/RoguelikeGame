@@ -50,6 +50,8 @@ private:
 	void ToggleConsoleInfo();
 	void ToggleWeaponHitboxVisibility();
 	void ToggleEnemiesHitboxVisibility();
+	void ToggleMapCollisionLinesVisibility();
+	void ToggleRaycastVisibility();
 #pragma endregion
 
 public:

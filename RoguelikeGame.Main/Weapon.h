@@ -19,14 +19,18 @@ protected:
 	float _currentAngle;
 
 	sf::VertexArray _hitbox;
+	sf::VertexArray _raycast;
 private:
 	float _dmg;
 	unsigned short _attackCooldown;
 
 	bool _isVisible;
 	bool _showHitbox;
+	bool _showRaycast;
 
 	sf::Color _hitboxColor;
+	sf::Color _raycastColor;
+
 
 	WeaponType _weaponType;
 public:
@@ -46,6 +50,9 @@ public:
 	sf::Color GetHitboxColor();
 	std::vector<sf::Vector2f> GetHitbox();
 	WeaponType GetWeaponType();
+	sf::Vector2f GetRaycastHitpoint();
+	sf::Color GetRaycastColor();
+	bool GetRaycastVisibility() const;
 
 	void SetWeaponDMG(float dmg);
 	void SetWeaponCooldown(uint16_t cooldown);
@@ -53,6 +60,9 @@ public:
 	virtual void SetCurrentAngle(float angle) = 0;
 	void SetHitboxVisibility(bool visibility);
 	void SetHitboxColor(sf::Color color);
+	void SetRaycastHitpoint(sf::Vector2f point);
+	void SetRaycastColor(sf::Color color);
+	void SetRaycastVisibility(bool visible);
 
 	sf::Animation* GetAnimation();
 	sf::TransformAnimation* GetTransformAnimation();

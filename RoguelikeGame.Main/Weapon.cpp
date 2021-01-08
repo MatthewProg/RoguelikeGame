@@ -8,7 +8,15 @@ Weapon::Weapon(WeaponType type)
 	_currentAngle = 0;
 	_isVisible = false;
 	_showHitbox = false;
+	_showRaycast = false;
 	_weaponType = type;
+	_raycastColor = sf::Color::Magenta;
+	_raycast.setPrimitiveType(sf::PrimitiveType::Lines);
+	_raycast.resize(2);
+	_raycast[0].position = getPosition();
+	_raycast[1].position = getPosition();
+	_raycast[0].color = sf::Color::Magenta;
+	_raycast[1].color = sf::Color::Magenta;
 }
 
 Weapon::~Weapon()
@@ -64,6 +72,21 @@ WeaponType Weapon::GetWeaponType()
 	return _weaponType;
 }
 
+sf::Vector2f Weapon::GetRaycastHitpoint()
+{
+	return _raycast[1].position;
+}
+
+sf::Color Weapon::GetRaycastColor()
+{
+	return _raycastColor;
+}
+
+bool Weapon::GetRaycastVisibility() const
+{
+	return _showRaycast;
+}
+
 void Weapon::SetWeaponDMG(float dmg)
 {
 	_dmg = dmg;
@@ -90,6 +113,24 @@ void Weapon::SetHitboxColor(sf::Color color)
 
 	for (size_t i = 0; i < _hitbox.getVertexCount(); i++)
 		_hitbox[i].color = _hitboxColor;
+}
+
+void Weapon::SetRaycastHitpoint(sf::Vector2f point)
+{
+	_raycast[0].position = getPosition();
+	_raycast[1].position = point;
+}
+
+void Weapon::SetRaycastColor(sf::Color color)
+{
+	_raycastColor = color;
+	_raycast[0].color = _raycastColor;
+	_raycast[1].color = _raycastColor;
+}
+
+void Weapon::SetRaycastVisibility(bool visible)
+{
+	_showRaycast = visible;
 }
 
 sf::Animation* Weapon::GetAnimation()

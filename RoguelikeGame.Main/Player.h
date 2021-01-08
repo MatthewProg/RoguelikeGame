@@ -24,6 +24,7 @@ public:
 
 	void ToggleHitboxVisibility();
 	void ToggleWeaponHitboxVisibility();
+	void ToggleRaycastVisibility();
 
 	//Weapon
 	Weapon* GetWeapon();

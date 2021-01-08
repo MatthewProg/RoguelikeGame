@@ -5,7 +5,7 @@ Enemy::Enemy()
 	//Collision changes
 	SetHitboxColor(sf::Color(64, 255, 64, 64));
 	SetHitboxOutlineColor(sf::Color(64, 255, 64, 160));
-	SetHitboxOutlineThickness(-1.F);
+	SetHitboxOutlineThickness(-.5F);
 	SetHitboxVisibility(false);
 
 	//Entity changes
