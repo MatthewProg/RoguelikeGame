@@ -31,6 +31,22 @@ sf::Texture* Utilities::NoTexture16x16()
 	return &_noTxt16x16;
 }
 
+sf::VertexArray Utilities::GenerateVertexCircle(const sf::Vector2f& center, float radius, unsigned short points, sf::Color color, bool fill)
+{
+	sf::VertexArray circle;
+	circle.resize(points + 1);
+	circle.setPrimitiveType((fill) ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
+
+	for (size_t i = 0; i < points + (unsigned int)1; i++)
+	{
+		circle[i].position = MathHelper::GetPointFromAngle(center, i * (360.F / (float)points), radius);
+		circle[i].color = color;
+	}
+	circle[points].position = circle[0].position;
+	circle[points].color = circle[0].color;
+	return circle;
+}
+
 Utilities* Utilities::GetInstance()
 {
 	if (_utilities == nullptr) {

@@ -8,6 +8,7 @@
 #include "EnemiesManager.h"
 #include "ObjectsManager.h"
 #include "DebugHelper.h"
+#include "EnemiesAI.h"
 #include "GameMap.h"
 #include "Player.h"
 
@@ -35,9 +36,11 @@ private:
 	Player _player;
 	EntityMovement _playerMovement;
 	EnemiesManager _enemies;
+	EnemiesAI _enemiesAI;
 
 	std::chrono::steady_clock::time_point _lastFrameTime;
 	void SetDeltaAndTick();
+	void RecalcPlayerRays();
 
 	bool Tick();
 

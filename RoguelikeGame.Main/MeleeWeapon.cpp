@@ -3,14 +3,9 @@
 void MeleeWeapon::PrepareHitbox()
 {
 	float step = _angle / (float)_hitboxAccuracy;
-	unsigned short p = 0;
-	for (size_t i = 0; i < _hitbox.getVertexCount(); i += 3)
-	{
-		_hitbox[i].position = getOrigin();
-		_hitbox[i + 1].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + (p * step), _range);
-		_hitbox[i + 2].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + ((p+1) * step), _range);
-		p++;
-	}
+	_hitbox[0].position = getOrigin();
+	for (size_t i = 1; i < _hitbox.getVertexCount(); i++)
+		_hitbox[i].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + ((i-1) * step), _range);
 }
 
 void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -33,8 +28,8 @@ MeleeWeapon::MeleeWeapon() : Weapon(WeaponType::MELEE)
 	_cooldownCounter = 0;
 
 	_angle = 60;
-	_hitbox.setPrimitiveType(sf::PrimitiveType::Triangles);
-	_hitbox.resize(12);
+	_hitbox.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+	_hitbox.resize(6);
 	_attackAnimation.SetTarget(this);
 
 	SetWeaponDMG(0.5);
@@ -80,7 +75,7 @@ void MeleeWeapon::Update(bool tick, float deltaTime)
 void MeleeWeapon::SetHitboxAccuracy(unsigned short steps)
 {
 	_hitboxAccuracy = steps;
-	_hitbox.resize((size_t)_hitboxAccuracy * 3);
+	_hitbox.resize((size_t)_hitboxAccuracy + 2);
 }
 
 

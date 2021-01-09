@@ -14,6 +14,7 @@ public:
 	static bool CheckTileCollision(const sf::FloatRect obj, const MapLayerModel<bool> *tiles);
 
 	static sf::Vector2f GetTileLimitPosition(const sf::FloatRect startPos, const sf::FloatRect endPos, const MapLayerModel<bool>* tiles);
+	static sf::Vector2f GetRectLimitPosition(const sf::FloatRect startPos, const sf::FloatRect endPos, const sf::FloatRect block);
 	static sf::Glsl::Ivec4 GetPosOnTiles(const sf::FloatRect pos, const MapLayerModel<bool>* tiles);
 	static std::vector<sf::Vector2f> GetRectPoints(const sf::FloatRect rect);
 };

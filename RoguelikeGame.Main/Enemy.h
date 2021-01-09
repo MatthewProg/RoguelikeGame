@@ -10,6 +10,7 @@ private:
 
 	float _tmpSpeed;
 	bool _inAttack;
+	bool _tmpStop;
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -19,7 +20,11 @@ public:
 
 	void Update(bool tick, float delta);
 	void Attack();
-	//void UpdateMovement(float delta, MapLayerModel<uint8_t>* tiles, uint8_t blockId);
+
+	void SetTmpStop(bool toggle);
+
+	bool GetTmpStop();
+	bool IsAttacking();
 
 	//Weapon
 	Weapon* GetWeapon();

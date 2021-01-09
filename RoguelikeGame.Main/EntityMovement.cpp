@@ -66,13 +66,13 @@ sf::FloatRect EntityMovement::GetNextHitboxPosition(float deltaTime)
 	float moveY = 0;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		moveX += (2 * deltaTime * _entity->GetSpeed());
+		moveX += (_entity->GetStep() * deltaTime * _entity->GetSpeed());
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		moveX -= (2 * deltaTime * _entity->GetSpeed());
+		moveX -= (_entity->GetStep() * deltaTime * _entity->GetSpeed());
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		moveY += (2 * deltaTime * _entity->GetSpeed());
+		moveY += (_entity->GetStep() * deltaTime * _entity->GetSpeed());
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		moveY -= (2 * deltaTime * _entity->GetSpeed());
+		moveY -= (_entity->GetStep() * deltaTime * _entity->GetSpeed());
 
 	auto rect = _entity->GetCollisionBox();
 	return sf::FloatRect(rect.left + moveX, rect.top + moveY, rect.width, rect.height);

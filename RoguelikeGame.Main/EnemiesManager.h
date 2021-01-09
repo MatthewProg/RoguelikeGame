@@ -16,7 +16,6 @@ private:
 	std::vector<Enemy*> _enemies;
 
 	Player* _player;
-	CollisionsManager* _collisionsManager; //DELETE when implementing enemies AI
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -27,10 +26,8 @@ public:
 	void Update(bool tick, float deltaTime);
 	void CheckForHit();
 	void CheckAttacks();
-	void UpdateRays(); //DELETE when implementing enemies AI
 
 	void SetPlayer(Player* player);
-	void SetCollisionsManager(CollisionsManager* manager); //DELETE when implementing enemies AI
 	void SetEnemiesHitboxVisibility(bool visibility);
 
 	bool GetEnemiesHitboxVisibility();

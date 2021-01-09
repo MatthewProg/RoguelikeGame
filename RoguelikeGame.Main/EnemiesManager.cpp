@@ -5,7 +5,6 @@ EnemiesManager::EnemiesManager()
 	_enemies.clear();
 	_logger = Logger::GetInstance();
 	_player = nullptr;
-	_collisionsManager = nullptr;
 }
 
 EnemiesManager::~EnemiesManager()
@@ -90,39 +89,9 @@ void EnemiesManager::CheckAttacks()
 	}
 }
 
-void EnemiesManager::UpdateRays()
-{
-	auto plrCenter = ViewHelper::GetRectCenter(_player->GetCollisionBox());
-	auto rayPrecision = 2.F;
-
-	for (auto& enemy : _enemies)
-	{
-		auto wpn = enemy->GetWeapon();
-		if (wpn != nullptr)
-		{
-			auto enemyCenter = ViewHelper::GetRectCenter(enemy->GetCollisionBox());
-			auto angle = MathHelper::GetAngleBetweenPoints(enemyCenter, plrCenter);
-			auto distance = MathHelper::GetDistanceBetweenPoints(enemyCenter, plrCenter);
-			auto raycastHitpoint = _collisionsManager->GetRayHitpoint(enemyCenter, angle, distance);
-			auto enemyRaycastDistance = MathHelper::GetDistanceBetweenPoints(enemyCenter, raycastHitpoint);
-
-			wpn->SetRaycastHitpoint(raycastHitpoint);
-			if (enemyRaycastDistance - rayPrecision < distance && enemyRaycastDistance + rayPrecision > distance)
-				wpn->SetRaycastColor(sf::Color::Yellow);
-			else
-				wpn->SetRaycastColor(sf::Color::Cyan);
-		}
-	}
-}
-
 void EnemiesManager::SetPlayer(Player* player)
 {
 	_player = player;
-}
-
-void EnemiesManager::SetCollisionsManager(CollisionsManager* manager)
-{
-	_collisionsManager = manager;
 }
 
 void EnemiesManager::SetEnemiesHitboxVisibility(bool visibility)

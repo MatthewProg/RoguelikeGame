@@ -1,9 +1,13 @@
 #pragma once
 
 #include <vector>
-#include "SFML/Graphics/Image.hpp"
+
+#include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/Graphics/Image.hpp"
 #include "SFML/Window/Event.hpp"
+
+#include "MathHelper.h"
 
 class Utilities
 {
@@ -15,6 +19,7 @@ private:
 	void Generate(unsigned int width, unsigned int height);
 public:
 	sf::Texture* NoTexture16x16();
+	static sf::VertexArray GenerateVertexCircle(const sf::Vector2f& center, float radius, unsigned short points, sf::Color color = sf::Color::White, bool fill = false);
 
 	Utilities(Utilities& other) = delete;
 	void operator=(const Utilities&) = delete;

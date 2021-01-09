@@ -29,6 +29,14 @@ void Game::SetDeltaAndTick()
 	_tickCounter += _delta;
 }
 
+void Game::RecalcPlayerRays()
+{
+	auto coord = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
+	auto angle = MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player.GetCollisionBox()), sf::Vector2f(coord.x, coord.y));
+	_player.GetWeapon()->SetCurrentAngle(angle);
+	_player.GetWeapon()->SetRaycastHitpoint(_collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player.GetCollisionBox()), angle, 500));
+}
+
 bool Game::Tick()
 {
 	if (_tickCounter >= 1)
@@ -115,6 +123,11 @@ void Game::Start()
 	_playerMovement.SetEntity(&_player);
 	_playerMovement.SetCollisionsManager(&_collisionsManager);
 
+	//Enemies AI
+	_enemiesAI.SetTarget(&_player);
+	_enemiesAI.SetCollisionsManager(&_collisionsManager);
+	_enemiesAI.SetEnemiesManager(&_enemies);
+
 	//Enemies
 	_enemies.SetPlayer(&_player);
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
@@ -125,13 +138,10 @@ void Game::Start()
 	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(0)->SetPosition(500, 310);
-	_enemies.GetEnemies()->at(1)->SetPosition(480, 300);
-	_enemies.GetEnemies()->at(1)->SetState("move");
-	_enemies.GetEnemies()->at(2)->SetPosition(490, 310);
-	_enemies.GetEnemies()->at(2)->SetState("attack");
-	_enemies.GetEnemies()->at(3)->SetPosition(510, 300);
-	_enemies.SetCollisionsManager(&_collisionsManager);
+	_enemies.GetEnemies()->at(0)->SetPosition(600, 310);
+	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -149,6 +159,9 @@ void Game::Start()
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleWeaponHitboxVisibility);
 	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
 	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
+
+	//Reset timings
+	SetDeltaAndTick();
 }
 
 void Game::EventUpdate()
@@ -168,13 +181,7 @@ void Game::EventUpdate()
 			}
 		}
 		if (_event.type == sf::Event::MouseMoved)
-		{
-			auto coord = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
-			auto angle = MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player.GetCollisionBox()), sf::Vector2f(coord.x, coord.y));
-			_player.GetWeapon()->SetCurrentAngle(angle);
-
-			_player.GetWeapon()->SetRaycastHitpoint( _collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player.GetCollisionBox()), angle, 500));
-		}
+			RecalcPlayerRays();
 	}
 }
 
@@ -186,9 +193,12 @@ void Game::Update()
 	_playerMovement.Update((float)_delta);
 	_player.Update(Game::Tick(), (float)_delta);
 
+	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
+
 	_enemies.Update(Game::Tick(), (float)_delta);
 	_enemies.CheckAttacks();
-	_enemies.UpdateRays();
+
+	_enemiesAI.Update((float)_delta);
 	
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);

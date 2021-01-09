@@ -15,6 +15,7 @@ Enemy::Enemy()
 
 	_tmpSpeed = 1.F;
 	_inAttack = false;
+	_tmpStop = false;
 
 	_weapon = nullptr;
 }
@@ -32,7 +33,7 @@ void Enemy::Update(bool tick, float delta)
 
 	if (_inAttack && GetState() != "attack")
 	{
-		SetSpeed(_tmpSpeed);
+		SetTmpStop(false);
 		_inAttack = false;
 	}
 }
@@ -43,9 +44,33 @@ void Enemy::Attack()
 	GetAnimations()->SmoothStateChange("idle");
 	_weapon->Attack();
 
-	_tmpSpeed = GetSpeed();
-	SetSpeed(0);
+	SetTmpStop(true);
 	_inAttack = true;
+}
+
+void Enemy::SetTmpStop(bool toggle)
+{
+	if (_tmpStop != toggle)
+	{
+		if (_tmpStop == false)
+		{
+			_tmpSpeed = GetSpeed();
+			SetSpeed(0);
+		}
+		else
+			SetSpeed(_tmpSpeed);
+	}
+	_tmpStop = toggle;
+}
+
+bool Enemy::GetTmpStop()
+{
+	return _tmpStop;
+}
+
+bool Enemy::IsAttacking()
+{
+	return _inAttack;
 }
 
 Weapon* Enemy::GetWeapon()

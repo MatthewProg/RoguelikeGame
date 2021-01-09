@@ -114,6 +114,9 @@
     <ClCompile Include="HitboxWeapon.cpp">
       <Filter>Models</Filter>
     </ClCompile>
+    <ClCompile Include="EnemiesAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -196,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="HitboxWeapon.h">
       <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemiesAI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

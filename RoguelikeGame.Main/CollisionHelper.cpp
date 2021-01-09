@@ -136,6 +136,71 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect startPos,
         return sf::Vector2f(endPos.left, endPos.top);
 }
 
+sf::Vector2f CollisionHelper::GetRectLimitPosition(const sf::FloatRect startPos, const sf::FloatRect endPos, const sf::FloatRect block)
+{
+    if (CheckSimpleCollision(endPos, block))
+    {
+        sf::Vector2f moveVector(endPos.left - startPos.left, endPos.top - startPos.top);
+
+        float outY = startPos.top;
+        float outX = startPos.left;
+
+        sf::FloatRect verticalMove(startPos.left, endPos.top, startPos.width, startPos.height);
+        if (moveVector.y < 0) //Trying to move up
+        {
+            if (CheckSimpleCollision(verticalMove, block)) //Collision on top
+            {
+                auto blockLowerY = block.top + block.height;
+                auto diff = startPos.top - blockLowerY;
+                outY -= diff;
+            }
+            else
+                outY += moveVector.y;
+        }
+        else if (moveVector.y > 0) //Trying to move down
+        {
+            if (CheckSimpleCollision(verticalMove, block))
+            {
+                auto blockUpperY = block.top;
+                auto diff = blockUpperY - (startPos.top + startPos.height);
+                outY += diff;
+            }
+            else
+                outY += moveVector.y;
+        }
+
+        //Make moves
+        sf::FloatRect horizontalMove(endPos.left, outY, startPos.width, startPos.height);
+
+        if (moveVector.x < 0) //Trying to move left
+        {
+            if (CheckSimpleCollision(horizontalMove,block))
+            {
+                auto blockRightX = block.left + block.width;
+                auto diff = startPos.left - blockRightX;
+                outX -= diff;
+            }
+            else
+                outX += moveVector.x;
+        }
+        else if (moveVector.x > 0) //Trying to move right
+        {
+            if (CheckSimpleCollision(horizontalMove, block))
+            {
+                auto blockLeftX = block.left;
+                auto diff = blockLeftX - (startPos.left + startPos.width);
+                outX += diff;
+            }
+            else
+                outX += moveVector.x;
+        }
+        
+        return sf::Vector2f(outX, outY);
+    }
+    else
+        return sf::Vector2f(endPos.left, endPos.top);
+}
+
 sf::Glsl::Ivec4 CollisionHelper::GetPosOnTiles(const sf::FloatRect pos, const MapLayerModel<bool>* tiles)
 {
     int y1 = (int)((pos.top - tiles->offsetY) / tiles->tileHeight);

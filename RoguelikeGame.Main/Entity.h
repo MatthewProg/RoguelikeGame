@@ -11,6 +11,7 @@ private:
 
 	float _health;
 	float _speed;
+	float _step;
 
 	sf::Transformable _transform;
 
@@ -35,6 +36,7 @@ public:
 	std::string GetState();
 	float GetHealth();
 	float GetSpeed();
+	float GetStep();
 	bool GetVisibility(); 
 	sf::Vector2f GetPosition();
 	float GetRotation();
@@ -48,6 +50,7 @@ public:
 	void SetAnimations(sf::AnimationContainer container);
 	void SetHealth(float health);
 	void SetSpeed(float speed);
+	void SetStep(float step);
 	void SetVisibility(bool visibility);
 	void SetPosition(float x, float y);
 	void SetPosition(const sf::Vector2f& pos);

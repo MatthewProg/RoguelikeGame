@@ -166,7 +166,7 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 
 	//Stats
 	devil->SetHealth(.5F);
-	devil->SetSpeed(1.25F);
+	devil->SetSpeed(.5F);
 
 	return devil;
 }
