@@ -5,6 +5,7 @@ GameMap<T>::GameMap()
 {
 	_map.clear();
 	_layersIds.clear();
+	_pathfingingPoints.clear();
 	_actionMap.visible = false;
 	_actionMap.opacity = 0.5;
 	_actionMap.tilesName = "special";
@@ -37,6 +38,7 @@ bool GameMap<T>::LoadFromFile(std::string path)
 
 	_mapSize = sf::Vector2u(doc["width"].get<unsigned int>(),doc["height"].get<unsigned int>());
 
+	//Layers
 	for (auto& v : doc["layers"])
 	{
 		auto id = v["id"].get<unsigned int>();
@@ -57,6 +59,7 @@ bool GameMap<T>::LoadFromFile(std::string path)
 			_map[id].data.push_back(dat.get<T>());
 	}
 
+	//Action map
 	_actionMap.height = doc["actionLayer"]["height"].get<unsigned int>();
 	_actionMap.width = doc["actionLayer"]["width"].get<unsigned int>();
 	_actionMap.offsetX = doc["actionLayer"]["x"].get<float>();
@@ -65,6 +68,14 @@ bool GameMap<T>::LoadFromFile(std::string path)
 	_actionMap.tileWidth = doc["actionLayer"]["tileWidth"].get<unsigned int>();
 	for (auto& dat : doc["actionLayer"]["data"])
 		_actionMap.data.push_back(dat.get<unsigned char>());
+
+	//Pathfind
+	for (auto& vec : doc["pathfindPoints"])
+	{
+		float x = vec["x"].get<float>();
+		float y = vec["y"].get<float>();
+		_pathfingingPoints.push_back(sf::Vector2f(x, y));
+	}
 		
 	std::sort(_layersIds.begin(), _layersIds.end());
 
@@ -186,6 +197,12 @@ template<typename T>
 MapLayerModel<unsigned char>* GameMap<T>::GetActionMap()
 {
 	return &_actionMap;
+}
+
+template<typename T>
+std::vector<sf::Vector2f> GameMap<T>::GetPathfindingPoints()
+{
+	return _pathfingingPoints;
 }
 
 template<typename T>
@@ -606,6 +623,7 @@ template sf::Vector2u GameMap<int>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<int>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<int>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<int>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<int>::GetPathfindingPoints();
 template sf::Color GameMap<int>::GetActionMapGridColor();
 template bool GameMap<int>::GetActionMapGridVisibility();
 template void GameMap<int>::SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -643,6 +661,7 @@ template sf::Vector2u GameMap<char>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<char>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<char>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<char>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<char>::GetPathfindingPoints();
 template sf::Color GameMap<char>::GetActionMapGridColor();
 template bool GameMap<char>::GetActionMapGridVisibility();
 template void GameMap<char>::SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -680,6 +699,7 @@ template sf::Vector2u GameMap<short>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<short>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<short>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<short>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<short>::GetPathfindingPoints();
 template sf::Color GameMap<short>::GetActionMapGridColor();
 template bool GameMap<short>::GetActionMapGridVisibility();
 template void GameMap<short>::SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -719,6 +739,7 @@ template sf::Vector2u GameMap<unsigned int>::GetLayerSize(unsigned int layerId);
 template sf::Vector2f GameMap<unsigned int>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned int>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned int>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<unsigned int>::GetPathfindingPoints();
 template sf::Color GameMap<unsigned int>::GetActionMapGridColor();
 template bool GameMap<unsigned int>::GetActionMapGridVisibility();
 template void GameMap<unsigned int>::SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -756,6 +777,7 @@ template sf::Vector2u GameMap<unsigned char>::GetLayerSize(unsigned int layerId)
 template sf::Vector2f GameMap<unsigned char>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned char>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned char>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<unsigned char>::GetPathfindingPoints();
 template sf::Color GameMap<unsigned char>::GetActionMapGridColor();
 template bool GameMap<unsigned char>::GetActionMapGridVisibility();
 template void GameMap<unsigned char>::SetLayerVisibility(unsigned int layerId, bool visibility);
@@ -793,6 +815,7 @@ template sf::Vector2u GameMap<unsigned short>::GetLayerSize(unsigned int layerId
 template sf::Vector2f GameMap<unsigned short>::GetLayerOffset(unsigned int layerId);
 template std::string GameMap<unsigned short>::GetLayerTilesName(unsigned int layerId);
 template MapLayerModel<unsigned char>* GameMap<unsigned short>::GetActionMap();
+template std::vector<sf::Vector2f> GameMap<unsigned short>::GetPathfindingPoints();
 template sf::Color GameMap<unsigned short>::GetActionMapGridColor();
 template bool GameMap<unsigned short>::GetActionMapGridVisibility();
 template void GameMap<unsigned short>::SetLayerVisibility(unsigned int layerId, bool visibility);

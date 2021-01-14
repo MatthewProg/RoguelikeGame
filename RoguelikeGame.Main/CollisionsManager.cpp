@@ -275,6 +275,15 @@ sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float
 	return closest;
 }
 
+bool CollisionsManager::RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint)
+{
+	auto angle = MathHelper::GetAngleBetweenPoints(startPos, endPos);
+	auto range = MathHelper::GetDistanceBetweenPoints(startPos, endPos);
+	auto hitpoint = GetRayHitpoint(startPos, angle, range);
+	*distanceToHitpoint = MathHelper::GetDistanceBetweenPoints(startPos, hitpoint);
+	return (hitpoint == endPos);
+}
+
 std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps()
 {
 	return &_maps;

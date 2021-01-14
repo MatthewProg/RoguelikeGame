@@ -50,6 +50,7 @@ public:
 	bool CheckCollision(const sf::FloatRect& rect);
 	sf::Vector2f GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos);
 	sf::Vector2f GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange);
+	bool RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint);
 
 	//Var access methods
 	std::vector<MapLayerModel<bool>>* GetStoredMaps();

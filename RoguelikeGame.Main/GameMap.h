@@ -33,6 +33,8 @@ private:
 	sf::VertexArray _actionMapVertices;
 	sf::Transformable _actionMapTransform;
 
+	std::vector<sf::Vector2f> _pathfingingPoints;
+
 	sf::VertexArray _actionMapGrid;
 	sf::Color _actionMapGridColor;
 	bool _showGrid;
@@ -73,6 +75,7 @@ public:
 	sf::Vector2f GetLayerOffset(unsigned int layerId);
 	std::string GetLayerTilesName(unsigned int layerId);
 	MapLayerModel<unsigned char>* GetActionMap();
+	std::vector<sf::Vector2f> GetPathfindingPoints();
 	sf::Color GetActionMapGridColor();
 	bool GetActionMapGridVisibility();
 	

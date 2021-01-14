@@ -163,6 +163,7 @@
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MeleeWeapon.cpp" />
     <ClCompile Include="ObjectsManager.cpp" />
+    <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="EntityMovement.cpp" />
     <ClCompile Include="StringHelper.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MeleeWeapon.h" />
     <ClInclude Include="ObjectsManager.h" />
+    <ClInclude Include="PathfindingManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="EntityMovement.h" />
     <ClInclude Include="StringHelper.h" />

@@ -127,6 +127,7 @@ void Game::Start()
 	_enemiesAI.SetTarget(&_player);
 	_enemiesAI.SetCollisionsManager(&_collisionsManager);
 	_enemiesAI.SetEnemiesManager(&_enemies);
+	_enemiesAI.SetPathfindPoints(_gameMap.GetPathfindingPoints());
 
 	//Enemies
 	_enemies.SetPlayer(&_player);
@@ -151,6 +152,7 @@ void Game::Start()
 	sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
 	sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
 	sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
+	sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true };
 	_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
 	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
@@ -159,6 +161,7 @@ void Game::Start()
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleWeaponHitboxVisibility);
 	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
 	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
+	_keyboardHandler.NewOn(ctrlAltP, &Game::TogglePathfindingVisibility);
 
 	//Reset timings
 	SetDeltaAndTick();
@@ -213,6 +216,7 @@ void Game::Draw()
 {
 	_window.draw(_gameMap);
 	_window.draw(_collisionsManager);
+	_window.draw(_enemiesAI);
 	_window.draw(_enemies);
 	_window.draw(_player);
 }
@@ -267,6 +271,11 @@ void Game::ToggleRaycastVisibility()
 {
 	_player.ToggleRaycastVisibility();
 	_enemies.ToggleEnemiesRaycastVisibility();
+}
+
+void Game::TogglePathfindingVisibility()
+{
+	_enemiesAI.TogglePathfindingVisibility();
 }
 
 #pragma endregion

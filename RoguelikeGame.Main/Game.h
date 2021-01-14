@@ -55,6 +55,7 @@ private:
 	void ToggleEnemiesHitboxVisibility();
 	void ToggleMapCollisionLinesVisibility();
 	void ToggleRaycastVisibility();
+	void TogglePathfindingVisibility();
 #pragma endregion
 
 public:
