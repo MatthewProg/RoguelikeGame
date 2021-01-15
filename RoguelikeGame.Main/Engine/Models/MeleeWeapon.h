@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MathHelper.h"
-#include "Weapon.h"
+#include "../Helpers/MathHelper.h"
+#include "../Models/Weapon.h"
 
 class MeleeWeapon : public Weapon
 {

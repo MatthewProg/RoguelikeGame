@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CollisionsManager.h"
-#include "Entity.h"
+#include "../Managers/CollisionsManager.h"
+#include "../Models/Entity.h"
 
 class EntityMovement
 {

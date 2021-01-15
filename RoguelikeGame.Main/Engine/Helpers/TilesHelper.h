@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SFML/Graphics/Texture.hpp"
-#include "Utilities.h"
-#include "Logger.h"
+#include "../Utilities/Utilities.h"
+#include "../Core/Logger.h"
 
 class TilesHelper
 {

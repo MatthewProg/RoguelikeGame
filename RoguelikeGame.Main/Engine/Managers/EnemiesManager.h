@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Logger.h"
+#include "../Core/Logger.h"
 
-#include "CollisionsManager.h"
-#include "CollisionHelper.h"
-#include "MeleeWeapon.h"
-#include "Player.h"
-#include "Enemy.h"
+#include "../Managers/CollisionsManager.h"
+#include "../Helpers/CollisionHelper.h"
+#include "../Models/MeleeWeapon.h"
+#include "../Models/Player.h"
+#include "../Models/Enemy.h"
 
 class EnemiesManager : public sf::Drawable
 {

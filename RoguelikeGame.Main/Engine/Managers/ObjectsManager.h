@@ -1,10 +1,10 @@
 #pragma once
 
-#include "TexturesManager.h"
-#include "HitboxWeapon.h"
-#include "MeleeWeapon.h"
-#include "TilesHelper.h"
-#include "Enemy.h"
+#include "../Managers/TexturesManager.h"
+#include "../Models/HitboxWeapon.h"
+#include "../Models/MeleeWeapon.h"
+#include "../Helpers/TilesHelper.h"
+#include "../Models/Enemy.h"
 
 class ObjectsManager
 {

@@ -3,7 +3,7 @@
 #include <vector>
 #include <list>
 
-#include "CollisionsManager.h"
+#include "../Managers/CollisionsManager.h"
 
 class PathfindingManager
 {

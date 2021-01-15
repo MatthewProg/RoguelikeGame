@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ViewHelper.h"
-#include "Entity.h"
-#include "Weapon.h"
+#include "../Helpers/ViewHelper.h"
+#include "../Models/Entity.h"
+#include "../Models/Weapon.h"
 
-#include "Logger.h"
+#include "../Core/Logger.h"
 
 class Player : public Entity
 {

@@ -7,7 +7,7 @@
 #include "SFML/Graphics/Image.hpp"
 #include "SFML/Window/Event.hpp"
 
-#include "MathHelper.h"
+#include "../Helpers/MathHelper.h"
 
 class Utilities
 {

@@ -145,65 +145,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CollisionHelper.cpp" />
-    <ClCompile Include="CollisionsManager.cpp" />
-    <ClCompile Include="DebugHelper.cpp" />
-    <ClCompile Include="EnemiesAI.cpp" />
-    <ClCompile Include="EnemiesManager.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameMap.cpp" />
-    <ClCompile Include="HitboxWeapon.cpp" />
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Engine\Core\EnemiesAI.cpp" />
+    <ClCompile Include="Engine\Core\EntityMovement.cpp" />
+    <ClCompile Include="Engine\Core\Game.cpp" />
+    <ClCompile Include="Engine\Core\Logger.cpp" />
+    <ClCompile Include="Engine\Helpers\CollisionHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\DebugHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\MathHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\StringHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\TilesHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\ViewHelper.cpp" />
+    <ClCompile Include="Engine\Managers\CollisionsManager.cpp" />
+    <ClCompile Include="Engine\Managers\EnemiesManager.cpp" />
+    <ClCompile Include="Engine\Managers\ObjectsManager.cpp" />
+    <ClCompile Include="Engine\Managers\PathfindingManager.cpp" />
+    <ClCompile Include="Engine\Managers\TexturesManager.cpp" />
+    <ClCompile Include="Engine\Models\Enemy.cpp" />
+    <ClCompile Include="Engine\Models\Entity.cpp" />
+    <ClCompile Include="Engine\Models\GameMap.cpp" />
+    <ClCompile Include="Engine\Models\HitboxWeapon.cpp" />
+    <ClCompile Include="Engine\Models\MeleeWeapon.cpp" />
+    <ClCompile Include="Engine\Models\Player.cpp" />
+    <ClCompile Include="Engine\Models\Weapon.cpp" />
+    <ClCompile Include="Engine\UI\HealthBar.cpp" />
+    <ClCompile Include="Engine\Utilities\Animation.cpp" />
+    <ClCompile Include="Engine\Utilities\AnimationContainer.cpp" />
+    <ClCompile Include="Engine\Utilities\Collision.cpp" />
+    <ClCompile Include="Engine\Utilities\TransformAnimation.cpp" />
+    <ClCompile Include="Engine\Utilities\Utilities.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="AnimationContainer.cpp" />
-    <ClCompile Include="MathHelper.cpp" />
-    <ClCompile Include="MeleeWeapon.cpp" />
-    <ClCompile Include="ObjectsManager.cpp" />
-    <ClCompile Include="PathfindingManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="EntityMovement.cpp" />
-    <ClCompile Include="StringHelper.cpp" />
-    <ClCompile Include="TexturesManager.cpp" />
-    <ClCompile Include="TilesHelper.cpp" />
-    <ClCompile Include="TransformAnimation.cpp" />
-    <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="ViewHelper.cpp" />
-    <ClCompile Include="Weapon.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionHelper.h" />
-    <ClInclude Include="CollisionsManager.h" />
-    <ClInclude Include="DebugHelper.h" />
-    <ClInclude Include="EnemiesAI.h" />
-    <ClInclude Include="EnemiesManager.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameMap.h" />
-    <ClInclude Include="HitboxWeapon.h" />
-    <ClInclude Include="KeyboardEventHandler.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="AnimationContainer.h" />
-    <ClInclude Include="MapLayerModel.h" />
-    <ClInclude Include="MathHelper.h" />
-    <ClInclude Include="MeleeWeapon.h" />
-    <ClInclude Include="ObjectsManager.h" />
-    <ClInclude Include="PathfindingManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="EntityMovement.h" />
-    <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="TexturesManager.h" />
-    <ClInclude Include="TilesHelper.h" />
-    <ClInclude Include="TransformAnimation.h" />
-    <ClInclude Include="Utilities.h" />
-    <ClInclude Include="ViewHelper.h" />
-    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png" />
@@ -217,6 +187,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Core\EnemiesAI.h" />
+    <ClInclude Include="Engine\Core\EntityMovement.h" />
+    <ClInclude Include="Engine\Core\Game.h" />
+    <ClInclude Include="Engine\Core\Logger.h" />
+    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h" />
+    <ClInclude Include="Engine\Helpers\CollisionHelper.h" />
+    <ClInclude Include="Engine\Helpers\DebugHelper.h" />
+    <ClInclude Include="Engine\Helpers\MathHelper.h" />
+    <ClInclude Include="Engine\Helpers\StringHelper.h" />
+    <ClInclude Include="Engine\Helpers\TilesHelper.h" />
+    <ClInclude Include="Engine\Helpers\ViewHelper.h" />
+    <ClInclude Include="Engine\Managers\CollisionsManager.h" />
+    <ClInclude Include="Engine\Managers\EnemiesManager.h" />
+    <ClInclude Include="Engine\Managers\ObjectsManager.h" />
+    <ClInclude Include="Engine\Managers\PathfindingManager.h" />
+    <ClInclude Include="Engine\Managers\TexturesManager.h" />
+    <ClInclude Include="Engine\Models\Enemy.h" />
+    <ClInclude Include="Engine\Models\Entity.h" />
+    <ClInclude Include="Engine\Models\GameMap.h" />
+    <ClInclude Include="Engine\Models\HitboxWeapon.h" />
+    <ClInclude Include="Engine\Models\MapLayerModel.h" />
+    <ClInclude Include="Engine\Models\MeleeWeapon.h" />
+    <ClInclude Include="Engine\Models\Player.h" />
+    <ClInclude Include="Engine\Models\Weapon.h" />
+    <ClInclude Include="Engine\UI\HealthBar.h" />
+    <ClInclude Include="Engine\Utilities\Animation.h" />
+    <ClInclude Include="Engine\Utilities\AnimationContainer.h" />
+    <ClInclude Include="Engine\Utilities\Collision.h" />
+    <ClInclude Include="Engine\Utilities\TransformAnimation.h" />
+    <ClInclude Include="Engine\Utilities\Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "PathfindingManager.h"
-#include "CollisionsManager.h"
-#include "EnemiesManager.h"
-#include "ViewHelper.h"
+#include "../Managers/PathfindingManager.h"
+#include "../Managers/CollisionsManager.h"
+#include "../Managers/EnemiesManager.h"
+#include "../Helpers/ViewHelper.h"
 
 class EnemiesAI : public sf::Drawable
 {

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Logger.h"
-
-#include "CollisionHelper.h"
-#include "MapLayerModel.h"
 #include <tuple>
+
+#include "../Core/Logger.h"
+
+#include "../Helpers/CollisionHelper.h"
+#include "../Models/MapLayerModel.h"
 
 #include "SFML/Graphics/RenderTarget.hpp"
 #include "SFML/Graphics/VertexArray.hpp"

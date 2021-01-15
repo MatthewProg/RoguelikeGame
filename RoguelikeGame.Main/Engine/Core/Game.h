@@ -3,14 +3,13 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
-#include "KeyboardEventHandler.h"
-#include "EntityMovement.h"
-#include "EnemiesManager.h"
-#include "ObjectsManager.h"
-#include "DebugHelper.h"
-#include "EnemiesAI.h"
-#include "GameMap.h"
-#include "Player.h"
+#include "../Handlers/KeyboardEventHandler.h"
+#include "../Core/EntityMovement.h"
+#include "../Managers/ObjectsManager.h"
+#include "../Helpers/DebugHelper.h"
+#include "../Core/EnemiesAI.h"
+#include "../Models/GameMap.h"
+#include "../Models/Player.h"
 
 class Game
 {

@@ -10,11 +10,11 @@
 #include "SFML/Graphics/Texture.hpp"
 #include "nlohmann/json.hpp"
 
-#include "Logger.h"
-#include "Utilities.h"
-#include "TilesHelper.h"
-#include "MapLayerModel.h"
-#include "TexturesManager.h"
+#include "../Core/Logger.h"
+#include "../Utilities/Utilities.h"
+#include "../Helpers/TilesHelper.h"
+#include "../Models/MapLayerModel.h"
+#include "../Managers/TexturesManager.h"
 
 template<typename T>
 class GameMap : public sf::Drawable

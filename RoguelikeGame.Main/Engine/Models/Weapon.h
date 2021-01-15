@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TransformAnimation.h"
-#include "Animation.h"
+#include "../Utilities/TransformAnimation.h"
+#include "../Utilities/Animation.h"
 
 enum class WeaponType
 {

@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -34,181 +26,12 @@
     <Filter Include="Handlers">
       <UniqueIdentifier>{48f89be3-3f1c-4b50-9ac4-94a4c997dfe1}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationContainer.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="GameMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TilesHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="TexturesManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="MeleeWeapon.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformAnimation.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="MathHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Weapon.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectsManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionsManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityMovement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemiesManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="HitboxWeapon.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemiesAI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PathfindingManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationContainer.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="GameMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="TilesHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="MapLayerModel.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="TexturesManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardEventHandler.h">
-      <Filter>Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="MeleeWeapon.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformAnimation.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MathHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Weapon.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectsManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityMovement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemiesManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionsManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="HitboxWeapon.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemiesAI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PathfindingManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a4a82ebd-98c6-43e1-bc83-043542d505c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{431159e9-063e-4b6c-a2cb-766d3a781e3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png">
@@ -228,5 +51,184 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\CollisionHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\DebugHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\MathHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\StringHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\TilesHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helpers\ViewHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\CollisionsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\EnemiesManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\ObjectsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\PathfindingManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\TexturesManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\Enemy.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\Entity.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\GameMap.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\HitboxWeapon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\MapLayerModel.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\MeleeWeapon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\Player.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Models\Weapon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\EnemiesAI.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\EntityMovement.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Logger.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\HealthBar.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\Animation.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\AnimationContainer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\Collision.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\TransformAnimation.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Helpers\CollisionHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\DebugHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\MathHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\StringHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\TilesHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\ViewHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\CollisionsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\EnemiesManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\ObjectsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\PathfindingManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\TexturesManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\Enemy.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\Entity.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\GameMap.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\HitboxWeapon.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\MeleeWeapon.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\Player.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\Weapon.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\EnemiesAI.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\EntityMovement.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Logger.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\HealthBar.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utilities\Animation.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utilities\AnimationContainer.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utilities\Collision.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utilities\TransformAnimation.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utilities\Utilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

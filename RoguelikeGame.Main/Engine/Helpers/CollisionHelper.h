@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MapLayerModel.h"
-#include "MathHelper.h"
+#include "../Models/MapLayerModel.h"
+#include "../Helpers/MathHelper.h"
 
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/Glsl.hpp"

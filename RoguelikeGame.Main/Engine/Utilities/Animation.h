@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Utilities.h"
+#include "../Utilities/Utilities.h"
 
 #include "SFML/Graphics/Transformable.hpp"
 #include "SFML/Graphics/RenderTarget.hpp"

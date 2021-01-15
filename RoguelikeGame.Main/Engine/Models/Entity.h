@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AnimationContainer.h"
-#include "Collision.h"
+#include "../Utilities/AnimationContainer.h"
+#include "../Utilities/Collision.h"
 
 class Entity : public sf::Collision
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StringHelper.h"
+#include "../Helpers/StringHelper.h"
 
 #include <iostream>
 #include <fstream>

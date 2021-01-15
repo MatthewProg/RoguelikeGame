@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "Logger.h"
+#include "../Core/Logger.h"
 
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/Image.hpp"
