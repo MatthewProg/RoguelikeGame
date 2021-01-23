@@ -12,6 +12,7 @@ Player::Player() : Entity()
 	SetHealth(3.F);
 	SetSpeed(1.F);
 	SetVisibility(true);
+	SetView(sf::FloatRect(-150, -94, 300, 188));
 
 	//Player
 	_logger = Logger::GetInstance();

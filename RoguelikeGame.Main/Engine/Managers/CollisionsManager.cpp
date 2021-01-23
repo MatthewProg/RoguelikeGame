@@ -294,7 +294,7 @@ MapLayerModel<bool>* CollisionsManager::GetCommonMap()
 	return &_sumMap;
 }
 
-void CollisionsManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void CollisionsManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	if(_showCollisionLines)
 		target.draw(_edgesLines);

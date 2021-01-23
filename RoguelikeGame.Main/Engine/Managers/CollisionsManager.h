@@ -27,7 +27,7 @@ private:
 	bool _showCollisionLines;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	CollisionsManager();
 	~CollisionsManager();

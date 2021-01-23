@@ -15,6 +15,8 @@ private:
 
 	sf::Transformable _transform;
 
+	sf::FloatRect _viewRect;
+
 	bool _isVisible;
 
 	sf::Color _dmgColor;
@@ -45,6 +47,7 @@ public:
 	sf::Transformable GetTransform();
 	sf::Color GetTakingDmgColor();
 	unsigned short GetTakingDmgColorTicks();
+	sf::FloatRect GetView();
 
 	void SetState(std::string state);
 	void SetAnimations(sf::AnimationContainer container);
@@ -62,5 +65,6 @@ public:
 	void SetTransform(const sf::Transformable& trans);
 	void SetTakingDmgColor(const sf::Color color);
 	void SetTakingDmgColorTicks(unsigned short ticks);
+	void SetView(sf::FloatRect rect);
 };
 

@@ -59,7 +59,6 @@ public:
 	bool LoadFromFile(std::string path);
 
 	void PrepareFrame();
-	void Update(bool tick);
 
 	void SetTilesTexture(std::string tilesName, sf::Texture* texture);
 	bool AutoSetTilesTextures(TexturesManager* manager);

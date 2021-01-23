@@ -14,7 +14,6 @@ sf::Texture TilesHelper::GetStandardTile(sf::Image img, unsigned int width, unsi
 	}
 
 	int cols = size.x / width;
-	int rows = size.y / height;
 
 	int row = id / cols;
 	int col = id % cols;
@@ -32,7 +31,6 @@ sf::IntRect TilesHelper::GetTileRect(sf::Vector2u imgSize, unsigned int width, u
 		return sf::IntRect(0, 0, 16, 16);
 	}
 	int cols = imgSize.x / width;
-	int rows = imgSize.y / height;
 
 	int row = id / cols;
 	int col = id % cols;

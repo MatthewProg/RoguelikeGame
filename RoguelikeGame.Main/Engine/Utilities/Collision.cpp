@@ -117,7 +117,7 @@ sf::Vector2f sf::Collision::GetHitboxScale()
 	return _hitboxRecangle.getScale();
 }
 
-void sf::Collision::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void sf::Collision::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	if (_showHitbox)
 		target.draw(_hitboxRecangle);

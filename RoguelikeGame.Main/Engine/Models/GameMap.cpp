@@ -83,11 +83,6 @@ bool GameMap<T>::LoadFromFile(std::string path)
 }
 
 template<typename T>
-void GameMap<T>::Update(bool tick)
-{
-}
-
-template<typename T>
 void GameMap<T>::SetTilesTexture(std::string tilesName, sf::Texture* texture)
 {
 	_tilesTextures[tilesName] = texture;
@@ -377,6 +372,8 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		auto texture = _tilesTextures.find(found->second.tilesName);
 		if (texture == _tilesTextures.end())
 			states.texture = _noTexture;
+		else if (texture->second == nullptr)
+			states.texture = _noTexture;
 		else if (texture->second->getSize() == sf::Vector2u())
 			states.texture = _noTexture;
 		else
@@ -499,8 +496,6 @@ void GameMap<T>::PrepareActionMapLayer()
 
 	auto height = layer->height;
 	auto width = layer->width;
-	auto offsetX = layer->offsetX;
-	auto offsetY = layer->offsetY;
 	auto tileWidth = layer->tileWidth;
 	auto tileHeight = layer->tileHeight;
 
@@ -552,7 +547,6 @@ void GameMap<T>::PrepareActionMapGrid()
 	_actionMapGrid.setPrimitiveType(sf::Lines);
 	_actionMapGrid.resize(_actionMap.height * _actionMap.width * 8);
 
-	auto height = _actionMap.height;
 	auto width = _actionMap.width;
 	auto tileWidth = _actionMap.tileWidth;
 	auto tileHeight = _actionMap.tileHeight;
@@ -609,7 +603,6 @@ template void GameMap<int>::draw(sf::RenderTarget& target, sf::RenderStates stat
 template GameMap<int>::GameMap();
 template GameMap<int>::~GameMap();
 template void GameMap<int>::PrepareFrame();
-template void GameMap<int>::Update(bool tick);
 template bool GameMap<int>::LoadFromFile(std::string path);
 template void GameMap<int>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<int>::AutoSetTilesTextures(TexturesManager* manager);
@@ -647,7 +640,6 @@ template void GameMap<char>::draw(sf::RenderTarget& target, sf::RenderStates sta
 template GameMap<char>::GameMap();
 template GameMap<char>::~GameMap();
 template void GameMap<char>::PrepareFrame();
-template void GameMap<char>::Update(bool tick);
 template bool GameMap<char>::LoadFromFile(std::string path);
 template void GameMap<char>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<char>::AutoSetTilesTextures(TexturesManager* manager);
@@ -685,7 +677,6 @@ template void GameMap<short>::draw(sf::RenderTarget& target, sf::RenderStates st
 template GameMap<short>::GameMap();
 template GameMap<short>::~GameMap();
 template void GameMap<short>::PrepareFrame();
-template void GameMap<short>::Update(bool tick);
 template bool GameMap<short>::LoadFromFile(std::string path);
 template void GameMap<short>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<short>::AutoSetTilesTextures(TexturesManager* manager);
@@ -725,7 +716,6 @@ template void GameMap<unsigned int>::draw(sf::RenderTarget& target, sf::RenderSt
 template GameMap<unsigned int>::GameMap();
 template GameMap<unsigned int>::~GameMap();
 template void GameMap<unsigned int>::PrepareFrame();
-template void GameMap<unsigned int>::Update(bool tick);
 template bool GameMap<unsigned int>::LoadFromFile(std::string path);
 template void GameMap<unsigned int>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<unsigned int>::AutoSetTilesTextures(TexturesManager* manager);
@@ -763,7 +753,6 @@ template void GameMap<unsigned char>::draw(sf::RenderTarget& target, sf::RenderS
 template GameMap<unsigned char>::GameMap();
 template GameMap<unsigned char>::~GameMap();
 template void GameMap<unsigned char>::PrepareFrame();
-template void GameMap<unsigned char>::Update(bool tick);
 template bool GameMap<unsigned char>::LoadFromFile(std::string path);
 template void GameMap<unsigned char>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<unsigned char>::AutoSetTilesTextures(TexturesManager* manager);
@@ -801,7 +790,6 @@ template void GameMap<unsigned short>::draw(sf::RenderTarget& target, sf::Render
 template GameMap<unsigned short>::GameMap();
 template GameMap<unsigned short>::~GameMap();
 template void GameMap<unsigned short>::PrepareFrame();
-template void GameMap<unsigned short>::Update(bool tick);
 template bool GameMap<unsigned short>::LoadFromFile(std::string path);
 template void GameMap<unsigned short>::SetTilesTexture(std::string tilesName, sf::Texture* texture);
 template bool GameMap<unsigned short>::AutoSetTilesTextures(TexturesManager* manager);

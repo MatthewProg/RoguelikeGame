@@ -16,7 +16,9 @@ private:
 	PathfindingManager _pathfind;
 
 	sf::Vector2f _lastTargetPos;
-	std::map<Enemy*, std::vector<sf::Vector2f>> _enemyPath;
+	std::unordered_map<Vector2MapKey<float>, bool, Vector2MapKeyHasher<float>> _lastNeighbours;
+	std::map<Enemy*, std::list<sf::Vector2f>> _enemyPath;
+	Paths _allPaths;
 
 	sf::VertexArray _pathfindLines;
 	sf::Color _pathfindLinesColor;
@@ -26,7 +28,7 @@ private:
 	void PrepareVertex();
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	EnemiesAI();
 	~EnemiesAI();

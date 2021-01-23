@@ -34,23 +34,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\img\players.png">
-      <Filter>Resource Files\img</Filter>
-    </Image>
-    <Image Include="res\img\tiles.png">
-      <Filter>Resource Files\img</Filter>
-    </Image>
-    <Image Include="res\img\tiles2.png">
-      <Filter>Resource Files\img</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="res\maps\map1.txt">
-      <Filter>Resource Files\maps</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+    <None Include="res\maps\map1.json">
+      <Filter>Resource Files\maps</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h">
@@ -230,5 +217,19 @@
     <ClCompile Include="Engine\Utilities\Utilities.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\img\players.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+    <Image Include="res\img\special.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+    <Image Include="res\img\tiles.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+    <Image Include="res\img\tiles2.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
   </ItemGroup>
 </Project>

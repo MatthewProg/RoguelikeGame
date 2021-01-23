@@ -5,8 +5,12 @@
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
+#include <chrono>
 #include <ctime>
 #include <map>
+
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#define DISABLE_NEWLINE_AUTO_RETURN  0x0008
 
 struct LogOptions
 {
@@ -25,6 +29,8 @@ class Logger
 protected:
 	Logger(const LogOptions options) : _options(options)
 	{
+		TurnOnColorsSupport();
+
 		_options = options;
 		_typeStringMap[LogType::DEBUG] = "DEBUG";
 		_typeStringMap[LogType::ERROR] = "ERROR";
@@ -65,5 +71,23 @@ private:
 	std::map<LogType, std::string> _typeStringMap;
 	std::map<LogType, std::string> _typeColorMap;
 
+	void TurnOnColorsSupport();
 	std::string MessageBuilder(LogType type, std::string message, bool colorType);
+};
+
+class Stopwatch
+{
+protected:
+	static Stopwatch* _instance;
+	Stopwatch() { ; }
+private:
+	std::map<std::string, std::chrono::high_resolution_clock::time_point> _stopwatches;
+public:
+	static Stopwatch* GetInstance();
+
+	Stopwatch(Stopwatch& other) = delete;
+	void operator=(const Stopwatch&) = delete;
+
+	void Start(std::string name);
+	std::chrono::microseconds Stop(std::string name);
 };

@@ -7,7 +7,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
 	_window.create(vmode, title);
-	_window.setFramerateLimit(144);
+	//_window.setFramerateLimit(144);
 	_window.setView(_camera);
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
@@ -114,8 +114,10 @@ void Game::Start()
 	_player.SetAnimations(playerAnimations);
 	_player.SetState("idle");
 	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
-	_player.SetPosition(sf::Vector2f(496, 272));
+	_player.SetPosition(sf::Vector2f(296, 472));
 	_player.SetWeapon(_objTemplates.GetMeleeWeapon("sword"));
+	auto camSize = _camera.getSize() + sf::Vector2f(44, 44);
+	_player.SetView(sf::FloatRect(0 - (camSize.x / 2), 0 - (camSize.y / 2), camSize.x, camSize.y));
 
 	//Player movement
 	_playerMovement.SetIdleStateName("idle");
@@ -135,14 +137,63 @@ void Game::Start()
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	//
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	//
 	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	/*_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(0)->SetPosition(600, 310);
-	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));*/
+	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
+	_enemies.GetEnemies()->at(1)->SetPosition(510, 290);
+	_enemies.GetEnemies()->at(2)->SetPosition(520, 290);
+	_enemies.GetEnemies()->at(3)->SetPosition(530, 290);
+	_enemies.GetEnemies()->at(4)->SetPosition(540, 290);
+	_enemies.GetEnemies()->at(5)->SetPosition(550, 290);
+	_enemies.GetEnemies()->at(6)->SetPosition(560, 290);
+	_enemies.GetEnemies()->at(7)->SetPosition(570, 290);
+	_enemies.GetEnemies()->at(8)->SetPosition(580, 290);
+	_enemies.GetEnemies()->at(9)->SetPosition(590, 290);
+	_enemies.GetEnemies()->at(10)->SetPosition(500, 310);
+	_enemies.GetEnemies()->at(11)->SetPosition(510, 310);
+	_enemies.GetEnemies()->at(12)->SetPosition(520, 310);
+	_enemies.GetEnemies()->at(13)->SetPosition(530, 310);
+	_enemies.GetEnemies()->at(14)->SetPosition(540, 310);
+	_enemies.GetEnemies()->at(15)->SetPosition(550, 310);
+	_enemies.GetEnemies()->at(16)->SetPosition(560, 310);
+	_enemies.GetEnemies()->at(17)->SetPosition(570, 310);
+	_enemies.GetEnemies()->at(18)->SetPosition(580, 310);
+	_enemies.GetEnemies()->at(19)->SetPosition(590, 310);
+	/*_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
 	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
-	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -193,15 +244,24 @@ void Game::Update()
 	SetDeltaAndTick();
 	_debug.Status(Game::Tick());
 
+	//Stopwatch::GetInstance()->Start("player");
 	_playerMovement.Update((float)_delta);
 	_player.Update(Game::Tick(), (float)_delta);
+	//auto pl = std::to_string(Stopwatch::GetInstance()->Stop("player").count()) + "us";
 
+	//Stopwatch::GetInstance()->Start("rays");
 	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
+	//auto rays = std::to_string(Stopwatch::GetInstance()->Stop("rays").count()) + "us";
 
+	//Stopwatch::GetInstance()->Start("enemies");
 	_enemies.Update(Game::Tick(), (float)_delta);
+	//auto en = std::to_string(Stopwatch::GetInstance()->Stop("enemies").count()) + "us";
 	_enemies.CheckAttacks();
 
+	//Stopwatch::GetInstance()->Start("ai");
 	_enemiesAI.Update((float)_delta);
+	//auto ai = std::to_string(Stopwatch::GetInstance()->Stop("ai").count()) + "us";
+	//_logger->Log(Logger::LogType::DEBUG, "Player: "+pl+"   Rays: "+rays+"   Enemies: "+en+"   AI: "+ai);
 	
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);

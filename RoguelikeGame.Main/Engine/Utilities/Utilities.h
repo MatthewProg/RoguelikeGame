@@ -57,3 +57,44 @@ struct EventKeyMapKeyHasher
 	}
 };
 
+template<typename T>
+struct Vector2MapKey : public sf::Vector2<T>
+{
+	Vector2MapKey() : sf::Vector2<T>()
+	{ 
+		;
+	}
+
+	Vector2MapKey(const sf::Vector2<T>& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+	}
+
+	Vector2MapKey(const Vector2MapKey<T>& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+	}
+	
+	bool operator== (const Vector2MapKey<T>& other) const
+	{
+		return (this->x == other.x && this->y == other.y);
+	}
+};
+
+template<typename T>
+struct Vector2MapKeyHasher
+{
+	std::size_t operator()(const Vector2MapKey<T>& k) const
+	{
+		using std::size_t;
+		using std::hash;
+		using std::string;
+
+		std::size_t output = 17;
+		output = output * 31 + hash<T>()(k.x);
+		output = output * 31 + hash<T>()(k.y);
+		return output;
+	}
+};

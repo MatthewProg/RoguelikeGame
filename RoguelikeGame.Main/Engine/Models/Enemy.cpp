@@ -16,6 +16,7 @@ Enemy::Enemy()
 	_tmpSpeed = 1.F;
 	_inAttack = false;
 	_tmpStop = false;
+	_aiEnabled = false;
 
 	_weapon = nullptr;
 }
@@ -29,7 +30,8 @@ Enemy::~Enemy()
 void Enemy::Update(bool tick, float delta)
 {
 	Entity::UpdateEntity(tick);
-	_weapon->Update(tick, delta);
+	if(_weapon != nullptr)
+		_weapon->Update(tick, delta);
 
 	if (_inAttack && GetState() != "attack")
 	{
@@ -42,7 +44,8 @@ void Enemy::Attack()
 {
 	SetState("attack");
 	GetAnimations()->SmoothStateChange("idle");
-	_weapon->Attack();
+	if (_weapon != nullptr)
+		_weapon->Attack();
 
 	SetTmpStop(true);
 	_inAttack = true;
@@ -63,6 +66,11 @@ void Enemy::SetTmpStop(bool toggle)
 	_tmpStop = toggle;
 }
 
+void Enemy::SetAI(bool enable)
+{
+	_aiEnabled = enable;
+}
+
 bool Enemy::GetTmpStop()
 {
 	return _tmpStop;
@@ -71,6 +79,11 @@ bool Enemy::GetTmpStop()
 bool Enemy::IsAttacking()
 {
 	return _inAttack;
+}
+
+bool Enemy::IsAiEnabled()
+{
+	return _aiEnabled;
 }
 
 Weapon* Enemy::GetWeapon()

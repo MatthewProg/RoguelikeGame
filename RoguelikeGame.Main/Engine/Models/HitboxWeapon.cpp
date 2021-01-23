@@ -21,7 +21,7 @@ void HitboxWeapon::Attack()
 	_cooldownCounter = 0;
 }
 
-void HitboxWeapon::Update(bool tick, float deltaTime)
+void HitboxWeapon::Update(bool tick, float)
 {
 	if (tick && _cooldownCounter < GetWeaponCooldown())
 		_cooldownCounter++;
@@ -30,11 +30,11 @@ void HitboxWeapon::Update(bool tick, float deltaTime)
 		_weapon.Tick(tick);
 }
 
-void HitboxWeapon::SetCurrentAngle(float angle)
+void HitboxWeapon::SetCurrentAngle(float)
 {
 }
 
-void HitboxWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void HitboxWeapon::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	if (GetRaycastVisibility())
 		target.draw(_raycast);

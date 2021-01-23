@@ -26,6 +26,7 @@ Entity::Entity() : sf::Collision()
 	_dmgColor = sf::Color(255, 32, 32, 255);
 	_dmgColorTick = 15;
 	_dmgColorCounter = 0;
+	_viewRect = sf::FloatRect(-150,-94, 300, 188);
 }
 
 Entity::~Entity()
@@ -108,6 +109,17 @@ sf::Color Entity::GetTakingDmgColor()
 unsigned short Entity::GetTakingDmgColorTicks()
 {
 	return _dmgColorTick;
+}
+
+sf::FloatRect Entity::GetView()
+{
+	auto output = _viewRect;
+	auto pos = GetPosition();
+
+	output.left += pos.x;
+	output.top  += pos.y;
+
+	return output;
 }
 
 void Entity::SetState(std::string state)
@@ -205,6 +217,11 @@ void Entity::SetTakingDmgColor(const sf::Color color)
 void Entity::SetTakingDmgColorTicks(unsigned short ticks)
 {
 	_dmgColorTick = ticks;
+}
+
+void Entity::SetView(sf::FloatRect rect)
+{
+	_viewRect = rect;
 }
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -24,7 +24,7 @@ void EnemiesManager::Update(bool tick, float deltaTime)
 			if (it->IsDead())
 			{
 				_enemies.erase(_enemies.begin() + i);
-				break;
+				continue;
 			}
 		}
 
@@ -42,9 +42,11 @@ void EnemiesManager::CheckForHit()
 	//Player -> Enemy
 	auto weapon = _player->GetWeapon();
 	auto playerCenter = ViewHelper::GetRectCenter(_player->GetCollisionBox());
+	auto playerView = _player->GetView();
 
 	for (auto obj : _enemies)
 	{
+		if (CollisionHelper::CheckSimpleCollision(playerView, obj->GetCollisionBox()) == false) continue; //Not in player view
 		if (weapon == nullptr) continue;
 
 		if (weapon->GetWeaponType() == WeaponType::MELEE)
@@ -67,9 +69,12 @@ void EnemiesManager::CheckAttacks()
 {
 	//Enemy -> Player
 	auto playerHitbox = _player->GetCollisionBox();
+	auto playerView = _player->GetView();
 
 	for (auto enemy : _enemies)
 	{
+		if (CollisionHelper::CheckSimpleCollision(playerView, enemy->GetCollisionBox()) == false) continue; //Not in player view
+
 		auto enemyWeapon = enemy->GetWeapon();
 		if (enemyWeapon == nullptr) continue;
 
@@ -146,7 +151,7 @@ std::vector<Enemy*>* EnemiesManager::GetEnemies()
 	return &_enemies;
 }
 
-void EnemiesManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void EnemiesManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	for (auto it : _enemies)
 		target.draw(*it);

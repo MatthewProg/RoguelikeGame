@@ -8,7 +8,7 @@ int main()
     options.loggingPattern = "[{type}] {date} {time} - {message}";
     options.outputStream = LogOptions::LogOutput::CONSOLE;
 #ifdef NDEBUG
-    options.ignoredTypes["DEBUG"] = true;
+    //options.ignoredTypes["DEBUG"] = true;
 #endif
 
     Logger::GetInstance(options);

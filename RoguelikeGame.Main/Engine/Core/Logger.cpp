@@ -1,5 +1,8 @@
 #include "Logger.h"
 
+#define NOGDI //To avoid Windows.h ERROR enum conflict
+#include <Windows.h>
+
 Logger* Logger::_logger = nullptr;
 
 Logger* Logger::GetInstance(const LogOptions& options)
@@ -21,6 +24,16 @@ Logger::~Logger()
 	{
 		_outputStream.close();
 	}
+}
+
+void Logger::TurnOnColorsSupport()
+{
+	DWORD l_mode;
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleMode(hStdout, &l_mode);
+	SetConsoleMode(hStdout, l_mode |
+		ENABLE_VIRTUAL_TERMINAL_PROCESSING |
+		DISABLE_NEWLINE_AUTO_RETURN);
 }
 
 std::string Logger::MessageBuilder(LogType type, std::string message, bool colorType)
@@ -77,4 +90,33 @@ std::string Logger::CurrentTime()
 	strftime(buf, sizeof(buf), "%X", &tstruct);
 	std::string out(buf);
 	return out;
+}
+
+
+Stopwatch* Stopwatch::_instance = nullptr;
+
+Stopwatch* Stopwatch::GetInstance()
+{
+	if (_instance == nullptr) _instance = new Stopwatch();
+	return _instance;
+}
+
+void Stopwatch::Start(std::string name)
+{
+	_stopwatches[name] = std::chrono::high_resolution_clock::now();
+}
+
+std::chrono::microseconds Stopwatch::Stop(std::string name)
+{
+	std::chrono::microseconds output = std::chrono::duration_values<std::chrono::microseconds>::zero();
+
+	auto found = _stopwatches.find(name);
+	if (found != _stopwatches.end())
+	{
+		auto now = std::chrono::high_resolution_clock::now();
+		auto duration = now - found->second;
+		output = std::chrono::duration_cast<std::chrono::microseconds>(duration);
+		_stopwatches.erase(found);
+	}
+	return output;
 }
