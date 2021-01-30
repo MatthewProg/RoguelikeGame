@@ -17,6 +17,7 @@ Enemy::Enemy()
 	_inAttack = false;
 	_tmpStop = false;
 	_aiEnabled = false;
+	_avoidanceRadius = 0.0F;
 
 	_weapon = nullptr;
 }
@@ -71,6 +72,11 @@ void Enemy::SetAI(bool enable)
 	_aiEnabled = enable;
 }
 
+void Enemy::SetAvoidanceRadius(float radius)
+{
+	_avoidanceRadius = radius;
+}
+
 bool Enemy::GetTmpStop()
 {
 	return _tmpStop;
@@ -84,6 +90,11 @@ bool Enemy::IsAttacking()
 bool Enemy::IsAiEnabled()
 {
 	return _aiEnabled;
+}
+
+float Enemy::GetAvoidanceRadius()
+{
+	return _avoidanceRadius;
 }
 
 Weapon* Enemy::GetWeapon()

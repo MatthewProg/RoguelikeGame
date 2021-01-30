@@ -246,9 +246,19 @@ bool CollisionsManager::GetCollisionLinesVisibility()
 	return _showCollisionLines;
 }
 
-bool CollisionsManager::CheckCollision(const sf::FloatRect& rect)
+bool CollisionsManager::CheckTileCollision(const sf::FloatRect& rect)
 {
 	return CollisionHelper::CheckTileCollision(rect, &_sumMap);
+}
+
+bool CollisionsManager::CheckCircleCollision(const sf::Vector2f& center, float radius)
+{
+	return CollisionHelper::CheckTileCollision(center, radius, &_sumMap);
+}
+
+sf::Vector2f CollisionsManager::GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius)
+{
+	return CollisionHelper::GetTileLimitPosition(startPos, endPos, radius, &_sumMap);
 }
 
 sf::Vector2f CollisionsManager::GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos)
@@ -277,11 +287,12 @@ sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float
 
 bool CollisionsManager::RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint)
 {
+	float precision = 0.05F;
 	auto angle = MathHelper::GetAngleBetweenPoints(startPos, endPos);
 	auto range = MathHelper::GetDistanceBetweenPoints(startPos, endPos);
 	auto hitpoint = GetRayHitpoint(startPos, angle, range);
 	*distanceToHitpoint = MathHelper::GetDistanceBetweenPoints(startPos, hitpoint);
-	return (hitpoint == endPos);
+	return (*distanceToHitpoint >= range - precision && *distanceToHitpoint <= range + precision);
 }
 
 std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps()

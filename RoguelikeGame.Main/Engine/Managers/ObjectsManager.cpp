@@ -164,6 +164,11 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	devil->SetCollisionBoxOffset(sf::FloatRect(3.F, 17.F, 10.F, 12.F));
 	devil->SetPosition(0.F, 0.F);
 
+	auto box = devil->GetCollisionBox();
+	auto upperLeft = sf::Vector2f(box.left, box.top);
+	auto center = sf::Vector2f(box.left + (box.width / 2), box.top + (box.height / 2));
+	devil->SetAvoidanceRadius(MathHelper::GetDistanceBetweenPoints(upperLeft, center));
+
 	//Stats
 	devil->SetHealth(.5F);
 	devil->SetSpeed(.5F);

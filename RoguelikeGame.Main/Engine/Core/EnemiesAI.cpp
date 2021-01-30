@@ -74,8 +74,21 @@ void EnemiesAI::PrepareVertex()
 			}
 			v.position = ViewHelper::GetRectCenter(_target->GetCollisionBox());
 			_pathfindLines[_pathfindLines.getVertexCount() - 2] = v;
-		}	
+		}
+
+		//Draw avoidance circle
+		auto vertex = Utilities::GenerateVertexCircle(ViewHelper::GetRectCenter(e->GetCollisionBox()), e->GetAvoidanceRadius(), 12);
+		for (size_t j = 1; j < vertex.getVertexCount(); j++)
+		{
+			_pathfindLines.append(vertex[j - 1]);
+			_pathfindLines.append(vertex[j]);
+		}
 	}
+}
+
+float EnemiesAI::WeightFunction(float x)
+{
+	return (cosf(x) + 1.F) / 2;
 }
 
 EnemiesAI::EnemiesAI()
@@ -95,6 +108,8 @@ EnemiesAI::EnemiesAI()
 	_enemyPath.clear();
 	_allPaths.clear();
 	_lastNeighbours.clear();
+
+	srand((unsigned int)time(NULL));
 }
 
 EnemiesAI::~EnemiesAI()
@@ -122,14 +137,21 @@ void EnemiesAI::Update(float deltaTime)
 		{
 			auto key = Vector2MapKey<float>(*it);
 			toFill[key] = true;
-			if (_lastNeighbours[key] == false)
+			auto found = _lastNeighbours.find(key);
+			if (found == _lastNeighbours.end() || found->second == false)
 				same = false;
 		}
 
-		for (auto &p : _lastNeighbours)
-			if (p.second == true)
-				if (toFill[p.first] == false)
-					same = false;
+		if (same == true)
+		{
+			for (auto &p : _lastNeighbours)
+				if (p.second == true)
+				{
+					auto found = toFill.find(p.first);
+					if(found == toFill.end() || found->second == false)
+						same = false;
+				}
+		}
 
 		_lastNeighbours.clear();
 		_lastNeighbours = toFill;
@@ -205,7 +227,7 @@ void EnemiesAI::Update(float deltaTime)
 				{
 					if (currentEnemy->IsAttacking() == false)
 						currentEnemy->SetState("idle");
-					currentEnemy->SetAI(false);
+					//currentEnemy->SetAI(false);
 					continue;
 				}
 			}
@@ -218,20 +240,62 @@ void EnemiesAI::Update(float deltaTime)
 				_enemyPath.erase(found);
 		}
 		
-		if (CollisionHelper::CheckSimpleCollision(_target->GetCollisionBox(), currentEnemy->GetCollisionBox()) == false) //Not touching
+		if (CollisionHelper::CheckSimpleCollision(_target->GetCollisionBox(), currentEnemy->GetCollisionBox()) == false) //Not touching target
 		{
+			//Helpful vars
 			auto startBox = currentEnemy->GetCollisionBox();
-			MoveStraightToPoint(currentEnemy, gotoPoint, deltaTime);
-
-			//For collision checking
+			auto startBoxCenter = ViewHelper::GetRectCenter(startBox);
 			auto offset = currentEnemy->GetCollisionBoxOffset();
 			auto offsetPos = sf::Vector2f(offset.left, offset.top);
+
+			//Get enemies that touch current
+			float currEnemyGoalDistance = INFINITY; //CLoser to goal = more important
+			auto pathFound = _enemyPath.find(currentEnemy);
+			if (pathFound != _enemyPath.end() && pathFound->second.size() > 0)
+				currEnemyGoalDistance = MathHelper::GetDistanceBetweenPoints(startBoxCenter, pathFound->second.front());
+			std::vector<float> badAngles;
+			for (size_t no = 0; no < enemies->size(); no++)
+			{
+				if (no == i) continue;
+
+				auto checkedEnemy = enemies->at(no);
+
+				if (checkedEnemy->IsAiEnabled() == false) continue; //Don't care about idle ones
+
+				auto found = _enemyPath.find(checkedEnemy);
+				if (found != _enemyPath.end() && found->second.size() > 0)
+					if (MathHelper::GetDistanceBetweenPoints(ViewHelper::GetRectCenter(checkedEnemy->GetCollisionBox()), found->second.front()) > currEnemyGoalDistance)
+						continue; //If checked enemy has it's goal further than current one, you don't care about it
+
+				auto checkedCenter = ViewHelper::GetRectCenter(checkedEnemy->GetCollisionBox());
+				if (CollisionHelper::CheckCirclesIntersect(startBoxCenter, currentEnemy->GetAvoidanceRadius(),
+					checkedCenter, checkedEnemy->GetAvoidanceRadius()))
+				{
+					badAngles.push_back(MathHelper::GetAngleBetweenPoints(startBoxCenter, checkedCenter));
+				}
+			}
+			if (badAngles.size() > 0)
+			{
+				auto nowGoingAngle = MathHelper::GetAngleBetweenPoints(startBoxCenter, gotoPoint);
+				auto gotoAngle = GetBestAngle(nowGoingAngle, badAngles, 8);
+				gotoPoint = MathHelper::GetPointFromAngle(startBoxCenter, gotoAngle, currentEnemy->GetStep() * deltaTime * currentEnemy->GetSpeed());
+				auto moveVector = gotoPoint - startBoxCenter;
+				currentEnemy->SetPosition(currentEnemy->GetPosition() + moveVector);
+			}
+			else
+				MoveStraightToPoint(currentEnemy, gotoPoint, deltaTime);
+
+
+			//For collision checking
 			auto endBox = currentEnemy->GetCollisionBox();
+			auto endBoxCenter = ViewHelper::GetRectCenter(endBox);
 
 			//Check collisions with walls
-			auto pos = _collisions->GetLimitPosition(startBox, endBox);
-			currentEnemy->SetPosition(pos - offsetPos);
+			auto circleCollision = _collisions->GetCircleLimitPosition(startBoxCenter, endBoxCenter, currentEnemy->GetAvoidanceRadius());
+			auto centerDiff = sf::Vector2f(startBox.left, startBox.top) - startBoxCenter;
+			currentEnemy->SetPosition(circleCollision + centerDiff - offsetPos);
 
+			/*
 			//Check collisions with other enemies
 			for (size_t no = 0; no < enemies->size(); no++)
 			{
@@ -241,32 +305,21 @@ void EnemiesAI::Update(float deltaTime)
 				if (CollisionHelper::CheckSimpleCollision(currentEnemy->GetCollisionBox(), checkedEnemy->GetCollisionBox()))
 				{
 					auto newPos = CollisionHelper::GetRectLimitPosition(startBox, endBox, checkedEnemy->GetCollisionBox());
-					currentEnemy->SetPosition(newPos - offsetPos);
-				}
-			}
-
-			//If reached point, remove it, to go to the next
-			if (direct == false && gotoPoint == ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()))
-				if(_enemyPath[currentEnemy].size() > 0)
-					_enemyPath[currentEnemy].pop_front();
-
-			/* May be used to regroup
-			float radius = MathHelper::GetDistanceBetweenPoints(collisionBoxCenter, sf::Vector2f(collisionBox.left, collisionBox.top));
-			for (auto& e : _collisions->GetEdges())
-			{
-				for (unsigned char i = 0; i < 2; i++)
-				{
-					sf::Vector2f p;
-					p = (i == 0) ? std::get<0>(e) : std::get<1>(e);
-					if (CollisionHelper::CheckCircleCollision(p, collisionBoxCenter, radius, 180.F, 0))
+					auto newPosDistance = MathHelper::GetDistanceBetweenPoints(startPos, newPos);
+					if (newPosDistance < minMoveDistance)
 					{
-						float angle = MathHelper::GetAngleBetweenPoints(collisionBoxCenter, p);
-						auto point = MathHelper::GetPointFromAngle(collisionBoxCenter, angle, radius);
-						sf::Vector2f moveVector(p - point);
-						source->SetPosition(source->GetPosition() + moveVector);
+						minMoveDistance = newPosDistance;
+						minMoveNextPos = newPos;
 					}
 				}
 			}*/
+
+			//If reached point, remove it, to go to the next
+			if (direct == false && /*CollisionHelper::CheckCircleCollision(gotoPoint, ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()),2)*/ gotoPoint == ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()))
+				if(_enemyPath[currentEnemy].size() > 0)
+					if(_enemyPath[currentEnemy].front() == gotoPoint)
+						_enemyPath[currentEnemy].pop_front();
+
 		}
 
 		if (currentEnemy->IsAttacking() == false)
@@ -305,6 +358,30 @@ void EnemiesAI::MoveStraightToPoint(Enemy* source, sf::Vector2f point, float del
 	else if(moveVector.x > 0) source->GetAnimations()->ApplySetHorizontalFlip(false);
 
 	source->SetPosition(source->GetPosition() + moveVector);
+}
+
+float EnemiesAI::GetBestAngle(float gotoAngle, std::vector<float> avoidAngle, uint8_t precision)
+{
+	float maxWeight = -1.F;
+	float bestAngle = gotoAngle;
+
+	for (float add = 0; add < 2 * PI; add += (2 * float(PI)) / precision)
+	{
+		float val = add + MathHelper::DegToRad(gotoAngle);
+		float weight = WeightFunction(add);
+		for (float angle : avoidAngle)
+			weight *= WeightFunction(MathHelper::DegToRad(180 - angle) + val);
+
+		if (weight >= maxWeight)
+		{
+			if (weight > maxWeight || rand() % 2 == 0)
+			{
+				maxWeight = weight;
+				bestAngle = MathHelper::RadToDeg(val);
+			}
+		}
+	}
+	return bestAngle;
 }
 
 void EnemiesAI::SetPathfindVisibility(bool visible)

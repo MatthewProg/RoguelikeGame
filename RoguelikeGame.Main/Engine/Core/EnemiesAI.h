@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdlib>
+
 #include "../Managers/PathfindingManager.h"
 #include "../Managers/CollisionsManager.h"
 #include "../Managers/EnemiesManager.h"
@@ -26,6 +28,7 @@ private:
 
 	bool DirectLineOfSight(Enemy* source, sf::Vector2f* raycastHitpoint);
 	void PrepareVertex();
+	float WeightFunction(float x);
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
@@ -36,6 +39,7 @@ public:
 	void Update(float deltaTime);
 	void ClearEnemiesPaths();
 	void MoveStraightToPoint(Enemy* source, sf::Vector2f point, float deltaTime);
+	float GetBestAngle(float gotoAngle, std::vector<float> avoidAngle, uint8_t precision = 8);
 
 	//EnemiesAI setters
 	void SetPathfindVisibility(bool visible);

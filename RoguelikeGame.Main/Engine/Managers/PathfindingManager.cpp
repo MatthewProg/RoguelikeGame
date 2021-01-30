@@ -297,10 +297,14 @@ sf::Vector2f PathfindingManager::GetClosestNode(const Paths paths, const sf::Vec
 	//Check which hits
 	for (auto p : nodesDistances)
 	{
-		auto angle = MathHelper::GetAngleBetweenPoints(startPos, std::get<0>(p));
+		float distance = 0.f;
+		if (collisions->RaycastHitsPoint(startPos, std::get<0>(p), &distance))
+			return std::get<0>(p);
+
+		/*auto angle = MathHelper::GetAngleBetweenPoints(startPos, std::get<0>(p));
 		auto raycastHitpoint = collisions->GetRayHitpoint(startPos, angle, std::get<1>(p));
 		if (MathHelper::GetDistanceBetweenPoints(startPos, raycastHitpoint) == std::get<1>(p))
-			return std::get<0>(p);
+			return std::get<0>(p);*/
 	}
 	
 	return sf::Vector2f(INFINITY, INFINITY);

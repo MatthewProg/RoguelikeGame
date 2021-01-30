@@ -48,7 +48,9 @@ public:
 	bool GetCollisionLinesVisibility();
 
 	//Collision methods
-	bool CheckCollision(const sf::FloatRect& rect);
+	bool CheckTileCollision(const sf::FloatRect& rect);
+	bool CheckCircleCollision(const sf::Vector2f& center, float radius);
+	sf::Vector2f GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius);
 	sf::Vector2f GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos);
 	sf::Vector2f GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange);
 	bool RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint);

@@ -13,6 +13,8 @@ private:
 	bool _tmpStop;
 	bool _aiEnabled;
 
+	float _avoidanceRadius;
+
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
@@ -24,10 +26,12 @@ public:
 
 	void SetTmpStop(bool toggle);
 	void SetAI(bool enable);
+	void SetAvoidanceRadius(float radius);
 
 	bool GetTmpStop();
 	bool IsAttacking();
 	bool IsAiEnabled();
+	float GetAvoidanceRadius();
 
 	//Weapon
 	Weapon* GetWeapon();

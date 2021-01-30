@@ -167,7 +167,7 @@ void Game::Start()
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	//
-	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	//_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	/*_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));*/
@@ -244,25 +244,14 @@ void Game::Update()
 	SetDeltaAndTick();
 	_debug.Status(Game::Tick());
 
-	//Stopwatch::GetInstance()->Start("player");
 	_playerMovement.Update((float)_delta);
 	_player.Update(Game::Tick(), (float)_delta);
-	//auto pl = std::to_string(Stopwatch::GetInstance()->Stop("player").count()) + "us";
-
-	//Stopwatch::GetInstance()->Start("rays");
 	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
-	//auto rays = std::to_string(Stopwatch::GetInstance()->Stop("rays").count()) + "us";
 
-	//Stopwatch::GetInstance()->Start("enemies");
 	_enemies.Update(Game::Tick(), (float)_delta);
-	//auto en = std::to_string(Stopwatch::GetInstance()->Stop("enemies").count()) + "us";
 	_enemies.CheckAttacks();
-
-	//Stopwatch::GetInstance()->Start("ai");
 	_enemiesAI.Update((float)_delta);
-	//auto ai = std::to_string(Stopwatch::GetInstance()->Stop("ai").count()) + "us";
-	//_logger->Log(Logger::LogType::DEBUG, "Player: "+pl+"   Rays: "+rays+"   Enemies: "+en+"   AI: "+ai);
-	
+
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
 	_window.setView(_camera);
 }
