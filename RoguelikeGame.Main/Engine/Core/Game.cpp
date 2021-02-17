@@ -6,6 +6,9 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_logger = Logger::GetInstance();
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
+	_gui.setCenter(((float)vmode.width / 8.f), ((float)vmode.height / 8.f));
+	_gui.setSize((float)vmode.width / 4, (float)vmode.height / 4);
+	_gui.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
 	_window.create(vmode, title);
 	//_window.setFramerateLimit(144);
 	_window.setView(_camera);
@@ -37,6 +40,13 @@ void Game::RecalcPlayerRays()
 	_player.GetWeapon()->SetRaycastHitpoint(_collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player.GetCollisionBox()), angle, 500));
 }
 
+void Game::UpdateUI()
+{
+	auto sc = _sceneManager.GetScene("game");
+	ProgressBar* hb = (ProgressBar*)sc->GetElement("healthBar");
+	hb->SetCurrentValue(_player.GetHealth());
+}
+
 bool Game::Tick()
 {
 	if (_tickCounter >= 1)
@@ -64,6 +74,7 @@ void Game::Start()
 	_textures.LoadFromFile("tiles2", "./res/img/tiles2.png");
 	_textures.LoadFromFile("players", "./res/img/players.png");
 	_textures.LoadFromFile("special", "./res/img/special.png");
+	_textures.LoadFromFile("ui", "./res/img/ui.png");
 	_textures.ApplySmooth(false);
 	_textures.ApplyRepeat(false);
 
@@ -137,63 +148,21 @@ void Game::Start()
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	//
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	//
-	//_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	/*_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));*/
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
-	_enemies.GetEnemies()->at(1)->SetPosition(510, 290);
-	_enemies.GetEnemies()->at(2)->SetPosition(520, 290);
-	_enemies.GetEnemies()->at(3)->SetPosition(530, 290);
-	_enemies.GetEnemies()->at(4)->SetPosition(540, 290);
-	_enemies.GetEnemies()->at(5)->SetPosition(550, 290);
-	_enemies.GetEnemies()->at(6)->SetPosition(560, 290);
-	_enemies.GetEnemies()->at(7)->SetPosition(570, 290);
-	_enemies.GetEnemies()->at(8)->SetPosition(580, 290);
-	_enemies.GetEnemies()->at(9)->SetPosition(590, 290);
-	_enemies.GetEnemies()->at(10)->SetPosition(500, 310);
-	_enemies.GetEnemies()->at(11)->SetPosition(510, 310);
-	_enemies.GetEnemies()->at(12)->SetPosition(520, 310);
-	_enemies.GetEnemies()->at(13)->SetPosition(530, 310);
-	_enemies.GetEnemies()->at(14)->SetPosition(540, 310);
-	_enemies.GetEnemies()->at(15)->SetPosition(550, 310);
-	_enemies.GetEnemies()->at(16)->SetPosition(560, 310);
-	_enemies.GetEnemies()->at(17)->SetPosition(570, 310);
-	_enemies.GetEnemies()->at(18)->SetPosition(580, 310);
-	_enemies.GetEnemies()->at(19)->SetPosition(590, 310);
-	/*_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
 	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
-	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
+
+	//UI elements
+	Scene *sc = new Scene();
+	sc->AddElement("healthBar", (UIElement*)_objTemplates.GetProgressBar("heart"));
+	_sceneManager.AddScene("game", sc);
+	_sceneManager.LoadScene("game");
+	_sceneManager.SetShowFocused(false);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
@@ -204,6 +173,8 @@ void Game::Start()
 	sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
 	sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
 	sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true };
+	sf::Event::KeyEvent ctrlAltN = { sf::Keyboard::N, true, true };
+	sf::Event::KeyEvent ctrlAltU = { sf::Keyboard::U, true, true };
 	_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
 	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
 	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
@@ -213,6 +184,8 @@ void Game::Start()
 	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
 	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
 	_keyboardHandler.NewOn(ctrlAltP, &Game::TogglePathfindingVisibility);
+	_keyboardHandler.NewOn(ctrlAltN, &Game::ToggleNoClip);
+	_keyboardHandler.NewOn(ctrlAltU, &Game::ToggleUIFrames);
 
 	//Reset timings
 	SetDeltaAndTick();
@@ -220,6 +193,10 @@ void Game::Start()
 
 void Game::EventUpdate()
 {
+	bool LMB_Clicked = false;
+	auto pos = _window.mapPixelToCoords(sf::Vector2i(0, 0));
+	auto mousePos = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
+	auto endPos = mousePos - pos;
 	while (_window.pollEvent(_event))
 	{
 		if (_event.type == sf::Event::Closed)
@@ -233,10 +210,14 @@ void Game::EventUpdate()
 				_player.GetWeapon()->Attack();
 				_enemies.CheckForHit();
 			}
+			LMB_Clicked = true;
 		}
 		if (_event.type == sf::Event::MouseMoved)
 			RecalcPlayerRays();
+
+		_sceneManager.UpdateEvent(&_event, endPos);
 	}
+	_sceneManager.UpdateFocus(endPos, LMB_Clicked);
 }
 
 void Game::Update()
@@ -252,22 +233,30 @@ void Game::Update()
 	_enemies.CheckAttacks();
 	_enemiesAI.Update((float)_delta);
 
+	UpdateUI();
+	_sceneManager.Update(Game::Tick(), (float)_delta);
+
 	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
-	_window.setView(_camera);
 }
 
 void Game::Clear()
 {
-	_window.clear();
+	_window.clear(sf::Color::Transparent);
 }
 
 void Game::Draw()
 {
+	_window.setView(_camera);
 	_window.draw(_gameMap);
 	_window.draw(_collisionsManager);
 	_window.draw(_enemiesAI);
 	_window.draw(_enemies);
 	_window.draw(_player);
+
+	_window.setView(_gui);
+	_window.draw(_sceneManager);
+
+	_window.setView(_camera);
 }
 
 void Game::Display()
@@ -325,6 +314,16 @@ void Game::ToggleRaycastVisibility()
 void Game::TogglePathfindingVisibility()
 {
 	_enemiesAI.TogglePathfindingVisibility();
+}
+
+void Game::ToggleNoClip()
+{
+	_playerMovement.ToggleNoClip();
+}
+
+void Game::ToggleUIFrames()
+{
+	_sceneManager.ToggleShowFocused();
 }
 
 #pragma endregion

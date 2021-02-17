@@ -14,6 +14,8 @@ ObjectsManager::ObjectsManager()
 	_hitboxWeapons["bite"] = nullptr;
 
 	_enemies["devil"] = nullptr;
+
+	_progressBars["heart"] = nullptr;
 }
 ObjectsManager::~ObjectsManager()
 {
@@ -28,6 +30,31 @@ ObjectsManager::~ObjectsManager()
 	for (auto v : _enemies)
 		if (v.second != nullptr)
 			delete v.second;
+
+	for (auto v : _progressBars)
+		if (v.second != nullptr)
+			delete v.second;
+}
+
+ProgressBar* ObjectsManager::CreateProgressBarHeart()
+{
+	ProgressBar* hb = new ProgressBar();
+	hb->SetCurrentValue(3.F);
+	hb->SetMaxValue(3.f);
+	hb->setPosition(sf::Vector2f(0, 0));
+
+	hb->SetTexturesManager(_textures);
+	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
+
+	hb->SetVisibility(true);
+	hb->SetMouseInput(false);
+	hb->SetKeyboardInput(false);
+
+	hb->Init(sf::Vector2u(60, 30));
+
+	return hb;
 }
 
 MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
@@ -76,6 +103,24 @@ Enemy* ObjectsManager::GetEnemy(std::string name)
 		return obj;
 	}
 	return new Enemy();
+}
+
+ProgressBar* ObjectsManager::GetProgressBar(std::string name)
+{
+	auto found = _progressBars.find(name);
+	if (found != _progressBars.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "heart") found->second = CreateProgressBarHeart();
+		}
+
+		ProgressBar* obj = new ProgressBar();
+		*obj = *(found->second);
+		obj->RedrawElement();
+		return obj;
+	}
+	return nullptr;
 }
 
 MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()

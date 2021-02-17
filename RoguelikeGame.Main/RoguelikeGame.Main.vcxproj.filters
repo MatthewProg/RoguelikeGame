@@ -112,9 +112,6 @@
     <ClInclude Include="Engine\Core\Logger.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\HealthBar.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Utilities\Animation.h">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -129,6 +126,18 @@
     </ClInclude>
     <ClInclude Include="Engine\Utilities\Utilities.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\ProgressBar.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Scene.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Managers\SceneManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +208,6 @@
     <ClCompile Include="Engine\Core\Logger.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\HealthBar.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Utilities\Animation.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
@@ -217,6 +223,18 @@
     <ClCompile Include="Engine\Utilities\Utilities.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\ProgressBar.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\UIElement.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Scene.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Managers\SceneManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png">
@@ -229,6 +247,9 @@
       <Filter>Resource Files\img</Filter>
     </Image>
     <Image Include="res\img\tiles2.png">
+      <Filter>Resource Files\img</Filter>
+    </Image>
+    <Image Include="res\img\ui.png">
       <Filter>Resource Files\img</Filter>
     </Image>
   </ItemGroup>

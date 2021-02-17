@@ -1,12 +1,13 @@
 #pragma once
 
-#include "SFML/Window.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Window.hpp"
 
 #include "../Handlers/KeyboardEventHandler.h"
-#include "../Core/EntityMovement.h"
 #include "../Managers/ObjectsManager.h"
+#include "../Core/EntityMovement.h"
 #include "../Helpers/DebugHelper.h"
+#include "../Managers/SceneManager.h"
 #include "../Core/EnemiesAI.h"
 #include "../Models/GameMap.h"
 #include "../Models/Player.h"
@@ -23,6 +24,7 @@ private:
 
 	sf::RenderWindow _window;
 	sf::View _camera;
+	sf::View _gui;
 
 	sf::Event _event;
 	KeyboardEventHandler<Game> _keyboardHandler;
@@ -32,14 +34,16 @@ private:
 	GameMap<unsigned char> _gameMap;
 	CollisionsManager _collisionsManager;
 
+	SceneManager _sceneManager;
+
 	Player _player;
 	EntityMovement _playerMovement;
 	EnemiesManager _enemies;
 	EnemiesAI _enemiesAI;
-
 	std::chrono::steady_clock::time_point _lastFrameTime;
 	void SetDeltaAndTick();
 	void RecalcPlayerRays();
+	void UpdateUI();
 
 	bool Tick();
 
@@ -55,6 +59,8 @@ private:
 	void ToggleMapCollisionLinesVisibility();
 	void ToggleRaycastVisibility();
 	void TogglePathfindingVisibility();
+	void ToggleNoClip();
+	void ToggleUIFrames();
 #pragma endregion
 
 public:

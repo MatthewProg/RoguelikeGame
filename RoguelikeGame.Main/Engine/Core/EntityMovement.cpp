@@ -2,11 +2,13 @@
 
 EntityMovement::EntityMovement()
 {
+	_logger = Logger::GetInstance();
 	_collisions = nullptr;
 	_entity = nullptr;
 	_idleState = "idle";
 	_moveState = "move";
 	_lockMovement = false;
+	_noClip = false;
 }
 
 EntityMovement::~EntityMovement()
@@ -30,7 +32,7 @@ void EntityMovement::Update(float deltaTime)
 		else if (currPos.left < nextPos.left)
 			_entity->GetAnimations()->ApplySetHorizontalFlip(false);
 
-		if (_collisions == nullptr)
+		if (_collisions == nullptr || _noClip == true)
 			_entity->SetPosition(sf::Vector2f(nextPos.left - hitbox.left, nextPos.top - hitbox.top));
 		else
 		{
@@ -93,6 +95,11 @@ void EntityMovement::SetLockMovement(bool lock)
 	_lockMovement = lock;
 }
 
+void EntityMovement::SetNoClip(bool noClip)
+{
+	_noClip = noClip;
+}
+
 void EntityMovement::SetIdleStateName(std::string idle)
 {
 	_idleState = idle;
@@ -108,6 +115,11 @@ bool EntityMovement::GetLockMovement()
 	return _lockMovement;
 }
 
+bool EntityMovement::GetNoClip()
+{
+	return _noClip;
+}
+
 std::string EntityMovement::GetIdleStateName()
 {
 	return _idleState;
@@ -116,4 +128,11 @@ std::string EntityMovement::GetIdleStateName()
 std::string EntityMovement::GetMoveStateName()
 {
 	return _moveState;
+}
+
+void EntityMovement::ToggleNoClip()
+{
+	std::string status = (!_noClip) ? "true" : "false";
+	_logger->Log(Logger::LogType::INFO, "Toggle no clip: " + status);
+	SetNoClip(!_noClip);
 }

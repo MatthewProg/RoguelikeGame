@@ -166,6 +166,7 @@
     <ClCompile Include="Engine\Managers\ObjectsManager.cpp" />
     <ClCompile Include="Engine\Managers\PathfindingManager.cpp" />
     <ClCompile Include="Engine\Managers\TexturesManager.cpp" />
+    <ClCompile Include="Engine\Managers\SceneManager.cpp" />
     <ClCompile Include="Engine\Models\Enemy.cpp" />
     <ClCompile Include="Engine\Models\Entity.cpp" />
     <ClCompile Include="Engine\Models\GameMap.cpp" />
@@ -173,7 +174,9 @@
     <ClCompile Include="Engine\Models\MeleeWeapon.cpp" />
     <ClCompile Include="Engine\Models\Player.cpp" />
     <ClCompile Include="Engine\Models\Weapon.cpp" />
-    <ClCompile Include="Engine\UI\HealthBar.cpp" />
+    <ClCompile Include="Engine\UI\ProgressBar.cpp" />
+    <ClCompile Include="Engine\UI\Scene.cpp" />
+    <ClCompile Include="Engine\UI\UIElement.cpp" />
     <ClCompile Include="Engine\Utilities\Animation.cpp" />
     <ClCompile Include="Engine\Utilities\AnimationContainer.cpp" />
     <ClCompile Include="Engine\Utilities\Collision.cpp" />
@@ -204,6 +207,7 @@
     <ClInclude Include="Engine\Managers\ObjectsManager.h" />
     <ClInclude Include="Engine\Managers\PathfindingManager.h" />
     <ClInclude Include="Engine\Managers\TexturesManager.h" />
+    <ClInclude Include="Engine\Managers\SceneManager.h" />
     <ClInclude Include="Engine\Models\Enemy.h" />
     <ClInclude Include="Engine\Models\Entity.h" />
     <ClInclude Include="Engine\Models\GameMap.h" />
@@ -212,7 +216,9 @@
     <ClInclude Include="Engine\Models\MeleeWeapon.h" />
     <ClInclude Include="Engine\Models\Player.h" />
     <ClInclude Include="Engine\Models\Weapon.h" />
-    <ClInclude Include="Engine\UI\HealthBar.h" />
+    <ClInclude Include="Engine\UI\ProgressBar.h" />
+    <ClInclude Include="Engine\UI\Scene.h" />
+    <ClInclude Include="Engine\UI\UIElement.h" />
     <ClInclude Include="Engine\Utilities\Animation.h" />
     <ClInclude Include="Engine\Utilities\AnimationContainer.h" />
     <ClInclude Include="Engine\Utilities\Collision.h" />
@@ -230,6 +236,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="res\img\tiles2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="res\img\ui.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>

@@ -10,7 +10,8 @@ EnemiesManager::EnemiesManager()
 EnemiesManager::~EnemiesManager()
 {
 	for (auto it : _enemies)
-		delete it;
+		if(it != nullptr)
+			delete it;
 }
 
 void EnemiesManager::Update(bool tick, float deltaTime)
