@@ -35,6 +35,7 @@ private:
 	WeaponType _weaponType;
 public:
 	Weapon(WeaponType type);
+	Weapon(Weapon& other);
 	~Weapon();
 
 	virtual bool CanAttack() = 0;

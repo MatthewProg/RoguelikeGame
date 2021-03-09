@@ -22,6 +22,7 @@ namespace sf
 		virtual void draw(RenderTarget& target, RenderStates) const override;
 	public:
 		Collision();
+		Collision(Collision& other);
 		~Collision();
 
 		sf::FloatRect GetCollisionBox();

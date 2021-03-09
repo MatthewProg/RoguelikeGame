@@ -14,11 +14,7 @@ ProgressBar::ProgressBar()
 	_sthChanged = true;
 }
 
-ProgressBar::~ProgressBar()
-{
-}
-
-ProgressBar& ProgressBar::operator=(ProgressBar& other)
+ProgressBar::ProgressBar(ProgressBar& other)
 {
 	_currentValue = other._currentValue;
 	_maxValue = other._maxValue;
@@ -40,7 +36,10 @@ ProgressBar& ProgressBar::operator=(ProgressBar& other)
 	setRotation(other.getRotation());
 	setOrigin(other.getOrigin());
 	setScale(other.getScale());
-	return *this;
+}
+
+ProgressBar::~ProgressBar()
+{
 }
 
 void ProgressBar::SetCurrentValue(float value)
@@ -196,6 +195,7 @@ void ProgressBar::RedrawElement()
 			texture = _noTexture;
 
 		rs.texture = texture;
+		//rs.transform = getTransform();
 
 		auto& rect = std::get<0>(layer);
 		sf::VertexArray arr(sf::Quads, 4);
@@ -307,33 +307,36 @@ void ProgressBar::Update(bool, float)
 
 void ProgressBar::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 {
-	if (_mouseInput == true)
+	if (_inFocus == true)
 	{
-		if (ev->type == sf::Event::MouseButtonPressed && ev->mouseButton.button == sf::Mouse::Left)
+		if (_mouseInput == true)
 		{
-			auto barBounds = GetProgressBarStepsGlobalBounds();
-			if (barBounds.contains(mousePos))
+			if (ev->type == sf::Event::MouseButtonPressed && ev->mouseButton.button == sf::Mouse::Left)
 			{
-				float percent = (mousePos.x - barBounds.left) / barBounds.width;
-				SetCurrentValue(_maxValue * percent);
+				auto barBounds = GetProgressBarStepsGlobalBounds();
+				if (barBounds.contains(mousePos))
+				{
+					float percent = (mousePos.x - barBounds.left) / barBounds.width;
+					SetCurrentValue(_maxValue * percent);
+				}
 			}
 		}
-	}
-	if (_keyboardInput == true)
-	{
-		if (ev->type == sf::Event::KeyReleased)
+		if (_keyboardInput == true)
 		{
-			auto divide = (_progressBarSteps.size() - 1 == 0) ? 1 : _progressBarSteps.size() - 1;
-			float step = 1.f / float(divide);
-			if (ev->key.code == sf::Keyboard::Left)
+			if (ev->type == sf::Event::KeyReleased)
 			{
-				if (_currentValue - step < 0) SetCurrentValue(0.F);
-				else SetCurrentValue(_currentValue - step);
-			}
-			else if (ev->key.code == sf::Keyboard::Right)
-			{
-				if (_currentValue + step > _maxValue) SetCurrentValue(_maxValue);
-				else SetCurrentValue(_currentValue + step);
+				auto divide = (_progressBarSteps.size() - 1 == 0) ? 1 : _progressBarSteps.size() - 1;
+				float step = 1.f / float(divide);
+				if (ev->key.code == sf::Keyboard::Left)
+				{
+					if (_currentValue - step < 0) SetCurrentValue(0.F);
+					else SetCurrentValue(_currentValue - step);
+				}
+				else if (ev->key.code == sf::Keyboard::Right)
+				{
+					if (_currentValue + step > _maxValue) SetCurrentValue(_maxValue);
+					else SetCurrentValue(_currentValue + step);
+				}
 			}
 		}
 	}

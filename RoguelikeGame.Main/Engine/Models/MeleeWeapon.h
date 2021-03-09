@@ -17,6 +17,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	MeleeWeapon();
+	MeleeWeapon(MeleeWeapon& other);
 	~MeleeWeapon();
 
 	bool CanAttack() override;

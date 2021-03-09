@@ -19,6 +19,29 @@ Weapon::Weapon(WeaponType type)
 	_raycast[1].color = sf::Color::Magenta;
 }
 
+Weapon::Weapon(Weapon& other)
+{
+	_cooldownCounter = other._cooldownCounter;
+	_weapon = other._weapon;
+	_attackAnimation = other._attackAnimation;
+	_currentAngle = other._currentAngle;
+	_hitbox = other._hitbox;
+	_raycast = other._raycast;
+	_dmg = other._dmg;
+	_attackCooldown = other._attackCooldown;
+	_isVisible = other._isVisible;
+	_showHitbox = other._showHitbox;
+	_showRaycast = other._showRaycast;
+	_hitboxColor = other._hitboxColor;
+	_raycastColor = other._raycastColor;
+	_weaponType = other._weaponType;
+	
+	setPosition(other.getPosition());
+	setOrigin(other.getOrigin());
+	setRotation(other.getRotation());
+	setScale(other.getScale());
+}
+
 Weapon::~Weapon()
 {
 }

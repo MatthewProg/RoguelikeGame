@@ -29,6 +29,21 @@ Entity::Entity() : sf::Collision()
 	_viewRect = sf::FloatRect(-150,-94, 300, 188);
 }
 
+Entity::Entity(Entity& other) : sf::Collision(other)
+{
+	_animations = other._animations;
+	_dmgColor = other._dmgColor;
+	_dmgColorCounter = other._dmgColorCounter;
+	_dmgColorTick = other._dmgColorTick;
+	_health = other._health;
+	_isVisible = other._isVisible;
+	_speed = other._speed;
+	_state = other._state;
+	_step = other._step;
+	_transform = other._transform;
+	_viewRect = other._viewRect;
+}
+
 Entity::~Entity()
 {
 }

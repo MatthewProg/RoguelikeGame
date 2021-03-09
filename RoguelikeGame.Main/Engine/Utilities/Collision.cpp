@@ -11,6 +11,13 @@ sf::Collision::Collision()
 	_hitboxOffset = sf::FloatRect(0, 0, 16, 16);
 }
 
+sf::Collision::Collision(Collision& other)
+{
+	_hitboxOffset = other._hitboxOffset;
+	_hitboxRecangle = other._hitboxRecangle;
+	_showHitbox = other._showHitbox;
+}
+
 sf::Collision::~Collision()
 {
 }

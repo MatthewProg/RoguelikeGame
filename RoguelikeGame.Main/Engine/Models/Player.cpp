@@ -19,6 +19,12 @@ Player::Player() : Entity()
 	_weapon = nullptr;
 }
 
+Player::Player(Player& other) : Entity(other)
+{
+	_weapon = other._weapon;
+	_logger = other._logger;
+}
+
 Player::~Player()
 {
 	if (_weapon != nullptr)
@@ -70,6 +76,11 @@ void Player::SetWeapon(Weapon* weapon)
 	if (_weapon != nullptr)
 		delete _weapon;
 
+	_weapon = weapon;
+}
+
+void Player::SetWeaponUnsafe(Weapon* weapon)
+{
 	_weapon = weapon;
 }
 

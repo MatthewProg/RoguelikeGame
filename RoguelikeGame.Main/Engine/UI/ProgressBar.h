@@ -19,9 +19,8 @@ private:
 	bool _sthChanged;
 public:
 	ProgressBar();
+	ProgressBar(ProgressBar& other);
 	~ProgressBar();
-
-	ProgressBar& operator=(ProgressBar &other);
 
 	//Var setters
 	void SetCurrentValue(float value);

@@ -17,6 +17,7 @@ private:
 public:
 
 	Player();
+	Player(Player& other);
 	~Player();
 
 	//Player
@@ -29,5 +30,6 @@ public:
 	//Weapon
 	Weapon* GetWeapon();
 	void SetWeapon(Weapon* weapon);
+	void SetWeaponUnsafe(Weapon* weapon);
 };
 

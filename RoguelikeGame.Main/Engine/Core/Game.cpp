@@ -6,8 +6,8 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_logger = Logger::GetInstance();
 	_camera.setCenter(128, 64);
 	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
-	_gui.setCenter(((float)vmode.width / 8.f), ((float)vmode.height / 8.f));
-	_gui.setSize((float)vmode.width / 4, (float)vmode.height / 4);
+	_gui.setCenter(((float)vmode.width / 2.f), ((float)vmode.height / 2.f));
+	_gui.setSize((float)vmode.width / 1, (float)vmode.height / 1);
 	_gui.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
 	_window.create(vmode, title);
 	//_window.setFramerateLimit(144);
@@ -35,16 +35,16 @@ void Game::SetDeltaAndTick()
 void Game::RecalcPlayerRays()
 {
 	auto coord = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
-	auto angle = MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player.GetCollisionBox()), sf::Vector2f(coord.x, coord.y));
-	_player.GetWeapon()->SetCurrentAngle(angle);
-	_player.GetWeapon()->SetRaycastHitpoint(_collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player.GetCollisionBox()), angle, 500));
+	auto angle = MathHelper::GetAngleBetweenPoints(ViewHelper::GetRectCenter(_player->GetCollisionBox()), sf::Vector2f(coord.x, coord.y));
+	_player->GetWeapon()->SetCurrentAngle(angle);
+	_player->GetWeapon()->SetRaycastHitpoint(_collisionsManager.GetRayHitpoint(ViewHelper::GetRectCenter(_player->GetCollisionBox()), angle, 500));
 }
 
 void Game::UpdateUI()
 {
 	auto sc = _sceneManager.GetScene("game");
 	ProgressBar* hb = (ProgressBar*)sc->GetElement("healthBar");
-	hb->SetCurrentValue(_player.GetHealth());
+	hb->SetCurrentValue(_player->GetHealth());
 }
 
 bool Game::Tick()
@@ -62,13 +62,14 @@ void Game::Close()
 
 Game::~Game()
 {
+	delete _player;
 }
 
 void Game::Start()
 {
 	_logger->Log(Logger::LogType::INFO, "Starting...");
 
-	//Game
+	//Textures
 	_textures.SetExpectedSize(4);
 	_textures.LoadFromFile("tiles1", "./res/img/tiles.png");
 	_textures.LoadFromFile("tiles2", "./res/img/tiles2.png");
@@ -77,6 +78,10 @@ void Game::Start()
 	_textures.LoadFromFile("ui", "./res/img/ui.png");
 	_textures.ApplySmooth(false);
 	_textures.ApplyRepeat(false);
+
+	//Fonts
+	_fonts.SetExpectedSize(1);
+	_fonts.LoadFromFile("menu", "./res/fonts/menu.ttf");
 
 	//Object manager
 	_objTemplates.SetTexturesManager(&_textures);
@@ -99,51 +104,24 @@ void Game::Start()
 
 	//Player
 	_logger->Log(Logger::LogType::INFO, "Loading player components");
-
-	sf::AnimationContainer playerAnimations;
-
-	sf::Animation idle;
-	idle.SetTexture(_textures.GetTexture("players"));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 8));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 9));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 10));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 11));
-	idle.SetChangeFrameEvery(7);
-
-	sf::Animation move;
-	move.SetTexture(_textures.GetTexture("players"));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 12));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 13));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 14));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures.GetTexture("players")->getSize(), 16, 22, 15));
-	move.SetChangeFrameEvery(3);
-
-	playerAnimations.SetStateAnimation("idle", idle);
-	playerAnimations.SetStateAnimation("move", move);
-	playerAnimations.ApplySetScale(1, 1);
-
-	_player.SetAnimations(playerAnimations);
-	_player.SetState("idle");
-	_player.SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
-	_player.SetPosition(sf::Vector2f(296, 472));
-	_player.SetWeapon(_objTemplates.GetMeleeWeapon("sword"));
+	_player = _objTemplates.GetPlayer("male_elf");
 	auto camSize = _camera.getSize() + sf::Vector2f(44, 44);
-	_player.SetView(sf::FloatRect(0 - (camSize.x / 2), 0 - (camSize.y / 2), camSize.x, camSize.y));
+	_player->SetView(sf::FloatRect(0 - (camSize.x / 2), 0 - (camSize.y / 2), camSize.x, camSize.y));
 
 	//Player movement
 	_playerMovement.SetIdleStateName("idle");
 	_playerMovement.SetMoveStateName("move");
-	_playerMovement.SetEntity(&_player);
+	_playerMovement.SetEntity(_player);
 	_playerMovement.SetCollisionsManager(&_collisionsManager);
 
 	//Enemies AI
-	_enemiesAI.SetTarget(&_player);
+	_enemiesAI.SetTarget(_player);
 	_enemiesAI.SetCollisionsManager(&_collisionsManager);
 	_enemiesAI.SetEnemiesManager(&_enemies);
 	_enemiesAI.SetPathfindPoints(_gameMap.GetPathfindingPoints());
 
 	//Enemies
-	_enemies.SetPlayer(&_player);
+	_enemies.SetPlayer(_player);
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
@@ -194,9 +172,9 @@ void Game::Start()
 void Game::EventUpdate()
 {
 	bool LMB_Clicked = false;
-	auto pos = _window.mapPixelToCoords(sf::Vector2i(0, 0));
+	_window.setView(_gui);
 	auto mousePos = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
-	auto endPos = mousePos - pos;
+	_window.setView(_camera);
 	while (_window.pollEvent(_event))
 	{
 		if (_event.type == sf::Event::Closed)
@@ -205,9 +183,9 @@ void Game::EventUpdate()
 			_keyboardHandler.Rise(_event.key);
 		if (_event.type == sf::Event::MouseButtonPressed && _event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (_player.GetWeapon()->CanAttack())
+			if (_player->GetWeapon()->CanAttack())
 			{
-				_player.GetWeapon()->Attack();
+				_player->GetWeapon()->Attack();
 				_enemies.CheckForHit();
 			}
 			LMB_Clicked = true;
@@ -215,9 +193,9 @@ void Game::EventUpdate()
 		if (_event.type == sf::Event::MouseMoved)
 			RecalcPlayerRays();
 
-		_sceneManager.UpdateEvent(&_event, endPos);
+		_sceneManager.UpdateEvent(&_event, mousePos);
 	}
-	_sceneManager.UpdateFocus(endPos, LMB_Clicked);
+	_sceneManager.UpdateFocus(mousePos, LMB_Clicked);
 }
 
 void Game::Update()
@@ -226,7 +204,7 @@ void Game::Update()
 	_debug.Status(Game::Tick());
 
 	_playerMovement.Update((float)_delta);
-	_player.Update(Game::Tick(), (float)_delta);
+	_player->Update(Game::Tick(), (float)_delta);
 	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
 
 	_enemies.Update(Game::Tick(), (float)_delta);
@@ -236,7 +214,7 @@ void Game::Update()
 	UpdateUI();
 	_sceneManager.Update(Game::Tick(), (float)_delta);
 
-	_camera.setCenter(ViewHelper::GetRectCenter(_player.GetCollisionBox()));
+	_camera.setCenter(ViewHelper::GetRectCenter(_player->GetCollisionBox()));
 }
 
 void Game::Clear()
@@ -251,7 +229,7 @@ void Game::Draw()
 	_window.draw(_collisionsManager);
 	_window.draw(_enemiesAI);
 	_window.draw(_enemies);
-	_window.draw(_player);
+	_window.draw(*_player);
 
 	_window.setView(_gui);
 	_window.draw(_sceneManager);
@@ -282,7 +260,7 @@ void Game::ToggleActionMapVisibility()
 
 void Game::ToggleHitboxVisibility()
 {
-	_player.ToggleHitboxVisibility();
+	_player->ToggleHitboxVisibility();
 }
 
 void Game::ToggleConsoleInfo()
@@ -292,7 +270,7 @@ void Game::ToggleConsoleInfo()
 
 void Game::ToggleWeaponHitboxVisibility()
 {
-	_player.ToggleWeaponHitboxVisibility();
+	_player->ToggleWeaponHitboxVisibility();
 }
 
 void Game::ToggleEnemiesHitboxVisibility()
@@ -307,7 +285,7 @@ void Game::ToggleMapCollisionLinesVisibility()
 
 void Game::ToggleRaycastVisibility()
 {
-	_player.ToggleRaycastVisibility();
+	_player->ToggleRaycastVisibility();
 	_enemies.ToggleEnemiesRaycastVisibility();
 }
 

@@ -16,6 +16,8 @@ ObjectsManager::ObjectsManager()
 	_enemies["devil"] = nullptr;
 
 	_progressBars["heart"] = nullptr;
+
+	_players["male_elf"] = nullptr;
 }
 ObjectsManager::~ObjectsManager()
 {
@@ -34,29 +36,14 @@ ObjectsManager::~ObjectsManager()
 	for (auto v : _progressBars)
 		if (v.second != nullptr)
 			delete v.second;
+
+	for (auto v : _players)
+		if (v.second != nullptr)
+			delete v.second;
 }
 
-ProgressBar* ObjectsManager::CreateProgressBarHeart()
-{
-	ProgressBar* hb = new ProgressBar();
-	hb->SetCurrentValue(3.F);
-	hb->SetMaxValue(3.f);
-	hb->setPosition(sf::Vector2f(0, 0));
 
-	hb->SetTexturesManager(_textures);
-	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
-
-	hb->SetVisibility(true);
-	hb->SetMouseInput(false);
-	hb->SetKeyboardInput(false);
-
-	hb->Init(sf::Vector2u(60, 30));
-
-	return hb;
-}
-
+//Get
 MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
 {
 	auto found = _meleeWeapons.find(name);
@@ -73,6 +60,7 @@ MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
 	}
 	return new MeleeWeapon();
 }
+
 HitboxWeapon* ObjectsManager::GetHitboxWeapon(std::string name)
 {
 	auto found = _hitboxWeapons.find(name);
@@ -88,6 +76,7 @@ HitboxWeapon* ObjectsManager::GetHitboxWeapon(std::string name)
 	}
 	return new HitboxWeapon();
 }
+
 Enemy* ObjectsManager::GetEnemy(std::string name)
 {
 	auto found = _enemies.find(name);
@@ -115,14 +104,47 @@ ProgressBar* ObjectsManager::GetProgressBar(std::string name)
 			if (name == "heart") found->second = CreateProgressBarHeart();
 		}
 
-		ProgressBar* obj = new ProgressBar();
-		*obj = *(found->second);
+		ProgressBar* obj = new ProgressBar(*(found->second));
 		obj->RedrawElement();
 		return obj;
 	}
 	return nullptr;
 }
 
+Player* ObjectsManager::GetPlayer(std::string name)
+{
+	auto found = _players.find(name);
+	if (found != _players.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "male_elf")found->second = CreatePlayerMaleElf();
+		}
+
+		auto obj = new Player(*(found->second));
+		obj->GetAnimations()->UpdateCurrentAnimationPtr();
+		if (obj->GetWeapon() != nullptr)
+		{
+			switch (obj->GetWeapon()->GetWeaponType())
+			{
+			case WeaponType::NONE:
+				obj->SetWeaponUnsafe(new HitboxWeapon(*((HitboxWeapon*)obj->GetWeapon())));
+				break;
+			case WeaponType::MELEE:
+				obj->SetWeaponUnsafe(new MeleeWeapon(*((MeleeWeapon*)obj->GetWeapon())));
+				break;
+			default:
+				obj->SetWeaponUnsafe(nullptr);
+				break;
+			}
+			obj->GetWeapon()->GetTransformAnimation()->SetTarget(obj->GetWeapon()->GetAnimation()->ExternalTransform());
+		}
+		return obj;
+	}
+	return new Player();
+}
+
+//Create
 MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 {
 	MeleeWeapon* sword = new MeleeWeapon();
@@ -219,4 +241,61 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	devil->SetSpeed(.5F);
 
 	return devil;
+}
+
+ProgressBar* ObjectsManager::CreateProgressBarHeart()
+{
+	ProgressBar* hb = new ProgressBar();
+	hb->SetCurrentValue(3.F);
+	hb->SetMaxValue(3.f);
+	hb->setPosition(sf::Vector2f(0, 0));
+
+	hb->SetTexturesManager(_textures);
+	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
+
+	hb->SetVisibility(true);
+	hb->SetMouseInput(false);
+	hb->SetKeyboardInput(false);
+
+	hb->Init(sf::Vector2u(45, 15));
+	hb->setScale(sf::Vector2f(4.f, 4.f));
+
+	return hb;
+}
+
+Player* ObjectsManager::CreatePlayerMaleElf()
+{
+	Player* pl = new Player();
+
+	sf::AnimationContainer playerAnimations;
+
+	sf::Animation idle;
+	idle.SetTexture(_textures->GetTexture("players"));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 8));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 9));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 10));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 11));
+	idle.SetChangeFrameEvery(7);
+
+	sf::Animation move;
+	move.SetTexture(_textures->GetTexture("players"));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 12));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 13));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 14));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 15));
+	move.SetChangeFrameEvery(3);
+
+	playerAnimations.SetStateAnimation("idle", idle);
+	playerAnimations.SetStateAnimation("move", move);
+	playerAnimations.ApplySetScale(1, 1);
+
+	pl->SetAnimations(playerAnimations);
+	pl->SetState("idle");
+	pl->SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
+	pl->SetPosition(sf::Vector2f(296, 472));
+	pl->SetWeapon(GetMeleeWeapon("sword"));
+
+	return pl;
 }

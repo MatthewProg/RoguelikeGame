@@ -49,7 +49,10 @@ void Scene::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 				if (pair.second->GetFocusOnHover() == true || clicked == true)
 					if (pair.second->GetGlobalBounds().contains(mousePos))
 					{
+						if (std::get<1>(_inFocus) != nullptr)
+							std::get<1>(_inFocus)->SetInFocus(false);
 						_inFocus = pair;
+						std::get<1>(_inFocus)->SetInFocus(true);
 						return;
 					}
 				
@@ -61,9 +64,11 @@ void Scene::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 
 void Scene::UpdateEvent(sf::Event* ev, sf::Vector2f mousePos)
 {
-	auto focused = std::get<1>(_inFocus);
-	if (focused != nullptr)
-		focused->ProcessEvent(ev, mousePos);
+	//auto focused = std::get<1>(_inFocus);
+	//if (focused != nullptr)
+	//	focused->ProcessEvent(ev, mousePos);
+	for (auto& e : _uiElements)
+		e.second->ProcessEvent(ev, mousePos);
 }
 
 void Scene::Update(bool tick, float delta)
@@ -142,6 +147,8 @@ void Scene::SetFocus(std::string name)
 
 void Scene::ClearFocus()
 {
+	if (std::get<1>(_inFocus) != nullptr)
+		std::get<1>(_inFocus)->SetInFocus(false);
 	_inFocus = std::tuple<std::string, UIElement*>("", nullptr);
 }
 

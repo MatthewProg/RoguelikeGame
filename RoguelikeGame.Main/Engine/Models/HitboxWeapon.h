@@ -8,6 +8,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	HitboxWeapon();
+	HitboxWeapon(HitboxWeapon& other);
 	~HitboxWeapon();
 
 	// Inherited via Weapon

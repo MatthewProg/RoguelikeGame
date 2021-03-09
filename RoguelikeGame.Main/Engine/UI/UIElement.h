@@ -16,6 +16,7 @@ protected:
 	bool _keyboardInput;
 	bool _mouseInput;
 	bool _focusOnHover;
+	bool _inFocus;
 
 	sf::Texture* _noTexture;
 	TexturesManager* _texturesManager;
@@ -33,11 +34,13 @@ public:
 	void SetKeyboardInput(bool active);
 	void SetTexturesManager(TexturesManager* manager);
 	void SetFocusOnHover(bool hover);
+	void SetInFocus(bool isFocused);
 
 	bool GetVisibility();
 	bool GetMouseInput();
 	bool GetKeyboardInput();
 	bool GetFocusOnHover();
+	bool GetInFocus();
 	sf::FloatRect GetGlobalBounds();
 	sf::RenderTexture* GetTexture();
 };

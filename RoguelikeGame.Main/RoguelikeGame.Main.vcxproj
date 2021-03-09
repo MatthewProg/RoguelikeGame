@@ -163,6 +163,7 @@
     <ClCompile Include="Engine\Helpers\ViewHelper.cpp" />
     <ClCompile Include="Engine\Managers\CollisionsManager.cpp" />
     <ClCompile Include="Engine\Managers\EnemiesManager.cpp" />
+    <ClCompile Include="Engine\Managers\FontsManager.cpp" />
     <ClCompile Include="Engine\Managers\ObjectsManager.cpp" />
     <ClCompile Include="Engine\Managers\PathfindingManager.cpp" />
     <ClCompile Include="Engine\Managers\TexturesManager.cpp" />
@@ -174,6 +175,8 @@
     <ClCompile Include="Engine\Models\MeleeWeapon.cpp" />
     <ClCompile Include="Engine\Models\Player.cpp" />
     <ClCompile Include="Engine\Models\Weapon.cpp" />
+    <ClCompile Include="Engine\UI\Button.cpp" />
+    <ClCompile Include="Engine\UI\Label.cpp" />
     <ClCompile Include="Engine\UI\ProgressBar.cpp" />
     <ClCompile Include="Engine\UI\Scene.cpp" />
     <ClCompile Include="Engine\UI\UIElement.cpp" />
@@ -204,6 +207,7 @@
     <ClInclude Include="Engine\Helpers\ViewHelper.h" />
     <ClInclude Include="Engine\Managers\CollisionsManager.h" />
     <ClInclude Include="Engine\Managers\EnemiesManager.h" />
+    <ClInclude Include="Engine\Managers\FontsManager.h" />
     <ClInclude Include="Engine\Managers\ObjectsManager.h" />
     <ClInclude Include="Engine\Managers\PathfindingManager.h" />
     <ClInclude Include="Engine\Managers\TexturesManager.h" />
@@ -216,6 +220,8 @@
     <ClInclude Include="Engine\Models\MeleeWeapon.h" />
     <ClInclude Include="Engine\Models\Player.h" />
     <ClInclude Include="Engine\Models\Weapon.h" />
+    <ClInclude Include="Engine\UI\Button.h" />
+    <ClInclude Include="Engine\UI\Label.h" />
     <ClInclude Include="Engine\UI\ProgressBar.h" />
     <ClInclude Include="Engine\UI\Scene.h" />
     <ClInclude Include="Engine\UI\UIElement.h" />
@@ -241,6 +247,9 @@
     <Image Include="res\img\ui.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\fonts\Menu.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

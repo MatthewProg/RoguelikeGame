@@ -32,6 +32,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{431159e9-063e-4b6c-a2cb-766d3a781e3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\fonts">
+      <UniqueIdentifier>{5269810d-2d8f-4fe4-b431-589e5bd93354}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -139,6 +142,15 @@
     <ClInclude Include="Engine\Managers\SceneManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Managers\FontsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Label.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -235,6 +247,15 @@
     <ClCompile Include="Engine\Managers\SceneManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Managers\FontsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Label.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png">
@@ -252,5 +273,10 @@
     <Image Include="res\img\ui.png">
       <Filter>Resource Files\img</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\fonts\Menu.ttf">
+      <Filter>Resource Files\fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ UIElement::UIElement()
 	_mouseInput = true;
 	_keyboardInput = true;
 	_focusOnHover = false;
+	_inFocus = false;
 }
 
 UIElement::~UIElement()
@@ -45,6 +46,11 @@ void UIElement::SetFocusOnHover(bool hover)
 	_focusOnHover = hover;
 }
 
+void UIElement::SetInFocus(bool isFocused)
+{
+	_inFocus = isFocused;
+}
+
 bool UIElement::GetVisibility()
 {
 	return _isVisible;
@@ -63,6 +69,11 @@ bool UIElement::GetKeyboardInput()
 bool UIElement::GetFocusOnHover()
 {
 	return _focusOnHover;
+}
+
+bool UIElement::GetInFocus()
+{
+	return _inFocus;
 }
 
 sf::FloatRect UIElement::GetGlobalBounds()

@@ -4,6 +4,10 @@ HitboxWeapon::HitboxWeapon() : Weapon(WeaponType::NONE)
 {
 }
 
+HitboxWeapon::HitboxWeapon(HitboxWeapon& other) : Weapon(other)
+{
+}
+
 HitboxWeapon::~HitboxWeapon()
 {
 }

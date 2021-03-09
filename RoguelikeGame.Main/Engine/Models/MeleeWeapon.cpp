@@ -39,6 +39,13 @@ MeleeWeapon::MeleeWeapon() : Weapon(WeaponType::MELEE)
 	SetHitboxColor(sf::Color(255, 0, 0, 64));
 }
 
+MeleeWeapon::MeleeWeapon(MeleeWeapon& other) : Weapon(other)
+{
+	_angle = other._angle;
+	_range = other._range;
+	_hitboxAccuracy = other._hitboxAccuracy;
+}
+
 MeleeWeapon::~MeleeWeapon()
 {
 }

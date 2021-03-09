@@ -5,9 +5,10 @@
 
 #include "../Handlers/KeyboardEventHandler.h"
 #include "../Managers/ObjectsManager.h"
-#include "../Core/EntityMovement.h"
-#include "../Helpers/DebugHelper.h"
+#include "../Managers/FontsManager.h"
 #include "../Managers/SceneManager.h"
+#include "../Helpers/DebugHelper.h"
+#include "../Core/EntityMovement.h"
 #include "../Core/EnemiesAI.h"
 #include "../Models/GameMap.h"
 #include "../Models/Player.h"
@@ -30,13 +31,14 @@ private:
 	KeyboardEventHandler<Game> _keyboardHandler;
 
 	TexturesManager _textures;
+	FontsManager _fonts;
 	ObjectsManager _objTemplates;
 	GameMap<unsigned char> _gameMap;
 	CollisionsManager _collisionsManager;
 
 	SceneManager _sceneManager;
 
-	Player _player;
+	Player* _player;
 	EntityMovement _playerMovement;
 	EnemiesManager _enemies;
 	EnemiesAI _enemiesAI;
