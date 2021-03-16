@@ -4,6 +4,14 @@ Label::Label()
 {
 	_sthChanged = true;
 	_text.setString("");
+	_mouseInput = false;
+	_keyboardInput = false;
+}
+
+Label::Label(Label& other) : UIElement(other)
+{
+	_text = other._text;
+	_sthChanged = other._sthChanged;
 }
 
 Label::~Label()
@@ -48,6 +56,16 @@ void Label::RedrawElement()
 void Label::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 {
 	//Add TextBox mechanics at some point
+}
+
+sf::FloatRect Label::GetGlobalBounds()
+{
+	return getTransform().transformRect(_text.getGlobalBounds());
+}
+
+UIElement* Label::clone()
+{
+	return new Label(*this);
 }
 
 float Label::GetLineSpacing()

@@ -151,6 +151,9 @@
     <ClInclude Include="Engine\UI\Button.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\AnimationBox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -254,6 +257,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\UI\Button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\AnimationBox.cpp">
       <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>

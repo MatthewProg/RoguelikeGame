@@ -12,9 +12,11 @@ ProgressBar::ProgressBar()
 	_prevMaxValue = _maxValue;
 
 	_sthChanged = true;
+	_keyboardInput = true;
+	_mouseInput = true;
 }
 
-ProgressBar::ProgressBar(ProgressBar& other)
+ProgressBar::ProgressBar(ProgressBar& other) : UIElement(other)
 {
 	_currentValue = other._currentValue;
 	_maxValue = other._maxValue;
@@ -24,18 +26,6 @@ ProgressBar::ProgressBar(ProgressBar& other)
 	_backgroundLayers = other._backgroundLayers;
 	_progressBarStepsPos = other._progressBarStepsPos;
 	_sthChanged = other._sthChanged;
-	_isVisible = other._isVisible;
-	_noTexture = other._noTexture;
-	_texturesManager = other._texturesManager;
-	auto size = other._render.getSize();
-	_render.create(size.x, size.y);
-	_mouseInput = other._mouseInput;
-	_keyboardInput = other._keyboardInput;
-	_focusOnHover = other._focusOnHover;
-	setPosition(other.getPosition());
-	setRotation(other.getRotation());
-	setOrigin(other.getOrigin());
-	setScale(other.getScale());
 }
 
 ProgressBar::~ProgressBar()
@@ -340,5 +330,10 @@ void ProgressBar::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 			}
 		}
 	}
+}
+
+UIElement* ProgressBar::clone()
+{
+	return new ProgressBar(*this);
 }
 

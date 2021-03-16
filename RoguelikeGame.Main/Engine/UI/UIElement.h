@@ -6,7 +6,6 @@
 #include "SFML/Graphics/Transformable.hpp"
 #include "SFML/Graphics/RenderTexture.hpp"
 
-
 class UIElement : public sf::Transformable
 {
 protected:
@@ -22,7 +21,9 @@ protected:
 	TexturesManager* _texturesManager;
 public:
 	UIElement();
-	~UIElement();
+	UIElement(UIElement& other);
+	virtual UIElement* clone() = 0;
+	virtual ~UIElement() { ; }
 
 	void Init(sf::Vector2u size);
 	virtual void Update(bool tick, float delta) = 0;
@@ -41,7 +42,7 @@ public:
 	bool GetKeyboardInput();
 	bool GetFocusOnHover();
 	bool GetInFocus();
-	sf::FloatRect GetGlobalBounds();
+	virtual sf::FloatRect GetGlobalBounds();
 	sf::RenderTexture* GetTexture();
 };
 

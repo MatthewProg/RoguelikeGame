@@ -11,8 +11,21 @@ UIElement::UIElement()
 	_inFocus = false;
 }
 
-UIElement::~UIElement()
+UIElement::UIElement(UIElement& other)
 {
+	auto size = other._render.getSize();
+	_render.create(size.x, size.y);
+	_isVisible = other._isVisible;
+	_keyboardInput = other._keyboardInput;
+	_mouseInput = other._mouseInput;
+	_focusOnHover = other._focusOnHover;
+	_inFocus = other._inFocus;
+	_noTexture = other._noTexture;
+	_texturesManager = other._texturesManager;
+	setPosition(other.getPosition());
+	setRotation(other.getRotation());
+	setOrigin(other.getOrigin());
+	setScale(other.getScale());
 }
 
 void UIElement::Init(sf::Vector2u size)
@@ -78,8 +91,10 @@ bool UIElement::GetInFocus()
 
 sf::FloatRect UIElement::GetGlobalBounds()
 {
+	auto scale = getScale();
 	sf::Vector2f size((float)_render.getSize().x, (float)_render.getSize().y);
-	return sf::FloatRect(getPosition(), size);
+	sf::Vector2f output(size.x * scale.x, size.y * scale.y);
+	return sf::FloatRect(getPosition(), output);
 }
 
 sf::RenderTexture* UIElement::GetTexture()

@@ -12,6 +12,7 @@ private:
 	bool _sthChanged;
 public:
 	Label();
+	Label(Label& other);
 	~Label();
 
 	//Text getters
@@ -37,10 +38,11 @@ public:
 	void SetOutlineColor(const sf::Color& color);
 	void SetOutlineThickness(float thickness);
 
-
 	// Inherited via UIElement
+	virtual UIElement* clone() override;
 	virtual void Update(bool tick, float delta) override;
 	virtual void RedrawElement() override;
 	virtual void ProcessEvent(sf::Event* ev, sf::Vector2f mousePos) override;
+	virtual sf::FloatRect GetGlobalBounds() override;
 };
 

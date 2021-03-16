@@ -38,6 +38,7 @@ namespace sf
 
 		std::vector<sf::Color> _frameColor;
 
+		bool _frameSwitched;
 		void NextFrame();
 
 		// Inherited via Drawable
@@ -84,6 +85,7 @@ namespace sf
 		bool GetLoop();
 		bool IsPaused();
 		bool IsEnded();
+		bool IsFrameSwitched();
 
 		//Texture getteres
 		bool IsTextureRepeated();

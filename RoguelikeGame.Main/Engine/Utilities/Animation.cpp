@@ -18,6 +18,7 @@ sf::Animation::Animation()
 	_loop = true;
 	_paused = false;
 	_ended = false;
+	_frameSwitched = true;
 
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(4);
@@ -112,6 +113,11 @@ bool sf::Animation::IsEnded()
 	return _ended;
 }
 
+bool sf::Animation::IsFrameSwitched()
+{
+	return _frameSwitched;
+}
+
 bool sf::Animation::IsTextureRepeated()
 {
 	return _texture->isRepeated();
@@ -188,6 +194,7 @@ void sf::Animation::UpdateVertices()
 
 void sf::Animation::NextFrame()
 {
+	auto prev_frame = _currentFrame;
 	_currentFrame++;
 	if (_currentFrame > _rectFrames.size() - 1)
 	{
@@ -200,10 +207,13 @@ void sf::Animation::NextFrame()
 			_paused = true;
 		}
 	}
+	if (_currentFrame != prev_frame)
+		_frameSwitched = true;
 }
 
 void sf::Animation::Tick(bool tick)
 {
+	_frameSwitched = false;
 	if (tick == false || _paused == true || (_ended && !_loop)) return;
 
 	UpdateVertices();

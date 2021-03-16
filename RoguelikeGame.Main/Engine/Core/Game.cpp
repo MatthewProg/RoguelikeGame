@@ -17,6 +17,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_gameSpeed = 60;
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_event = sf::Event();
+	_player = nullptr;
 }
 
 void Game::SetDeltaAndTick()
@@ -85,6 +86,8 @@ void Game::Start()
 
 	//Object manager
 	_objTemplates.SetTexturesManager(&_textures);
+	_objTemplates.SetFontsManager(&_fonts);
+	_objTemplates.SetWindowSize(_window.getSize());
 
 	//Game map
 	_logger->Log(Logger::LogType::INFO, "Loading map components");
@@ -136,9 +139,8 @@ void Game::Start()
 	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
 
 	//UI elements
-	Scene *sc = new Scene();
-	sc->AddElement("healthBar", (UIElement*)_objTemplates.GetProgressBar("heart"));
-	_sceneManager.AddScene("game", sc);
+	_sceneManager.AddScene("game", _objTemplates.GetScene("game"));
+	_sceneManager.AddScene("main_menu", _objTemplates.GetScene("main_menu"));
 	_sceneManager.LoadScene("game");
 	_sceneManager.SetShowFocused(false);
 

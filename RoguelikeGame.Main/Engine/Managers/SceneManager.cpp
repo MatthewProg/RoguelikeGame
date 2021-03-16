@@ -20,8 +20,8 @@ SceneManager::SceneManager()
 	_loadedScene = "";
 	_showFocused = false;
 	_focusedOutline.setPrimitiveType(sf::LinesStrip);
-	_focusedOutline.resize(4);
-	for (uint8_t i = 0; i < 4; i++)
+	_focusedOutline.resize(5);
+	for (uint8_t i = 0; i < 5; i++)
 	{
 		_focusedOutline[i].color = sf::Color::Blue;
 		_focusedOutline[i].position = sf::Vector2f(-1, -1);
@@ -55,10 +55,11 @@ void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 			_focusedOutline[1].position = sf::Vector2f(bounds.left + bounds.width, bounds.top);
 			_focusedOutline[2].position = sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height);
 			_focusedOutline[3].position = sf::Vector2f(bounds.left, bounds.top + bounds.height);
+			_focusedOutline[4].position = sf::Vector2f(bounds.left, bounds.top);
 		}
 		else
 		{
-			for (uint8_t i = 0; i < 4; i++)
+			for (uint8_t i = 0; i < 5; i++)
 				_focusedOutline[i].position = sf::Vector2f(-1, -1);
 		}
 	}

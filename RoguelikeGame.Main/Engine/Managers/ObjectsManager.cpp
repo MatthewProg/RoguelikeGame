@@ -5,9 +5,20 @@ void ObjectsManager::SetTexturesManager(TexturesManager* textures)
 	_textures = textures;
 }
 
+void ObjectsManager::SetFontsManager(FontsManager* fonts)
+{
+	_fonts = fonts;
+}
+
+void ObjectsManager::SetWindowSize(sf::Vector2u size)
+{
+	_windowSize = size;
+}
+
 ObjectsManager::ObjectsManager()
 {
 	_textures = nullptr;
+	_fonts = nullptr;
 
 	_meleeWeapons["sword"] = nullptr;
 
@@ -15,9 +26,14 @@ ObjectsManager::ObjectsManager()
 
 	_enemies["devil"] = nullptr;
 
+	_players["male_elf"] = nullptr;
+
 	_progressBars["heart"] = nullptr;
 
-	_players["male_elf"] = nullptr;
+	_buttons["default_red"] = nullptr;
+
+	_scenes["main_menu"] = nullptr;
+	_scenes["game"] = nullptr;
 }
 ObjectsManager::~ObjectsManager()
 {
@@ -33,11 +49,19 @@ ObjectsManager::~ObjectsManager()
 		if (v.second != nullptr)
 			delete v.second;
 
+	for (auto v : _players)
+		if (v.second != nullptr)
+			delete v.second;
+
 	for (auto v : _progressBars)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _players)
+	for (auto v : _buttons)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto v : _scenes)
 		if (v.second != nullptr)
 			delete v.second;
 }
@@ -94,6 +118,28 @@ Enemy* ObjectsManager::GetEnemy(std::string name)
 	return new Enemy();
 }
 
+Player* ObjectsManager::GetPlayer(std::string name)
+{
+	auto found = _players.find(name);
+	if (found != _players.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "male_elf")found->second = CreatePlayerMaleElf();
+		}
+
+		auto obj = new Player(*(found->second));
+		obj->GetAnimations()->UpdateCurrentAnimationPtr();
+		if (found->second->GetWeapon() != nullptr)
+		{
+			obj->SetWeaponUnsafe(found->second->GetWeapon()->clone());
+			obj->GetWeapon()->GetTransformAnimation()->SetTarget(obj->GetWeapon()->GetAnimation()->ExternalTransform());
+		}
+		return obj;
+	}
+	return new Player();
+}
+
 ProgressBar* ObjectsManager::GetProgressBar(std::string name)
 {
 	auto found = _progressBars.find(name);
@@ -111,37 +157,38 @@ ProgressBar* ObjectsManager::GetProgressBar(std::string name)
 	return nullptr;
 }
 
-Player* ObjectsManager::GetPlayer(std::string name)
+Button* ObjectsManager::GetButton(std::string name)
 {
-	auto found = _players.find(name);
-	if (found != _players.end())
+	auto found = _buttons.find(name);
+	if (found != _buttons.end())
 	{
 		if (found->second == nullptr)
 		{
-			if (name == "male_elf")found->second = CreatePlayerMaleElf();
+			if (name == "default_red") found->second = CreateButtonDefaultRed();
 		}
 
-		auto obj = new Player(*(found->second));
-		obj->GetAnimations()->UpdateCurrentAnimationPtr();
-		if (obj->GetWeapon() != nullptr)
-		{
-			switch (obj->GetWeapon()->GetWeaponType())
-			{
-			case WeaponType::NONE:
-				obj->SetWeaponUnsafe(new HitboxWeapon(*((HitboxWeapon*)obj->GetWeapon())));
-				break;
-			case WeaponType::MELEE:
-				obj->SetWeaponUnsafe(new MeleeWeapon(*((MeleeWeapon*)obj->GetWeapon())));
-				break;
-			default:
-				obj->SetWeaponUnsafe(nullptr);
-				break;
-			}
-			obj->GetWeapon()->GetTransformAnimation()->SetTarget(obj->GetWeapon()->GetAnimation()->ExternalTransform());
-		}
+		Button* obj = new Button(*(found->second));
+		obj->RedrawElement();
 		return obj;
 	}
-	return new Player();
+	return nullptr;
+}
+
+Scene* ObjectsManager::GetScene(std::string name)
+{
+	auto found = _scenes.find(name);
+	if (found != _scenes.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "main_menu") found->second = CreateSceneMainMenu();
+			else if (name == "game") found->second = CreateSceneGameUI();
+		}
+		Scene* obj = new Scene(*(found->second));
+		obj->RefreshElements();
+		return obj;
+	}
+	return nullptr;
 }
 
 //Create
@@ -243,28 +290,6 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	return devil;
 }
 
-ProgressBar* ObjectsManager::CreateProgressBarHeart()
-{
-	ProgressBar* hb = new ProgressBar();
-	hb->SetCurrentValue(3.F);
-	hb->SetMaxValue(3.f);
-	hb->setPosition(sf::Vector2f(0, 0));
-
-	hb->SetTexturesManager(_textures);
-	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
-
-	hb->SetVisibility(true);
-	hb->SetMouseInput(false);
-	hb->SetKeyboardInput(false);
-
-	hb->Init(sf::Vector2u(45, 15));
-	hb->setScale(sf::Vector2f(4.f, 4.f));
-
-	return hb;
-}
-
 Player* ObjectsManager::CreatePlayerMaleElf()
 {
 	Player* pl = new Player();
@@ -299,3 +324,220 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 
 	return pl;
 }
+
+ProgressBar* ObjectsManager::CreateProgressBarHeart()
+{
+	ProgressBar* hb = new ProgressBar();
+	hb->SetCurrentValue(3.F);
+	hb->SetMaxValue(3.f);
+	hb->setPosition(sf::Vector2f(0, 0));
+
+	hb->SetTexturesManager(_textures);
+	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
+
+	hb->SetVisibility(true);
+	hb->SetMouseInput(false);
+	hb->SetKeyboardInput(false);
+
+	hb->Init(sf::Vector2u(45, 15));
+	hb->setScale(sf::Vector2f(4.f, 4.f));
+
+	return hb;
+}
+
+Button* ObjectsManager::CreateButtonDefaultRed()
+{
+	Button* btn = new Button();
+
+	//Init
+	btn->Init(sf::Vector2u(170, 96));
+	btn->SetTexturesManager(_textures);
+	btn->SetBackgroundSize(sf::Vector2f(170, 96));
+	btn->setPosition(0.f, 0.f);
+
+	//text general
+	sf::Text text;
+	text.setFont(*_fonts->GetFont("menu"));
+	text.setCharacterSize(17);
+	text.setFillColor(sf::Color::White);
+	text.setString("[default]");
+
+	//none
+	text.setPosition(5.f, 36.f);
+	btn->AddState("none", text, "ui", sf::FloatRect(15, 159, 34, 24));
+
+	//hover
+	text.setPosition(5.f, 36.f);
+	btn->AddState("hover", text, "ui", sf::FloatRect(15, 186, 34, 24));
+
+	//click
+	text.setPosition(10.f, 40.f);
+	text.setFillColor(sf::Color(230, 230, 230, 255));
+	btn->AddState("click", text, "ui", sf::FloatRect(15, 210, 34, 24));
+
+	return btn;
+}
+
+Scene* ObjectsManager::CreateSceneMainMenu()
+{
+	Scene* sc = new Scene();
+
+	//Scene settings
+	sc->SetBackgroundColor(sf::Color(66, 40, 53, 255));
+
+	//AnimationBoxes
+	auto leftCharacter = new AnimationBox();
+	auto rightCharacter = new AnimationBox();
+
+	//leftCharacter
+	sf::Animation lc;
+	lc.SetAnimationSpeed(1.f);
+	lc.SetChangeFrameEvery(7);
+	lc.SetLoop(true);
+	lc.SetTexture(_textures->GetTexture("players"));
+	lc.setPosition(0.f, 0.f);
+	lc.setScale(12.8f, 12.8f);
+	lc.AddNewFrame(sf::IntRect(0, 112, 14, 20));
+	lc.AddNewFrame(sf::IntRect(16, 112, 14, 20));
+	lc.AddNewFrame(sf::IntRect(32, 112, 14, 20));
+	lc.AddNewFrame(sf::IntRect(48, 112, 14, 20));
+	lc.Start();
+
+	leftCharacter->Init(sf::Vector2u(180, 256));
+	leftCharacter->SetAnimation(lc);
+	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.2f, 0.6f, 1.f, 1.f), leftCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	leftCharacter->setPosition(pos.left, pos.top);
+
+
+	//rightCharacter
+	sf::Animation rc;
+	rc.SetAnimationSpeed(1.f);
+	rc.SetChangeFrameEvery(7);
+	rc.SetLoop(true);
+	rc.SetTexture(_textures->GetTexture("tiles2"));
+	rc.setPosition(0.f, 0.f);
+	rc.setScale(9.6f, 9.6f);
+	rc.AddNewFrame(sf::IntRect(22, 277, 20, 27));
+	rc.AddNewFrame(sf::IntRect(54, 277, 20, 27));
+	rc.AddNewFrame(sf::IntRect(86, 277, 20, 27));
+	rc.AddNewFrame(sf::IntRect(118, 277, 20, 27));
+	rc.Start();
+
+	rightCharacter->Init(sf::Vector2u(192, 260));
+	rightCharacter->SetAnimation(rc);
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.8f, 0.6f, 1.f, 1.f), rightCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	rightCharacter->setPosition(pos.left, pos.top);
+
+	//Labels
+	auto title = new Label();
+
+	//title
+	title->SetFont(_fonts->GetFont("menu"));
+	title->SetFillColor(sf::Color::White);
+	title->SetText("Rogue Maze");
+	title->SetCharacterSize(50);
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.15f, 1.f, 1.f), title->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	title->setPosition(pos.left, pos.top);
+	title->Init(sf::Vector2u((int)pos.width, (int)pos.height));
+
+	//Buttons
+	auto playButton = GetButton("default_red");
+	auto optionsButton = GetButton("default_red");
+	auto exitButton = GetButton("default_red");
+
+	//playButton	
+	playButton->ApplyText("Play");
+	playButton->ApplyCharacterSize(24);
+	playButton->EditTextState("none")->setPosition(33.f, 33.f);
+	playButton->EditTextState("hover")->setPosition(33.f, 33.f);
+	playButton->EditTextState("click")->setPosition(38.f, 37.f);
+
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.4f, 1.f, 1.f), playButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	playButton->setPosition(pos.left, pos.top);
+	
+	//optionsButton
+	optionsButton->ApplyText("Options");
+	optionsButton->ApplyCharacterSize(20);
+	optionsButton->EditTextState("none")->setPosition(8.f, 35.f);
+	optionsButton->EditTextState("hover")->setPosition(8.f, 35.f);
+	optionsButton->EditTextState("click")->setPosition(13.f, 40.f);
+
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.6f, 1.f, 1.f), optionsButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	optionsButton->setPosition(pos.left, pos.top);
+	
+	//exitButton
+	exitButton->ApplyText("Exit");
+	exitButton->ApplyCharacterSize(24);
+	exitButton->EditTextState("none")->setPosition(33.f, 33.f);
+	exitButton->EditTextState("hover")->setPosition(33.f, 33.f);
+	exitButton->EditTextState("click")->setPosition(38.f, 37.f);
+
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.8f, 1.f, 1.f), exitButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	exitButton->setPosition(pos.left, pos.top);
+
+	//Add to scene
+	sc->AddElement("leftCharacter", leftCharacter);
+	sc->AddElement("rightCharacter", rightCharacter);
+	sc->AddElement("title", title);
+	sc->AddElement("play", playButton);
+	sc->AddElement("options", optionsButton);
+	sc->AddElement("exit", exitButton);
+
+	return sc;
+}
+
+Scene* ObjectsManager::CreateSceneGameUI()
+{
+	Scene* sc = new Scene();
+
+	//Scene settings
+	sc->SetBackgroundColor(sf::Color(0, 0, 0, 0));
+
+	//ProgressBars
+	auto heart = GetProgressBar("heart");
+
+	//heart
+	heart->setPosition(0.f, 0.f);
+
+	//Labels
+	auto money = new Label();
+
+	//money
+	money->Init(sf::Vector2u(200, 34));
+	money->SetFont(_fonts->GetFont("menu"));
+	money->SetCharacterSize(32);
+	money->SetText("000000");
+	money->SetFillColor(sf::Color::White);
+	money->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - 8, 4);
+
+	//AnimationBoxes
+	auto coin = new AnimationBox();
+
+	//coin
+	sf::Animation c;
+	c.SetAnimationSpeed(1.f);
+	c.SetChangeFrameEvery(5);
+	c.SetLoop(true);
+	c.SetTexture(_textures->GetTexture("tiles2"));
+	c.setPosition(0.f, 0.f);
+	c.setScale(4.f, 4.f);
+	c.AddNewFrame(sf::IntRect(289, 273, 6, 7));
+	c.AddNewFrame(sf::IntRect(297, 273, 6, 7));
+	c.AddNewFrame(sf::IntRect(305, 273, 6, 7));
+	c.AddNewFrame(sf::IntRect(313, 273, 6, 7));
+	c.Start();
+
+	coin->Init(sf::Vector2u(24, 28));
+	coin->SetAnimation(c);
+	coin->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - 40, 4);
+
+	//Add to scene
+	sc->AddElement("healthBar", heart);
+	sc->AddElement("coin", coin);
+	sc->AddElement("money", money);
+
+	return sc;
+}
+

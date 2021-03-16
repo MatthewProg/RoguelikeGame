@@ -116,3 +116,8 @@ void MeleeWeapon::SetCurrentAngle(float angle)
 	if (GetHitboxVisibility())
 		PrepareHitbox();
 }
+
+Weapon* MeleeWeapon::clone()
+{
+	return new MeleeWeapon(*this);
+}

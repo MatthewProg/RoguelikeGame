@@ -17,5 +17,8 @@ public:
 	virtual void Update(bool tick, float) override;
 
 	virtual void SetCurrentAngle(float) override;
+
+	// Inherited via Weapon
+	virtual Weapon* clone() override;
 };
 

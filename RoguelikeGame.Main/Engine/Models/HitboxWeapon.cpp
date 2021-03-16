@@ -38,6 +38,11 @@ void HitboxWeapon::SetCurrentAngle(float)
 {
 }
 
+Weapon* HitboxWeapon::clone()
+{
+	return new HitboxWeapon(*this);
+}
+
 void HitboxWeapon::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	if (GetRaycastVisibility())

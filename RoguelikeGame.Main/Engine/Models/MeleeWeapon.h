@@ -34,5 +34,8 @@ public:
 	void SetWeaponAngle(float angle);
 	void SetWeaponRange(float range);
 	void SetCurrentAngle(float angle) override;
+
+	// Inherited via Weapon
+	virtual Weapon* clone() override;
 };
 

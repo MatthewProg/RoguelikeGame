@@ -175,6 +175,7 @@
     <ClCompile Include="Engine\Models\MeleeWeapon.cpp" />
     <ClCompile Include="Engine\Models\Player.cpp" />
     <ClCompile Include="Engine\Models\Weapon.cpp" />
+    <ClCompile Include="Engine\UI\AnimationBox.cpp" />
     <ClCompile Include="Engine\UI\Button.cpp" />
     <ClCompile Include="Engine\UI\Label.cpp" />
     <ClCompile Include="Engine\UI\ProgressBar.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="Engine\Models\MeleeWeapon.h" />
     <ClInclude Include="Engine\Models\Player.h" />
     <ClInclude Include="Engine\Models\Weapon.h" />
+    <ClInclude Include="Engine\UI\AnimationBox.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\UI\Label.h" />
     <ClInclude Include="Engine\UI\ProgressBar.h" />

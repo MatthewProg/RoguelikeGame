@@ -36,7 +36,8 @@ private:
 public:
 	Weapon(WeaponType type);
 	Weapon(Weapon& other);
-	~Weapon();
+	virtual ~Weapon() { ; }
+	virtual Weapon* clone() = 0;
 
 	virtual bool CanAttack() = 0;
 	virtual void Attack() = 0;

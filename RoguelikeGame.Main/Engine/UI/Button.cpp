@@ -121,6 +121,11 @@ void Button::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 	}
 }
 
+UIElement* Button::clone() 
+{
+	return new Button(*this);
+}
+
 Button::Button()
 {
 	_textStates.clear();
@@ -131,6 +136,17 @@ Button::Button()
 	_lmbUp = false;
 	_keyboardInput = false;
 	_mouseInput = true;
+}
+
+Button::Button(Button& other) : UIElement(other)
+{
+	_textStates = other._textStates;
+	_backgroundStates = other._backgroundStates;
+	_forcedState = other._forcedState;
+	_currentState = other._currentState;
+	_backgroundSize = other._backgroundSize;
+	_lmbWasDown = other._lmbWasDown;
+	_lmbUp = other._lmbUp;
 }
 
 Button::~Button()
@@ -181,6 +197,22 @@ void Button::RemoveState(std::string name)
 	if (_currentState == name) _currentState = "none";
 }
 
+sf::Text* Button::EditTextState(std::string name)
+{
+	auto found = _textStates.find(name);
+	if (found != _textStates.end())
+		return &found->second;
+	return nullptr;
+}
+
+std::tuple<std::string, sf::FloatRect>* Button::EditBackgroundState(std::string name)
+{
+	auto found = _backgroundStates.find(name);
+	if (found != _backgroundStates.end())
+		return &found->second;
+	return nullptr;
+}
+
 bool Button::Clicked()
 {
 	return _lmbUp;
@@ -190,6 +222,60 @@ void Button::SetBackgroundSize(sf::Vector2f size)
 {
 	_backgroundSize = size;
 	RedrawElement();
+}
+
+void Button::ApplyText(std::string string)
+{
+	for (auto& t : _textStates)
+		t.second.setString(string);
+}
+
+void Button::ApplyFont(sf::Font* font)
+{
+	for (auto& t : _textStates)
+		t.second.setFont(*font);
+}
+
+void Button::ApplyCharacterSize(uint32_t size)
+{
+	for (auto& t : _textStates)
+		t.second.setCharacterSize(size);
+}
+
+void Button::ApplyLineSpacing(float spacing)
+{
+	for (auto& t : _textStates)
+		t.second.setLineSpacing(spacing);
+}
+
+void Button::ApplyLetterSpacing(float spacing)
+{
+	for (auto& t : _textStates)
+		t.second.setLetterSpacing(spacing);
+}
+
+void Button::ApplyStyle(uint32_t style)
+{
+	for (auto& t : _textStates)
+		t.second.setStyle(style);
+}
+
+void Button::ApplyFillColor(const sf::Color& color)
+{
+	for (auto& t : _textStates)
+		t.second.setFillColor(color);
+}
+
+void Button::ApplyOutlineColor(const sf::Color& color)
+{
+	for (auto& t : _textStates)
+		t.second.setOutlineColor(color);
+}
+
+void Button::ApplyOutlineThickness(float thickness)
+{
+	for (auto& t : _textStates)
+		t.second.setOutlineThickness(thickness);
 }
 
 sf::Vector2f Button::GetBackgroundSize()

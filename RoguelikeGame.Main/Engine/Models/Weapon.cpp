@@ -42,10 +42,6 @@ Weapon::Weapon(Weapon& other)
 	setScale(other.getScale());
 }
 
-Weapon::~Weapon()
-{
-}
-
 void Weapon::ResetCooldown()
 {
 	_cooldownCounter = 0;
