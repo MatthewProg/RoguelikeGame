@@ -40,9 +40,9 @@ public:
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
-	virtual void Update(bool tick, float delta) override;
+	virtual void Update(bool, float) override;
 	virtual void RedrawElement() override;
-	virtual void ProcessEvent(sf::Event* ev, sf::Vector2f mousePos) override;
+	virtual void ProcessEvent(sf::Event*, sf::Vector2f) override;
 	virtual sf::FloatRect GetGlobalBounds() override;
 };
 

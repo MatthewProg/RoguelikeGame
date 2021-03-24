@@ -19,9 +19,10 @@ private:
 	Logger* _logger;
 	DebugHelper _debug;
 
-	double _delta = 1.000000000;
-	double _tickCounter = 0.0;
-	unsigned int _gameSpeed = 20;
+	double _delta;
+	double _tickCounter;
+	unsigned int _gameSpeed;
+	bool _inGame;
 
 	sf::RenderWindow _window;
 	sf::View _camera;
@@ -46,6 +47,9 @@ private:
 	void SetDeltaAndTick();
 	void RecalcPlayerRays();
 	void UpdateUI();
+	void UpdateGame();
+	void CheckButtons();
+	void LoadLevel(std::string path, std::string playerTemplate);
 
 	bool Tick();
 

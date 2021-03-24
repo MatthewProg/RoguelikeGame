@@ -113,7 +113,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						// Northern neighbour does not have one, so create one
 						std::tuple<sf::Vector2f, sf::Vector2f> edge;
 
-						float posX = ((x + 1) * _sumMap.tileWidth) + _sumMap.offsetX; //!!!TEST THIS -1!!!!
+						float posX = ((x + 1) * _sumMap.tileWidth) + _sumMap.offsetX;
 						float posY = (y * _sumMap.tileHeight) + _sumMap.offsetY;
 
 						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
@@ -174,7 +174,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						std::tuple<sf::Vector2f, sf::Vector2f> edge;
 
 						float posX = (x * _sumMap.tileWidth) + _sumMap.offsetX;
-						float posY = ((y + 1) * _sumMap.tileHeight) + _sumMap.offsetY; //!!!TEST THIS -1!!!!
+						float posY = ((y + 1) * _sumMap.tileHeight) + _sumMap.offsetY;
 
 						std::get<0>(edge) = sf::Vector2f(posX, posY); //Start pos
 						std::get<1>(edge) = sf::Vector2f(posX + _sumMap.tileWidth, posY); //End pos

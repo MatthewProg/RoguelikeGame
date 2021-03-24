@@ -15,6 +15,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
 	_gameSpeed = 60;
+	_inGame = false;
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_event = sf::Event();
 	_player = nullptr;
@@ -43,9 +44,99 @@ void Game::RecalcPlayerRays()
 
 void Game::UpdateUI()
 {
-	auto sc = _sceneManager.GetScene("game");
-	ProgressBar* hb = (ProgressBar*)sc->GetElement("healthBar");
-	hb->SetCurrentValue(_player->GetHealth());
+	if (_inGame)
+	{
+		auto sc = _sceneManager.GetScene("game");
+		ProgressBar* hb = (ProgressBar*)sc->GetElement("healthBar");
+		hb->SetCurrentValue(_player->GetHealth());
+	}
+	CheckButtons();
+}
+
+void Game::UpdateGame()
+{
+	_playerMovement.Update((float)_delta);
+	_player->Update(Game::Tick(), (float)_delta);
+	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
+
+	_enemies.Update(Game::Tick(), (float)_delta);
+	_enemies.CheckAttacks();
+	_enemiesAI.Update((float)_delta);
+
+	_camera.setCenter(ViewHelper::GetRectCenter(_player->GetCollisionBox()));
+}
+
+void Game::CheckButtons()
+{
+	auto loaded = _sceneManager.GetLoadedScene();
+	if (loaded != nullptr)
+	{
+		if (_sceneManager.GetLoadedSceneName() == "main_menu")
+		{
+			if (((Button*)loaded->GetElement("exit"))->Clicked()) Close();
+			else if (((Button*)loaded->GetElement("options"))->Clicked()) { ; }
+			else if (((Button*)loaded->GetElement("play"))->Clicked()) { LoadLevel("./res/maps/map1.json", "male_elf"); }
+		}
+	}
+}
+
+void Game::LoadLevel(std::string path, std::string playerTemplate)
+{
+	_logger->Log(Logger::LogType::INFO, "Loading level: " + path);
+
+	//Game map
+	_logger->Log(Logger::LogType::INFO, "Loading map components");
+	if (_gameMap.LoadFromFile(path) == false)
+		_logger->Log(Logger::LogType::ERROR, "Data (1/1): ERROR");
+	else
+		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
+
+	_gameMap.AutoSetTilesTextures(&_textures);
+	_gameMap.PrepareFrame();
+
+	//Collisions
+	_collisionsManager.AddMap(*_gameMap.GetActionMap(), (unsigned char)1);
+	_collisionsManager.GenerateCommonMap();
+	_collisionsManager.CovertTilesIntoEdges();
+
+	//Player
+	_logger->Log(Logger::LogType::INFO, "Loading player components");
+	_player = _objTemplates.GetPlayer(playerTemplate);
+	auto camSize = _camera.getSize() + sf::Vector2f(44, 44);
+	_player->SetView(sf::FloatRect(0 - (camSize.x / 2), 0 - (camSize.y / 2), camSize.x, camSize.y));
+
+	//Player movement
+	_playerMovement.SetIdleStateName("idle");
+	_playerMovement.SetMoveStateName("move");
+	_playerMovement.SetEntity(_player);
+	_playerMovement.SetCollisionsManager(&_collisionsManager);
+
+	//Enemies AI
+	_enemiesAI.SetTarget(_player);
+	_enemiesAI.SetCollisionsManager(&_collisionsManager);
+	_enemiesAI.SetEnemiesManager(&_enemies);
+	_enemiesAI.SetPathfindPoints(_gameMap.GetPathfindingPoints());
+
+	//Enemies
+	_enemies.SetPlayer(_player);
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
+	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
+
+	//Scene
+	_sceneManager.LoadScene("game");
+
+	_inGame = true;
+	_logger->Log(Logger::LogType::INFO, "Done");
 }
 
 bool Game::Tick()
@@ -89,64 +180,16 @@ void Game::Start()
 	_objTemplates.SetFontsManager(&_fonts);
 	_objTemplates.SetWindowSize(_window.getSize());
 
-	//Game map
-	_logger->Log(Logger::LogType::INFO, "Loading map components");
-	if (_gameMap.LoadFromFile("./res/maps/map1.json") == false)
-		_logger->Log(Logger::LogType::ERROR, "Data (1/1): ERROR");
-	else
-		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
-
-	_gameMap.AutoSetTilesTextures(&_textures);
-
-	_gameMap.PrepareFrame();
-
-	//Collisions
-	_collisionsManager.AddMap(*_gameMap.GetActionMap(), (unsigned char)1);
-	_collisionsManager.GenerateCommonMap();
-	_collisionsManager.CovertTilesIntoEdges();
-
-	//Player
-	_logger->Log(Logger::LogType::INFO, "Loading player components");
-	_player = _objTemplates.GetPlayer("male_elf");
-	auto camSize = _camera.getSize() + sf::Vector2f(44, 44);
-	_player->SetView(sf::FloatRect(0 - (camSize.x / 2), 0 - (camSize.y / 2), camSize.x, camSize.y));
-
-	//Player movement
-	_playerMovement.SetIdleStateName("idle");
-	_playerMovement.SetMoveStateName("move");
-	_playerMovement.SetEntity(_player);
-	_playerMovement.SetCollisionsManager(&_collisionsManager);
-
-	//Enemies AI
-	_enemiesAI.SetTarget(_player);
-	_enemiesAI.SetCollisionsManager(&_collisionsManager);
-	_enemiesAI.SetEnemiesManager(&_enemies);
-	_enemiesAI.SetPathfindPoints(_gameMap.GetPathfindingPoints());
-
-	//Enemies
-	_enemies.SetPlayer(_player);
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
-	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
-	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
-	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
-
 	//UI elements
 	_sceneManager.AddScene("game", _objTemplates.GetScene("game"));
 	_sceneManager.AddScene("main_menu", _objTemplates.GetScene("main_menu"));
-	_sceneManager.LoadScene("game");
+	_sceneManager.LoadScene("main_menu");
 	_sceneManager.SetShowFocused(false);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);
 
+	//Keybinds
 	sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true };
 	sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
 	sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
@@ -185,15 +228,21 @@ void Game::EventUpdate()
 			_keyboardHandler.Rise(_event.key);
 		if (_event.type == sf::Event::MouseButtonPressed && _event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (_player->GetWeapon()->CanAttack())
+			if (_inGame)
 			{
-				_player->GetWeapon()->Attack();
-				_enemies.CheckForHit();
+				if (_player->GetWeapon()->CanAttack())
+				{
+					_player->GetWeapon()->Attack();
+					_enemies.CheckForHit();
+				}
 			}
 			LMB_Clicked = true;
 		}
 		if (_event.type == sf::Event::MouseMoved)
-			RecalcPlayerRays();
+		{
+			if (_inGame)
+				RecalcPlayerRays();
+		}
 
 		_sceneManager.UpdateEvent(&_event, mousePos);
 	}
@@ -205,18 +254,11 @@ void Game::Update()
 	SetDeltaAndTick();
 	_debug.Status(Game::Tick());
 
-	_playerMovement.Update((float)_delta);
-	_player->Update(Game::Tick(), (float)_delta);
-	if (_playerMovement.IsKeyPressed()) RecalcPlayerRays();
-
-	_enemies.Update(Game::Tick(), (float)_delta);
-	_enemies.CheckAttacks();
-	_enemiesAI.Update((float)_delta);
+	if (_inGame)
+		UpdateGame();
 
 	UpdateUI();
 	_sceneManager.Update(Game::Tick(), (float)_delta);
-
-	_camera.setCenter(ViewHelper::GetRectCenter(_player->GetCollisionBox()));
 }
 
 void Game::Clear()
@@ -226,12 +268,15 @@ void Game::Clear()
 
 void Game::Draw()
 {
-	_window.setView(_camera);
-	_window.draw(_gameMap);
-	_window.draw(_collisionsManager);
-	_window.draw(_enemiesAI);
-	_window.draw(_enemies);
-	_window.draw(*_player);
+	if (_inGame)
+	{
+		_window.setView(_camera);
+		_window.draw(_gameMap);
+		_window.draw(_collisionsManager);
+		_window.draw(_enemiesAI);
+		_window.draw(_enemies);
+		_window.draw(*_player);
+	}
 
 	_window.setView(_gui);
 	_window.draw(_sceneManager);

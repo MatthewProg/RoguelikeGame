@@ -227,7 +227,6 @@ void EnemiesAI::Update(float deltaTime)
 				{
 					if (currentEnemy->IsAttacking() == false)
 						currentEnemy->SetState("idle");
-					//currentEnemy->SetAI(false);
 					continue;
 				}
 			}
@@ -295,27 +294,8 @@ void EnemiesAI::Update(float deltaTime)
 			auto centerDiff = sf::Vector2f(startBox.left, startBox.top) - startBoxCenter;
 			currentEnemy->SetPosition(circleCollision + centerDiff - offsetPos);
 
-			/*
-			//Check collisions with other enemies
-			for (size_t no = 0; no < enemies->size(); no++)
-			{
-				if (no == i) continue;
-
-				auto checkedEnemy = enemies->at(no);
-				if (CollisionHelper::CheckSimpleCollision(currentEnemy->GetCollisionBox(), checkedEnemy->GetCollisionBox()))
-				{
-					auto newPos = CollisionHelper::GetRectLimitPosition(startBox, endBox, checkedEnemy->GetCollisionBox());
-					auto newPosDistance = MathHelper::GetDistanceBetweenPoints(startPos, newPos);
-					if (newPosDistance < minMoveDistance)
-					{
-						minMoveDistance = newPosDistance;
-						minMoveNextPos = newPos;
-					}
-				}
-			}*/
-
 			//If reached point, remove it, to go to the next
-			if (direct == false && /*CollisionHelper::CheckCircleCollision(gotoPoint, ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()),2)*/ gotoPoint == ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()))
+			if (direct == false && gotoPoint == ViewHelper::GetRectCenter(currentEnemy->GetCollisionBox()))
 				if(_enemyPath[currentEnemy].size() > 0)
 					if(_enemyPath[currentEnemy].front() == gotoPoint)
 						_enemyPath[currentEnemy].pop_front();

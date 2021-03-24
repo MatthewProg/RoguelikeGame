@@ -26,19 +26,15 @@ sf::Texture TilesHelper::GetStandardTile(sf::Image img, unsigned int width, unsi
 sf::IntRect TilesHelper::GetTileRect(sf::Vector2u imgSize, unsigned int width, unsigned int height, int id)
 {
 	if (imgSize.x <= 0 || imgSize.y <= 0 || height <= 0 || width <= 0)
-	{
-		//Logger::GetInstance()->Log(Logger::LogType::WARNING, "GetTileRect(), one of the parameters were equal to 0!", true);
 		return sf::IntRect(0, 0, 16, 16);
-	}
+
 	int cols = imgSize.x / width;
 
 	int row = id / cols;
 	int col = id % cols;
 	if (imgSize.x < (col * width) + width || imgSize.y < (row * height) + height)
-	{
-		//Logger::GetInstance()->Log(Logger::LogType::WARNING, "GetTileRect(), tile exceed img size!", true);
 		return sf::IntRect(0, 0, 16, 16);
-	}
+
 	return sf::IntRect(col * width, row * height, width, height);
 }
 

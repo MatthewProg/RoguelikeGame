@@ -32,7 +32,7 @@ UIElement* AnimationBox::clone()
     return new AnimationBox(*this);
 }
 
-void AnimationBox::Update(bool tick, float delta)
+void AnimationBox::Update(bool tick, float)
 {
     _animation.Tick(tick);
     if (_animation.IsFrameSwitched())
@@ -46,6 +46,6 @@ void AnimationBox::RedrawElement()
     _render.display();
 }
 
-void AnimationBox::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
+void AnimationBox::ProcessEvent(sf::Event*, sf::Vector2f)
 {
 }

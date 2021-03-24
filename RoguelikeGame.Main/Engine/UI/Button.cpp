@@ -1,6 +1,6 @@
 #include "Button.h"
 
-void Button::Update(bool tick, float delta)
+void Button::Update(bool, float)
 {
 
 }
@@ -46,7 +46,7 @@ void Button::RedrawElement()
 
 		rs.texture = _noTexture;
 	}
-	//rs.transform = getTransform();
+
 	_render.draw(bg, rs);
 
 	if (text != _textStates.end())

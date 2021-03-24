@@ -35,6 +35,9 @@
     <Filter Include="Resource Files\fonts">
       <UniqueIdentifier>{5269810d-2d8f-4fe4-b431-589e5bd93354}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\sounds">
+      <UniqueIdentifier>{a0be12ea-8397-42cb-803b-15adeafaa38a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -284,5 +287,22 @@
     <Font Include="res\fonts\Menu.ttf">
       <Filter>Resource Files\fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\sounds\click.wav">
+      <Filter>Resource Files\sounds</Filter>
+    </Media>
+    <Media Include="res\sounds\coin.wav">
+      <Filter>Resource Files\sounds</Filter>
+    </Media>
+    <Media Include="res\sounds\hit.wav">
+      <Filter>Resource Files\sounds</Filter>
+    </Media>
+    <Media Include="res\sounds\release.wav">
+      <Filter>Resource Files\sounds</Filter>
+    </Media>
+    <Media Include="res\sounds\select.wav">
+      <Filter>Resource Files\sounds</Filter>
+    </Media>
   </ItemGroup>
 </Project>

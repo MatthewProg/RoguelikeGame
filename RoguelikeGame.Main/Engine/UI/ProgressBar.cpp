@@ -185,7 +185,6 @@ void ProgressBar::RedrawElement()
 			texture = _noTexture;
 
 		rs.texture = texture;
-		//rs.transform = getTransform();
 
 		auto& rect = std::get<0>(layer);
 		sf::VertexArray arr(sf::Quads, 4);

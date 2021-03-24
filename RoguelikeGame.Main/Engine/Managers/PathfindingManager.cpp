@@ -26,7 +26,7 @@ std::vector<sf::Vector2f> PathfindingManager::SolveAStar(Cell* startCell, Cell* 
 	std::list<Cell*> listNotTestedNodes;
 	listNotTestedNodes.push_back(startCell);
 
-	while (!listNotTestedNodes.empty()/* && currentCell != endCell*/)
+	while (!listNotTestedNodes.empty())
 	{
 		// Sort Untested nodes by global goal, so lowest is first
 		listNotTestedNodes.sort([](const Cell* lhs, const Cell* rhs) { return lhs->globalGoal < rhs->globalGoal; });
@@ -300,11 +300,6 @@ sf::Vector2f PathfindingManager::GetClosestNode(const Paths paths, const sf::Vec
 		float distance = 0.f;
 		if (collisions->RaycastHitsPoint(startPos, std::get<0>(p), &distance))
 			return std::get<0>(p);
-
-		/*auto angle = MathHelper::GetAngleBetweenPoints(startPos, std::get<0>(p));
-		auto raycastHitpoint = collisions->GetRayHitpoint(startPos, angle, std::get<1>(p));
-		if (MathHelper::GetDistanceBetweenPoints(startPos, raycastHitpoint) == std::get<1>(p))
-			return std::get<0>(p);*/
 	}
 	
 	return sf::Vector2f(INFINITY, INFINITY);

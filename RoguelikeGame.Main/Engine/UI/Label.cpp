@@ -33,7 +33,7 @@ uint32_t Label::GetCharacterSize()
 	return _text.getCharacterSize();
 }
 
-void Label::Update(bool tick, float delta)
+void Label::Update(bool, float)
 {
 	if (_sthChanged)
 	{
@@ -45,15 +45,11 @@ void Label::Update(bool tick, float delta)
 void Label::RedrawElement()
 {
 	_render.clear(sf::Color::Transparent);
-
-	sf::RenderStates rs;
-	//rs.transform = getTransform();
-	_render.draw(_text, rs);
-
+	_render.draw(_text);
 	_render.display();
 }
 
-void Label::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
+void Label::ProcessEvent(sf::Event*, sf::Vector2f)
 {
 	//Add TextBox mechanics at some point
 }

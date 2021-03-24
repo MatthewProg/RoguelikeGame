@@ -251,7 +251,26 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="res\fonts\Menu.ttf" />
+    <Font Include="res\fonts\Menu.ttf">
+      <DeploymentContent>true</DeploymentContent>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\sounds\click.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\coin.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\hit.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\release.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\select.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

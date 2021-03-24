@@ -200,7 +200,6 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 	weapon.SetTexture(_textures->GetTexture("tiles1"));
 	weapon.AddNewFrame(sf::IntRect(208, 32, 16, 32));
 	weapon.setScale(0.6F, 0.6F);
-	//weapon.setOrigin(8, 32);
 
 	sword->SetAnimation(weapon);
 

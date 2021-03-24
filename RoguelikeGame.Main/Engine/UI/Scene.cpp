@@ -19,7 +19,7 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates) const
 	{
 		if (element.second->GetVisibility() == false) continue;
 		auto texture = element.second->GetTexture();
-		auto size = texture->getSize();
+		size = texture->getSize();
 		rs.texture = &texture->getTexture();
 		rs.transform = element.second->getTransform();
 		sf::VertexArray draw(sf::Quads, 4);
