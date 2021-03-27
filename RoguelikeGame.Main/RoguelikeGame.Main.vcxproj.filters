@@ -38,6 +38,15 @@
     <Filter Include="Resource Files\sounds">
       <UniqueIdentifier>{a0be12ea-8397-42cb-803b-15adeafaa38a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\sounds\ui">
+      <UniqueIdentifier>{dbafac68-cdaa-48be-ae4c-bca5af8775cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\sounds\entities">
+      <UniqueIdentifier>{66168e3b-b6d0-4f39-ad36-4ac2be63d89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\sounds\weapons">
+      <UniqueIdentifier>{a64d3ac4-59ec-44f7-bdee-6b0189154c2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -157,6 +166,9 @@
     <ClInclude Include="Engine\UI\AnimationBox.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Managers\SoundsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -265,6 +277,9 @@
     <ClCompile Include="Engine\UI\AnimationBox.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Managers\SoundsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\img\players.png">
@@ -289,20 +304,92 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="res\sounds\click.wav">
-      <Filter>Resource Files\sounds</Filter>
+    <Media Include="res\sounds\ui\click.wav">
+      <Filter>Resource Files\sounds\ui</Filter>
     </Media>
-    <Media Include="res\sounds\coin.wav">
-      <Filter>Resource Files\sounds</Filter>
+    <Media Include="res\sounds\ui\coin.wav">
+      <Filter>Resource Files\sounds\ui</Filter>
     </Media>
-    <Media Include="res\sounds\hit.wav">
-      <Filter>Resource Files\sounds</Filter>
+    <Media Include="res\sounds\ui\hit.wav">
+      <Filter>Resource Files\sounds\ui</Filter>
     </Media>
-    <Media Include="res\sounds\release.wav">
-      <Filter>Resource Files\sounds</Filter>
+    <Media Include="res\sounds\ui\release.wav">
+      <Filter>Resource Files\sounds\ui</Filter>
     </Media>
-    <Media Include="res\sounds\select.wav">
-      <Filter>Resource Files\sounds</Filter>
+    <Media Include="res\sounds\ui\select.wav">
+      <Filter>Resource Files\sounds\ui</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg1.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg2.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg3.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg4.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg5.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg6.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg7.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg8.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg9.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg10.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg11.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\dmg12.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\shade1.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\shade2.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\shade3.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\slime1.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\slime2.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\entities\slime3.wav">
+      <Filter>Resource Files\sounds\entities</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\bite1.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\change1.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\swing1.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\swing2.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\swing3.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
+    </Media>
+    <Media Include="res\sounds\weapons\swing4.wav">
+      <Filter>Resource Files\sounds\weapons</Filter>
     </Media>
   </ItemGroup>
 </Project>

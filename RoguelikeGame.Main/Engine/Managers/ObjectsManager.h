@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Managers/TexturesManager.h"
+#include "../Managers/SoundsManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Helpers/TilesHelper.h"
 #include "../Models/HitboxWeapon.h"
@@ -18,6 +19,7 @@ class ObjectsManager
 private:
 	TexturesManager* _textures;
 	FontsManager* _fonts;
+	SoundsManager* _sounds;
 	sf::Vector2u _windowSize;
 
 	std::map<std::string, HitboxWeapon*> _hitboxWeapons;
@@ -64,6 +66,7 @@ public:
 
 	void SetTexturesManager(TexturesManager* textures);
 	void SetFontsManager(FontsManager* fonts);
+	void SetSoundsManager(SoundsManager* sounds);
 	void SetWindowSize(sf::Vector2u size);
 
 	ObjectsManager();

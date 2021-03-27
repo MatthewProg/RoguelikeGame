@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Managers/TexturesManager.h"
+#include "../Managers/SoundsManager.h"
 #include "../Utilities/Utilities.h"
 
 #include "SFML/Graphics/Transformable.hpp"
@@ -19,6 +20,7 @@ protected:
 
 	sf::Texture* _noTexture;
 	TexturesManager* _texturesManager;
+	SoundsManager* _soundsManager;
 public:
 	UIElement();
 	UIElement(UIElement& other);
@@ -34,6 +36,7 @@ public:
 	void SetMouseInput(bool active);
 	void SetKeyboardInput(bool active);
 	void SetTexturesManager(TexturesManager* manager);
+	void SetSoundsManager(SoundsManager* manager);
 	void SetFocusOnHover(bool hover);
 	void SetInFocus(bool isFocused);
 

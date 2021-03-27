@@ -4,6 +4,7 @@ UIElement::UIElement()
 {
 	_noTexture = Utilities::GetInstance()->NoTexture16x16();
 	_texturesManager = nullptr;
+	_soundsManager = nullptr;
 	_isVisible = true;
 	_mouseInput = true;
 	_keyboardInput = true;
@@ -22,6 +23,7 @@ UIElement::UIElement(UIElement& other)
 	_inFocus = other._inFocus;
 	_noTexture = other._noTexture;
 	_texturesManager = other._texturesManager;
+	_soundsManager = other._soundsManager;
 	setPosition(other.getPosition());
 	setRotation(other.getRotation());
 	setOrigin(other.getOrigin());
@@ -52,6 +54,11 @@ void UIElement::SetKeyboardInput(bool active)
 void UIElement::SetTexturesManager(TexturesManager* manager)
 {
 	_texturesManager = manager;
+}
+
+void UIElement::SetSoundsManager(SoundsManager* manager)
+{
+	_soundsManager = manager;
 }
 
 void UIElement::SetFocusOnHover(bool hover)

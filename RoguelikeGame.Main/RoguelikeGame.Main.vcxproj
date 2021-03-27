@@ -94,7 +94,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\CodeIT\Documents\Projects\Libs\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,7 +113,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\CodeIT\Documents\Projects\Libs\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -166,6 +166,7 @@
     <ClCompile Include="Engine\Managers\FontsManager.cpp" />
     <ClCompile Include="Engine\Managers\ObjectsManager.cpp" />
     <ClCompile Include="Engine\Managers\PathfindingManager.cpp" />
+    <ClCompile Include="Engine\Managers\SoundsManager.cpp" />
     <ClCompile Include="Engine\Managers\TexturesManager.cpp" />
     <ClCompile Include="Engine\Managers\SceneManager.cpp" />
     <ClCompile Include="Engine\Models\Enemy.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Engine\Managers\FontsManager.h" />
     <ClInclude Include="Engine\Managers\ObjectsManager.h" />
     <ClInclude Include="Engine\Managers\PathfindingManager.h" />
+    <ClInclude Include="Engine\Managers\SoundsManager.h" />
     <ClInclude Include="Engine\Managers\TexturesManager.h" />
     <ClInclude Include="Engine\Managers\SceneManager.h" />
     <ClInclude Include="Engine\Models\Enemy.h" />
@@ -256,19 +258,91 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="res\sounds\click.wav">
+    <Media Include="res\sounds\entities\dmg1.wav">
       <DeploymentContent>true</DeploymentContent>
     </Media>
-    <Media Include="res\sounds\coin.wav">
+    <Media Include="res\sounds\entities\dmg10.wav">
       <DeploymentContent>true</DeploymentContent>
     </Media>
-    <Media Include="res\sounds\hit.wav">
+    <Media Include="res\sounds\entities\dmg11.wav">
       <DeploymentContent>true</DeploymentContent>
     </Media>
-    <Media Include="res\sounds\release.wav">
+    <Media Include="res\sounds\entities\dmg12.wav">
       <DeploymentContent>true</DeploymentContent>
     </Media>
-    <Media Include="res\sounds\select.wav">
+    <Media Include="res\sounds\entities\dmg2.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg3.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg4.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg5.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg6.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg7.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg8.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\dmg9.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\shade1.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\shade2.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\shade3.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\slime1.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\slime2.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\entities\slime3.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\ui\click.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\ui\coin.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\ui\hit.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\ui\release.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\ui\select.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\bite1.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\change1.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\swing1.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\swing2.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\swing3.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="res\sounds\weapons\swing4.wav">
       <DeploymentContent>true</DeploymentContent>
     </Media>
   </ItemGroup>

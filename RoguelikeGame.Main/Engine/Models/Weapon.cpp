@@ -17,6 +17,7 @@ Weapon::Weapon(WeaponType type)
 	_raycast[1].position = getPosition();
 	_raycast[0].color = sf::Color::Magenta;
 	_raycast[1].color = sf::Color::Magenta;
+	_sounds = nullptr;
 }
 
 Weapon::Weapon(Weapon& other)
@@ -35,6 +36,7 @@ Weapon::Weapon(Weapon& other)
 	_hitboxColor = other._hitboxColor;
 	_raycastColor = other._raycastColor;
 	_weaponType = other._weaponType;
+	_sounds = other._sounds;
 	
 	setPosition(other.getPosition());
 	setOrigin(other.getOrigin());
@@ -170,4 +172,9 @@ void Weapon::SetAnimation(sf::Animation animation)
 void Weapon::SetTransformAnimation(sf::TransformAnimation transformAnimation)
 {
 	_attackAnimation = transformAnimation;
+}
+
+void Weapon::SetSoundsManager(SoundsManager* manager)
+{
+	_sounds = manager;
 }

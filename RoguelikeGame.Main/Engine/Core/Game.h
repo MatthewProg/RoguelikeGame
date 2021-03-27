@@ -5,6 +5,7 @@
 
 #include "../Handlers/KeyboardEventHandler.h"
 #include "../Managers/ObjectsManager.h"
+#include "../Managers/SoundsManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/SceneManager.h"
 #include "../Helpers/DebugHelper.h"
@@ -31,11 +32,12 @@ private:
 	sf::Event _event;
 	KeyboardEventHandler<Game> _keyboardHandler;
 
-	TexturesManager _textures;
-	FontsManager _fonts;
-	ObjectsManager _objTemplates;
-	GameMap<unsigned char> _gameMap;
 	CollisionsManager _collisionsManager;
+	ObjectsManager _objTemplates;
+	TexturesManager _textures;
+	SoundsManager _sounds;
+	FontsManager _fonts;
+	GameMap<unsigned char> _gameMap;
 
 	SceneManager _sceneManager;
 

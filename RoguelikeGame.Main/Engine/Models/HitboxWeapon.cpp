@@ -2,10 +2,12 @@
 
 HitboxWeapon::HitboxWeapon() : Weapon(WeaponType::NONE)
 {
+	_hitSounds.clear();
 }
 
 HitboxWeapon::HitboxWeapon(HitboxWeapon& other) : Weapon(other)
 {
+	_hitSounds = other._hitSounds;
 }
 
 HitboxWeapon::~HitboxWeapon()
@@ -23,6 +25,12 @@ void HitboxWeapon::Attack()
         return;
 
 	_cooldownCounter = 0;
+
+	if (_hitSounds.size() > 0)
+	{
+		auto rng = rand() % _hitSounds.size();
+		_sounds->PlaySoundIndependent(_hitSounds[rng]);
+	}
 }
 
 void HitboxWeapon::Update(bool tick, float)
@@ -36,6 +44,11 @@ void HitboxWeapon::Update(bool tick, float)
 
 void HitboxWeapon::SetCurrentAngle(float)
 {
+}
+
+std::vector<std::string>* HitboxWeapon::GetHitSounds()
+{
+	return &_hitSounds;
 }
 
 Weapon* HitboxWeapon::clone()

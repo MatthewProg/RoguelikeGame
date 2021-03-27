@@ -26,6 +26,7 @@ MeleeWeapon::MeleeWeapon() : Weapon(WeaponType::MELEE)
 	_hitboxAccuracy = 4;
 	_currentAngle = 0;
 	_cooldownCounter = 0;
+	_swingSounds.clear();
 
 	_angle = 60;
 	_hitbox.setPrimitiveType(sf::PrimitiveType::TriangleFan);
@@ -44,6 +45,7 @@ MeleeWeapon::MeleeWeapon(MeleeWeapon& other) : Weapon(other)
 	_angle = other._angle;
 	_range = other._range;
 	_hitboxAccuracy = other._hitboxAccuracy;
+	_swingSounds = other._swingSounds;
 }
 
 MeleeWeapon::~MeleeWeapon()
@@ -65,6 +67,12 @@ void MeleeWeapon::Attack()
 	PrepareHitbox();
 	_attackAnimation.Reset();
 	_attackAnimation.Start();
+
+	if (_swingSounds.size() > 0)
+	{
+		auto rng = rand() % _swingSounds.size();
+		_sounds->PlaySoundIndependent(_swingSounds[rng]);
+	}
 }
 
 void MeleeWeapon::Update(bool tick, float deltaTime)
@@ -115,6 +123,11 @@ void MeleeWeapon::SetCurrentAngle(float angle)
 	_weapon.setRotation(angle + 90);
 	if (GetHitboxVisibility())
 		PrepareHitbox();
+}
+
+std::vector<std::string>* MeleeWeapon::GetSwingSounds()
+{
+	return &_swingSounds;
 }
 
 Weapon* MeleeWeapon::clone()

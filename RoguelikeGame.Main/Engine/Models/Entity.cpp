@@ -27,6 +27,8 @@ Entity::Entity() : sf::Collision()
 	_dmgColorTick = 15;
 	_dmgColorCounter = 0;
 	_viewRect = sf::FloatRect(-150,-94, 300, 188);
+	_sounds = nullptr;
+	_takingDmgSounds.clear();
 }
 
 Entity::Entity(Entity& other) : sf::Collision(other)
@@ -42,6 +44,8 @@ Entity::Entity(Entity& other) : sf::Collision(other)
 	_step = other._step;
 	_transform = other._transform;
 	_viewRect = other._viewRect;
+	_sounds = other._sounds;
+	_takingDmgSounds = other._takingDmgSounds;
 }
 
 Entity::~Entity()
@@ -53,6 +57,12 @@ void Entity::TakeDmg(float dmg)
 	_health -= dmg;
 	_animations.ApplySetColor(_dmgColor);
 	_dmgColorCounter = 0;
+	
+	if (_takingDmgSounds.size() > 0)
+	{
+		auto rng = rand() % _takingDmgSounds.size();
+		_sounds->PlaySoundIndependent(_takingDmgSounds[rng]);
+	}
 }
 
 bool Entity::IsDead()
@@ -237,6 +247,26 @@ void Entity::SetTakingDmgColorTicks(unsigned short ticks)
 void Entity::SetView(sf::FloatRect rect)
 {
 	_viewRect = rect;
+}
+
+void Entity::SetSoundsManager(SoundsManager* manager)
+{ 
+	_sounds = manager;
+}
+
+void Entity::AddTakingDmgSound(std::string sound)
+{
+	_takingDmgSounds.push_back(sound);
+}
+
+void Entity::ClearTakingDmgSounds()
+{
+	_takingDmgSounds.clear();
+}
+
+std::vector<std::string>* Entity::GetTakingDmgSounds()
+{
+	return &_takingDmgSounds;
 }
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const

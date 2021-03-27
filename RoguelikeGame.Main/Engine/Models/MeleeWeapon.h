@@ -13,6 +13,8 @@ private:
 
 	void PrepareHitbox();
 
+	std::vector<std::string> _swingSounds;
+
 	// Inherited via Weapon::Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
@@ -20,9 +22,11 @@ public:
 	MeleeWeapon(MeleeWeapon& other);
 	~MeleeWeapon();
 
+	// Inherited via Weapon
 	bool CanAttack() override;
 	void Attack() override;
 	void Update(bool tick, float deltaTime) override;
+	virtual Weapon* clone() override;
 
 	void SetHitboxAccuracy(unsigned short steps);
 
@@ -35,7 +39,7 @@ public:
 	void SetWeaponRange(float range);
 	void SetCurrentAngle(float angle) override;
 
-	// Inherited via Weapon
-	virtual Weapon* clone() override;
+	//Sound getters
+	std::vector<std::string>* GetSwingSounds();
 };
 

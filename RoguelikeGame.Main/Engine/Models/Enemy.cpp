@@ -34,6 +34,12 @@ void Enemy::Update(bool tick, float delta)
 	if(_weapon != nullptr)
 		_weapon->Update(tick, delta);
 
+	if (GetHealth() <= 0)
+	{
+		_weapon = nullptr;
+		SetSpeed(0.f);
+	}
+
 	if (_inAttack && GetState() != "attack")
 	{
 		SetTmpStop(false);

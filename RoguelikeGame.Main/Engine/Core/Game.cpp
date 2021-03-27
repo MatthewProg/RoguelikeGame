@@ -19,6 +19,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_event = sf::Event();
 	_player = nullptr;
+	srand((uint32_t)time(NULL));
 }
 
 void Game::SetDeltaAndTick()
@@ -132,6 +133,15 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
 	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
 
+	//Sounds
+	_sounds.LoadFromFile("entities_dmg4", "./res/sounds/entities/dmg4.wav");
+	_sounds.LoadFromFile("entities_dmg5", "./res/sounds/entities/dmg5.wav");
+	_sounds.LoadFromFile("entities_dmg6", "./res/sounds/entities/dmg6.wav");
+	_sounds.LoadFromFile("weapons_swing1", "./res/sounds/weapons/swing1.wav");
+	_sounds.LoadFromFile("weapons_swing2", "./res/sounds/weapons/swing2.wav");
+	_sounds.LoadFromFile("weapons_swing3", "./res/sounds/weapons/swing3.wav");
+	_sounds.LoadFromFile("weapons_bite1", "./res/sounds/weapons/bite1.wav");
+
 	//Scene
 	_sceneManager.LoadScene("game");
 
@@ -175,9 +185,18 @@ void Game::Start()
 	_fonts.SetExpectedSize(1);
 	_fonts.LoadFromFile("menu", "./res/fonts/menu.ttf");
 
+	//Sounds
+	_sounds.SetExpectedSize(5);
+	_sounds.LoadFromFile("ui_click", "./res/sounds/ui/click.wav");
+	_sounds.LoadFromFile("ui_coin", "./res/sounds/ui/coin.wav");
+	_sounds.LoadFromFile("ui_hit", "./res/sounds/ui/hit.wav");
+	_sounds.LoadFromFile("ui_release", "./res/sounds/ui/release.wav");
+	_sounds.LoadFromFile("ui_select", "./res/sounds/ui/select.wav");
+
 	//Object manager
 	_objTemplates.SetTexturesManager(&_textures);
 	_objTemplates.SetFontsManager(&_fonts);
+	_objTemplates.SetSoundsManager(&_sounds);
 	_objTemplates.SetWindowSize(_window.getSize());
 
 	//UI elements
@@ -259,6 +278,7 @@ void Game::Update()
 
 	UpdateUI();
 	_sceneManager.Update(Game::Tick(), (float)_delta);
+	_sounds.Update();
 }
 
 void Game::Clear()

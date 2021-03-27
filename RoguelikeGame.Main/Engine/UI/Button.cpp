@@ -101,7 +101,7 @@ void Button::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 		if (ev->type == sf::Event::KeyPressed && ev->key.code == sf::Keyboard::Enter)
 		{
 			if (_inFocus == true)
-				newState = "clicked";
+				newState = "click";
 			else
 				newState = "none";
 		}
@@ -115,9 +115,21 @@ void Button::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
 
 	if (newState != _currentState)
 	{
-		_currentState = newState;
-		if(_forcedState == "")
+		if (_forcedState == "")
+		{
+			if (_soundsManager != nullptr)
+			{
+				sf::Sound* sound = nullptr;
+				if (_currentState == "none" && newState == "hover") sound = _soundsManager->GetSound("ui_select");
+				else if (newState == "click") sound = _soundsManager->GetSound("ui_click");
+				else if (_currentState == "click") sound = _soundsManager->GetSound("ui_release");
+
+				if (sound != nullptr) sound->play();
+			}
+
+			_currentState = newState;
 			RedrawElement();
+		}
 	}
 }
 

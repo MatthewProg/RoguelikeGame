@@ -4,6 +4,8 @@
 class HitboxWeapon : public Weapon
 {
 private:
+	std::vector<std::string> _hitSounds;
+
 	// Inherited via Weapon
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
@@ -15,10 +17,11 @@ public:
 	virtual bool CanAttack() override;
 	virtual void Attack() override;
 	virtual void Update(bool tick, float) override;
+	virtual Weapon* clone() override;
 
 	virtual void SetCurrentAngle(float) override;
 
-	// Inherited via Weapon
-	virtual Weapon* clone() override;
+	//Sound getters
+	std::vector<std::string>* GetHitSounds();
 };
 

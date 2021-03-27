@@ -2,6 +2,7 @@
 
 #include "../Utilities/TransformAnimation.h"
 #include "../Utilities/Animation.h"
+#include "../Managers/SoundsManager.h"
 
 enum class WeaponType
 {
@@ -20,6 +21,8 @@ protected:
 
 	sf::VertexArray _hitbox;
 	sf::VertexArray _raycast;
+
+	SoundsManager* _sounds;
 private:
 	float _dmg;
 	unsigned short _attackCooldown;
@@ -30,7 +33,6 @@ private:
 
 	sf::Color _hitboxColor;
 	sf::Color _raycastColor;
-
 
 	WeaponType _weaponType;
 public:
@@ -71,7 +73,8 @@ public:
 
 	void SetAnimation(sf::Animation animation);
 	void SetTransformAnimation(sf::TransformAnimation transformAnimation);
-
+	void SetSoundsManager(SoundsManager* manager);
+		
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };

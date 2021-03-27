@@ -10,6 +10,11 @@ void ObjectsManager::SetFontsManager(FontsManager* fonts)
 	_fonts = fonts;
 }
 
+void ObjectsManager::SetSoundsManager(SoundsManager* sounds)
+{
+	_sounds = sounds;
+}
+
 void ObjectsManager::SetWindowSize(sf::Vector2u size)
 {
 	_windowSize = size;
@@ -19,6 +24,7 @@ ObjectsManager::ObjectsManager()
 {
 	_textures = nullptr;
 	_fonts = nullptr;
+	_sounds = nullptr;
 
 	_meleeWeapons["sword"] = nullptr;
 
@@ -229,6 +235,11 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 
 	sword->SetTransformAnimation(attack);
 
+	sword->SetSoundsManager(_sounds);
+	sword->GetSwingSounds()->push_back("weapons_swing1");
+	sword->GetSwingSounds()->push_back("weapons_swing2");
+	sword->GetSwingSounds()->push_back("weapons_swing3");
+
 	return sword;
 }
 
@@ -238,6 +249,8 @@ HitboxWeapon* ObjectsManager::CreateHitboxWeaponBite()
 
 	bite->SetWeaponCooldown(60);
 	bite->SetWeaponDMG(0.25F);
+	bite->SetSoundsManager(_sounds);
+	bite->GetHitSounds()->push_back("weapons_bite1");
 
 	return bite;
 }
@@ -246,6 +259,7 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 {
 	Enemy* devil = new Enemy();
 
+	//Graphics
 	sf::Animation idle;
 	idle.SetTexture(_textures->GetTexture("tiles2"));
 	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16, 32, 344));
@@ -277,6 +291,13 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	devil->SetCollisionBoxOffset(sf::FloatRect(3.F, 17.F, 10.F, 12.F));
 	devil->SetPosition(0.F, 0.F);
 
+	//Sounds
+	devil->SetSoundsManager(_sounds);
+	devil->AddTakingDmgSound("entities_dmg4");
+	devil->AddTakingDmgSound("entities_dmg5");
+	devil->AddTakingDmgSound("entities_dmg6");
+
+	//Pathfinding
 	auto box = devil->GetCollisionBox();
 	auto upperLeft = sf::Vector2f(box.left, box.top);
 	auto center = sf::Vector2f(box.left + (box.width / 2), box.top + (box.height / 2));
@@ -293,6 +314,7 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 {
 	Player* pl = new Player();
 
+	//Graphics
 	sf::AnimationContainer playerAnimations;
 
 	sf::Animation idle;
@@ -319,7 +341,17 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 	pl->SetState("idle");
 	pl->SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
 	pl->SetPosition(sf::Vector2f(296, 472));
+
+	//Weapon
 	pl->SetWeapon(GetMeleeWeapon("sword"));
+
+	//Sounds
+	pl->SetSoundsManager(_sounds);
+	
+	//Stats
+	pl->SetSpeed(1.f);
+	pl->SetHealth(3.f);
+	pl->SetStep(2.f);
 
 	return pl;
 }
@@ -331,6 +363,7 @@ ProgressBar* ObjectsManager::CreateProgressBarHeart()
 	hb->SetMaxValue(3.f);
 	hb->setPosition(sf::Vector2f(0, 0));
 
+	hb->SetSoundsManager(_sounds);
 	hb->SetTexturesManager(_textures);
 	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
 	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
@@ -353,6 +386,7 @@ Button* ObjectsManager::CreateButtonDefaultRed()
 	//Init
 	btn->Init(sf::Vector2u(170, 96));
 	btn->SetTexturesManager(_textures);
+	btn->SetSoundsManager(_sounds);
 	btn->SetBackgroundSize(sf::Vector2f(170, 96));
 	btn->setPosition(0.f, 0.f);
 

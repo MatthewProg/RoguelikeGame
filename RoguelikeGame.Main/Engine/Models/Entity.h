@@ -2,6 +2,7 @@
 
 #include "../Utilities/AnimationContainer.h"
 #include "../Utilities/Collision.h"
+#include "../Managers/SoundsManager.h"
 
 class Entity : public sf::Collision
 {
@@ -23,6 +24,9 @@ private:
 	unsigned short _dmgColorTick;
 	unsigned short _dmgColorCounter;
 protected:
+	SoundsManager* _sounds;
+	std::vector<std::string> _takingDmgSounds;
+
 	void UpdateEntity(bool tick);
 
 	// Inherited via Drawable
@@ -67,5 +71,10 @@ public:
 	void SetTakingDmgColor(const sf::Color color);
 	void SetTakingDmgColorTicks(unsigned short ticks);
 	void SetView(sf::FloatRect rect);
+
+	void SetSoundsManager(SoundsManager* manager);
+	void AddTakingDmgSound(std::string sound);
+	void ClearTakingDmgSounds();
+	std::vector<std::string>* GetTakingDmgSounds();
 };
 
