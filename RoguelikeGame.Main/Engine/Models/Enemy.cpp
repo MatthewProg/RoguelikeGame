@@ -83,22 +83,22 @@ void Enemy::SetAvoidanceRadius(float radius)
 	_avoidanceRadius = radius;
 }
 
-bool Enemy::GetTmpStop()
+bool Enemy::GetTmpStop() const
 {
 	return _tmpStop;
 }
 
-bool Enemy::IsAttacking()
+bool Enemy::IsAttacking() const
 {
 	return _inAttack;
 }
 
-bool Enemy::IsAiEnabled()
+bool Enemy::IsAiEnabled() const
 {
 	return _aiEnabled;
 }
 
-float Enemy::GetAvoidanceRadius()
+float Enemy::GetAvoidanceRadius() const
 {
 	return _avoidanceRadius;
 }

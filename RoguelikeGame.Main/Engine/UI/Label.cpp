@@ -18,17 +18,17 @@ Label::~Label()
 {
 }
 
-std::string Label::GetText()
+std::string Label::GetText() const
 {
 	return _text.getString();
 }
 
-const sf::Font* Label::GetFont()
+const sf::Font* Label::GetFont() const
 {
 	return _text.getFont();
 }
 
-uint32_t Label::GetCharacterSize()
+uint32_t Label::GetCharacterSize() const
 {
 	return _text.getCharacterSize();
 }
@@ -49,12 +49,12 @@ void Label::RedrawElement()
 	_render.display();
 }
 
-void Label::ProcessEvent(sf::Event*, sf::Vector2f)
+void Label::ProcessEvent(sf::Event*, const sf::Vector2f&)
 {
 	//Add TextBox mechanics at some point
 }
 
-sf::FloatRect Label::GetGlobalBounds()
+sf::FloatRect Label::GetGlobalBounds() const
 {
 	return getTransform().transformRect(_text.getGlobalBounds());
 }
@@ -64,50 +64,50 @@ UIElement* Label::clone()
 	return new Label(*this);
 }
 
-float Label::GetLineSpacing()
+float Label::GetLineSpacing() const
 {
 	return _text.getLineSpacing();
 }
 
-float Label::GetLetterSpacing()
+float Label::GetLetterSpacing() const
 {
 	return _text.getLetterSpacing();
 }
 
-uint32_t Label::GetStyle()
+uint32_t Label::GetStyle() const
 {
 	return _text.getStyle();
 }
 
-const sf::Color& Label::GetFillColor()
+const sf::Color& Label::GetFillColor() const
 {
 	return _text.getFillColor();
 }
 
-const sf::Color& Label::GetOutlineColor()
+const sf::Color& Label::GetOutlineColor() const
 {
 	return _text.getOutlineColor();
 }
 
-float Label::GetOutlineThickness()
+float Label::GetOutlineThickness() const
 {
 	return _text.getOutlineThickness();
 }
 
-sf::Vector2f Label::FindCharacterPos(size_t index)
+sf::Vector2f Label::FindCharacterPos(size_t index) const
 {
 	return _text.findCharacterPos(index);
 }
 
-void Label::SetText(std::string string)
+void Label::SetText(const std::string& string)
 {
 	_text.setString(string);
 	_sthChanged = true;
 }
 
-void Label::SetFont(sf::Font* font)
+void Label::SetFont(const sf::Font& font)
 {
-	_text.setFont(*font);
+	_text.setFont(font);
 	_sthChanged = true;
 }
 

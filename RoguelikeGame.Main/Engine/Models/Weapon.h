@@ -41,21 +41,21 @@ public:
 	virtual ~Weapon() { ; }
 	virtual Weapon* clone() = 0;
 
-	virtual bool CanAttack() = 0;
+	virtual bool CanAttack() const = 0;
 	virtual void Attack() = 0;
 	virtual void Update(bool tick, float deltaTime) = 0;
 	void ResetCooldown();
 
-	float GetWeaponDMG();
-	uint16_t GetWeaponCooldown();
+	float GetWeaponDMG() const;
+	uint16_t GetWeaponCooldown() const;
 	bool GetVisibility() const;
-	float GetCurrentAngle();
+	float GetCurrentAngle() const;
 	bool GetHitboxVisibility() const;
-	sf::Color GetHitboxColor();
-	std::vector<sf::Vector2f> GetHitbox();
-	WeaponType GetWeaponType();
-	sf::Vector2f GetRaycastHitpoint();
-	sf::Color GetRaycastColor();
+	const sf::Color& GetHitboxColor() const;
+	std::vector<sf::Vector2f> GetHitbox() const;
+	const WeaponType& GetWeaponType() const;
+	const sf::Vector2f& GetRaycastHitpoint() const;
+	const sf::Color& GetRaycastColor() const;
 	bool GetRaycastVisibility() const;
 
 	void SetWeaponDMG(float dmg);
@@ -63,16 +63,16 @@ public:
 	void SetVisibility(bool visibility);
 	virtual void SetCurrentAngle(float angle) = 0;
 	void SetHitboxVisibility(bool visibility);
-	void SetHitboxColor(sf::Color color);
-	void SetRaycastHitpoint(sf::Vector2f point);
-	void SetRaycastColor(sf::Color color);
+	void SetHitboxColor(const sf::Color& color);
+	void SetRaycastHitpoint(const sf::Vector2f& point);
+	void SetRaycastColor(const sf::Color& color);
 	void SetRaycastVisibility(bool visible);
 
 	sf::Animation* GetAnimation();
 	sf::TransformAnimation* GetTransformAnimation();
 
-	void SetAnimation(sf::Animation animation);
-	void SetTransformAnimation(sf::TransformAnimation transformAnimation);
+	void SetAnimation(const sf::Animation& animation);
+	void SetTransformAnimation(const sf::TransformAnimation& transformAnimation);
 	void SetSoundsManager(SoundsManager* manager);
 		
 	// Inherited via Drawable

@@ -14,7 +14,7 @@ HitboxWeapon::~HitboxWeapon()
 {
 }
 
-bool HitboxWeapon::CanAttack()
+bool HitboxWeapon::CanAttack() const
 {
     return (_cooldownCounter >= GetWeaponCooldown());
 }

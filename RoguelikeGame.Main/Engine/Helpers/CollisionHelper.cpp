@@ -1,11 +1,11 @@
 #include "CollisionHelper.h"
 
-bool CollisionHelper::CheckSimpleCollision(const sf::FloatRect first, const sf::FloatRect second)
+bool CollisionHelper::CheckSimpleCollision(const sf::FloatRect& first, const sf::FloatRect& second)
 {
     return first.intersects(second);
 }
 
-bool CollisionHelper::CheckCircleCollision(const sf::Vector2f point, const sf::Vector2f center, float radius, float arc, float angle)
+bool CollisionHelper::CheckCircleCollision(const sf::Vector2f& point, const sf::Vector2f& center, float radius, float arc, float angle)
 {
     auto pointAngle = MathHelper::GetAngleBetweenPoints(center, point);
     auto pointRadius = MathHelper::GetDistanceBetweenPoints(center, point);
@@ -20,18 +20,18 @@ bool CollisionHelper::CheckCircleCollision(const sf::Vector2f point, const sf::V
                 normalPointAngle <= normalCircleAngleR && normalPointAngle >= 0 && pointRadius <= radius);
 }
 
-bool CollisionHelper::CheckCircleCollision(const sf::Vector2f point, const sf::Vector2f center, float radius)
+bool CollisionHelper::CheckCircleCollision(const sf::Vector2f& point, const sf::Vector2f& center, float radius)
 {
     auto diff = point - center;
     return (diff.x * diff.x + diff.y * diff.y <= radius * radius);
 }
 
-bool CollisionHelper::CheckCirclesIntersect(const sf::Vector2f center1, float radius1, const sf::Vector2f center2, float radius2)
+bool CollisionHelper::CheckCirclesIntersect(const sf::Vector2f& center1, float radius1, const sf::Vector2f& center2, float radius2)
 {
     return (MathHelper::GetDistanceBetweenPoints(center1, center2) <= radius1 + radius2);
 }
 
-bool CollisionHelper::CheckTileCollision(const sf::FloatRect obj, const MapLayerModel<bool> *tiles)
+bool CollisionHelper::CheckTileCollision(const sf::FloatRect& obj, const MapLayerModel<bool> *tiles)
 {
     auto pos = GetPosOnTiles(obj, tiles);
     if (pos.y < 0 || pos.y >(int)tiles->height - 1 ||
@@ -48,7 +48,7 @@ bool CollisionHelper::CheckTileCollision(const sf::FloatRect obj, const MapLayer
     return false;
 }
 
-bool CollisionHelper::CheckTileCollision(const sf::Vector2f center, float radius, const MapLayerModel<bool>* tiles)
+bool CollisionHelper::CheckTileCollision(const sf::Vector2f& center, float radius, const MapLayerModel<bool>* tiles)
 {
     auto tl = GetPosOnTiles(sf::Vector2f(center.x - radius, center.y - radius), tiles);
     auto dr = GetPosOnTiles(sf::Vector2f(center.x + radius, center.y + radius), tiles);
@@ -78,7 +78,7 @@ bool CollisionHelper::CheckTileCollision(const sf::Vector2f center, float radius
     return false;
 }
 
-sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect startPos, const sf::FloatRect endPos, const MapLayerModel<bool>* tiles)
+sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos, const MapLayerModel<bool>* tiles)
 {
     if (CheckTileCollision(endPos, tiles))
     {
@@ -177,7 +177,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect startPos,
         return sf::Vector2f(endPos.left, endPos.top);
 }
 
-sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::Vector2f startPos, const sf::Vector2f endPos, float radius, const MapLayerModel<bool>* tiles)
+sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius, const MapLayerModel<bool>* tiles)
 {
     //Circle tile collision
     sf::Vector2f output = endPos;
@@ -228,7 +228,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::Vector2f startPos, 
     return output;
 }
 
-sf::Vector2f CollisionHelper::GetRectLimitPosition(const sf::FloatRect startPos, const sf::FloatRect endPos, const sf::FloatRect block)
+sf::Vector2f CollisionHelper::GetRectLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos, const sf::FloatRect& block)
 {
     if (CheckSimpleCollision(endPos, block))
     {
@@ -293,7 +293,7 @@ sf::Vector2f CollisionHelper::GetRectLimitPosition(const sf::FloatRect startPos,
         return sf::Vector2f(endPos.left, endPos.top);
 }
 
-sf::Glsl::Ivec4 CollisionHelper::GetPosOnTiles(const sf::FloatRect pos, const MapLayerModel<bool>* tiles)
+sf::Glsl::Ivec4 CollisionHelper::GetPosOnTiles(const sf::FloatRect& pos, const MapLayerModel<bool>* tiles)
 {
     int y1 = (int)((pos.top - tiles->offsetY) / tiles->tileHeight);
     int y2 = (int)(((double)pos.top + pos.height - tiles->offsetY - .01) / tiles->tileHeight);
@@ -302,14 +302,14 @@ sf::Glsl::Ivec4 CollisionHelper::GetPosOnTiles(const sf::FloatRect pos, const Ma
     return sf::Glsl::Ivec4(x1, y1, x2, y2);
 }
 
-sf::Vector2i CollisionHelper::GetPosOnTiles(const sf::Vector2f pos, const MapLayerModel<bool>* tiles)
+sf::Vector2i CollisionHelper::GetPosOnTiles(const sf::Vector2f& pos, const MapLayerModel<bool>* tiles)
 {
     int x = (int)((pos.x - tiles->offsetX) / tiles->tileWidth);
     int y = (int)((pos.y - tiles->offsetY) / tiles->tileHeight);
     return sf::Vector2i(x, y);
 }
 
-std::vector<sf::Vector2f> CollisionHelper::GetRectPoints(const sf::FloatRect rect)
+std::vector<sf::Vector2f> CollisionHelper::GetRectPoints(const sf::FloatRect& rect)
 {
     std::vector<sf::Vector2f> output(4);
 

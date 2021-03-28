@@ -24,21 +24,21 @@ public:
 	~SceneManager();
 
 	void UpdateFocus(const sf::Vector2f& mousePos, bool clicked);
-	void UpdateEvent(sf::Event* ev, sf::Vector2f mousePos);
+	void UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos);
 	void Update(bool tick, float delta);
 
 	void SetShowFocused(bool show);
 	void ToggleShowFocused();
 
-	bool GetShowFocused();
+	bool GetShowFocused() const;
 
-	void LoadScene(std::string name);
+	void LoadScene(const std::string& name);
 	void UnloadCurrentScene();
-	std::string GetLoadedSceneName();
+	const std::string& GetLoadedSceneName() const;
 	Scene* GetLoadedScene();
 
-	void AddScene(std::string name, Scene* element);
-	void RemoveScene(std::string name);
-	Scene* GetScene(std::string name);
-	size_t GetNoOfScenes();
+	void AddScene(const std::string& name, Scene* element);
+	void RemoveScene(const std::string& name);
+	Scene* GetScene(const std::string& name);
+	size_t GetNoOfScenes() const;
 };

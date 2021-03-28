@@ -22,7 +22,7 @@ public:
 	~EntityMovement();
 
 	void Update(float deltaTime);
-	bool IsKeyPressed();
+	bool IsKeyPressed() const;
 	void MoveBy(float x, float y, float deltaTime);
 
 	void SetEntity(Entity* entity);
@@ -30,13 +30,13 @@ public:
 
 	void SetLockMovement(bool lock);
 	void SetNoClip(bool noClip);
-	void SetIdleStateName(std::string idle);
-	void SetMoveStateName(std::string move);
+	void SetIdleStateName(const std::string& idle);
+	void SetMoveStateName(const std::string& move);
 
-	bool GetLockMovement();
-	bool GetNoClip();
-	std::string GetIdleStateName();
-	std::string GetMoveStateName();
+	bool GetLockMovement() const;
+	bool GetNoClip() const;
+	std::string GetIdleStateName() const;
+	std::string GetMoveStateName() const;
 
 	void ToggleNoClip();
 };

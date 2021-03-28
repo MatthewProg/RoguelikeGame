@@ -52,23 +52,23 @@ void ProgressBar::SetMaxValue(float maxValue)
 	}
 }
 
-float ProgressBar::GetCurrentValue()
+float ProgressBar::GetCurrentValue() const
 {
 	return _currentValue;
 }
 
-float ProgressBar::GetMaxValue()
+float ProgressBar::GetMaxValue() const
 {
 	return _maxValue;
 }
 
-void ProgressBar::AddProgressBarStep(sf::FloatRect step, std::string textureName)
+void ProgressBar::AddProgressBarStep(const sf::FloatRect& step, const std::string& textureName)
 {
 	_progressBarSteps.push_back(std::tuple<sf::FloatRect, std::string>(step, textureName));
 	_sthChanged = true;
 }
 
-void ProgressBar::AddBackgroundLayer(sf::FloatRect layer, std::string textureName)
+void ProgressBar::AddBackgroundLayer(const sf::FloatRect& layer, const std::string& textureName)
 {
 	_backgroundLayers.push_back(std::tuple<sf::FloatRect, std::string>(layer, textureName));
 	_sthChanged = true;
@@ -86,7 +86,7 @@ void ProgressBar::ResetBackgroundLayers()
 	_sthChanged = true;
 }
 
-void ProgressBar::ReplaceProgressBarStep(size_t index, std::tuple<sf::FloatRect, std::string> newTuple)
+void ProgressBar::ReplaceProgressBarStep(size_t index, const std::tuple<sf::FloatRect, std::string>& newTuple)
 {
 	if (_progressBarSteps.size() - 1 <= index)
 	{
@@ -95,7 +95,7 @@ void ProgressBar::ReplaceProgressBarStep(size_t index, std::tuple<sf::FloatRect,
 	}
 }
 
-void ProgressBar::ReplaceBackgroundLayer(size_t index, std::tuple<sf::FloatRect, std::string> newTuple)
+void ProgressBar::ReplaceBackgroundLayer(size_t index, const std::tuple<sf::FloatRect, std::string>& newTuple)
 {
 	if (_backgroundLayers.size() - 1 <= index)
 	{
@@ -122,42 +122,42 @@ void ProgressBar::RemoveBackgroundLayer(size_t index)
 	}
 }
 
-void ProgressBar::SetProgressBarStepsPos(sf::Vector2f pos)
+void ProgressBar::SetProgressBarStepsPos(const sf::Vector2f& pos)
 {
 	_progressBarStepsPos = pos;
 	_sthChanged = true;
 }
 
-size_t ProgressBar::GetNoOfProgressBarSteps()
+size_t ProgressBar::GetNoOfProgressBarSteps() const
 {
 	return _progressBarSteps.size();
 }
 
-size_t ProgressBar::GetNoOfBackgroundLayers()
+size_t ProgressBar::GetNoOfBackgroundLayers() const
 {
 	return _backgroundLayers.size();
 }
 
-std::tuple<sf::FloatRect, std::string> ProgressBar::GetProgressBarStep(size_t index)
+std::tuple<sf::FloatRect, std::string> ProgressBar::GetProgressBarStep(size_t index) const
 {
 	if (_progressBarSteps.size() - 1 <= index)
 		return _progressBarSteps[index];
 	return std::tuple<sf::FloatRect, std::string>();
 }
 
-std::tuple<sf::FloatRect, std::string> ProgressBar::GetBackgroundLayer(size_t index)
+std::tuple<sf::FloatRect, std::string> ProgressBar::GetBackgroundLayer(size_t index) const
 {
 	if (_backgroundLayers.size() - 1 <= index)
 		return _backgroundLayers[index];
 	return std::tuple<sf::FloatRect, std::string>();
 }
 
-sf::Vector2f ProgressBar::GetProgressBarStepsPos()
+const sf::Vector2f& ProgressBar::GetProgressBarStepsPos() const
 {
 	return _progressBarStepsPos;
 }
 
-sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds()
+sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds() const
 {
 	auto bounds = GetGlobalBounds();
 	if (_progressBarSteps.size() == 0)
@@ -294,7 +294,7 @@ void ProgressBar::Update(bool, float)
 	}
 }
 
-void ProgressBar::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
+void ProgressBar::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
 	if (_inFocus == true)
 	{

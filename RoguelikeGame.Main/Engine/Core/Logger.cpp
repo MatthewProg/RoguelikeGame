@@ -36,7 +36,7 @@ void Logger::TurnOnColorsSupport()
 		DISABLE_NEWLINE_AUTO_RETURN);
 }
 
-std::string Logger::MessageBuilder(LogType type, std::string message, bool colorType)
+std::string Logger::MessageBuilder(const LogType& type, const std::string& message, bool colorType)
 {
 	std::string pattern = _options.loggingPattern;
 	
@@ -101,12 +101,12 @@ Stopwatch* Stopwatch::GetInstance()
 	return _instance;
 }
 
-void Stopwatch::Start(std::string name)
+void Stopwatch::Start(const std::string& name)
 {
 	_stopwatches[name] = std::chrono::high_resolution_clock::now();
 }
 
-std::chrono::microseconds Stopwatch::Stop(std::string name)
+std::chrono::microseconds Stopwatch::Stop(const std::string& name)
 {
 	std::chrono::microseconds output = std::chrono::duration_values<std::chrono::microseconds>::zero();
 

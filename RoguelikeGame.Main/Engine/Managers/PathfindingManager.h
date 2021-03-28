@@ -40,7 +40,7 @@ public:
 
 	//Dijkstra's algh
 	Paths GetDijkstrasPath(const sf::Vector2f& startPos, CollisionsManager* collisions);
-	sf::Vector2f GetClosestNode(const Paths paths, const sf::Vector2f& startPos, CollisionsManager* collisions);
-	sf::Vector2f GetClosestVisibleNodeTo(const Paths paths, const sf::Vector2f& startPos, const sf::Vector2f& endPos, CollisionsManager* collisions);
+	sf::Vector2f GetClosestNode(const Paths& paths, const sf::Vector2f& startPos, CollisionsManager* collisions);
+	sf::Vector2f GetClosestVisibleNodeTo(const Paths& paths, const sf::Vector2f& startPos, const sf::Vector2f& endPos, CollisionsManager* collisions);
 };
 

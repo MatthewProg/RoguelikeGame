@@ -52,7 +52,7 @@ void EntityMovement::MoveBy(float x, float y, float deltaTime)
 	_entity->SetPosition(pos.x + (x * deltaTime * _entity->GetSpeed()), pos.y + (y * deltaTime * _entity->GetSpeed()));
 }
 
-bool EntityMovement::IsKeyPressed()
+bool EntityMovement::IsKeyPressed() const
 {
 	return (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
 		sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
@@ -100,32 +100,32 @@ void EntityMovement::SetNoClip(bool noClip)
 	_noClip = noClip;
 }
 
-void EntityMovement::SetIdleStateName(std::string idle)
+void EntityMovement::SetIdleStateName(const std::string& idle)
 {
 	_idleState = idle;
 }
 
-void EntityMovement::SetMoveStateName(std::string move)
+void EntityMovement::SetMoveStateName(const std::string& move)
 {
 	_moveState = move;
 }
 
-bool EntityMovement::GetLockMovement()
+bool EntityMovement::GetLockMovement() const
 {
 	return _lockMovement;
 }
 
-bool EntityMovement::GetNoClip()
+bool EntityMovement::GetNoClip() const
 {
 	return _noClip;
 }
 
-std::string EntityMovement::GetIdleStateName()
+std::string EntityMovement::GetIdleStateName() const
 {
 	return _idleState;
 }
 
-std::string EntityMovement::GetMoveStateName()
+std::string EntityMovement::GetMoveStateName() const
 {
 	return _moveState;
 }

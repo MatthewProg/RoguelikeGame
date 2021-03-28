@@ -30,12 +30,11 @@ public:
 	void SetPlayer(Player* player);
 	void SetEnemiesHitboxVisibility(bool visibility);
 
-	bool GetEnemiesHitboxVisibility();
+	bool GetEnemiesHitboxVisibility() const;
 	void ToggleEnemiesHitboxVisibility();
 	void ToggleEnemiesRaycastVisibility();
 
 	void Add(Enemy* enemy);
 	std::vector<Enemy*>* GetEnemies();
-
 };
 

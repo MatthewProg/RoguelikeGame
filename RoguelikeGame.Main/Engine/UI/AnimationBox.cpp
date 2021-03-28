@@ -17,7 +17,7 @@ AnimationBox::~AnimationBox()
 {
 }
 
-void AnimationBox::SetAnimation(sf::Animation anim)
+void AnimationBox::SetAnimation(const sf::Animation& anim)
 {
     _animation = anim;
 }
@@ -46,6 +46,6 @@ void AnimationBox::RedrawElement()
     _render.display();
 }
 
-void AnimationBox::ProcessEvent(sf::Event*, sf::Vector2f)
+void AnimationBox::ProcessEvent(sf::Event*, const sf::Vector2f&)
 {
 }

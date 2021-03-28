@@ -14,7 +14,7 @@ public:
 	~HitboxWeapon();
 
 	// Inherited via Weapon
-	virtual bool CanAttack() override;
+	virtual bool CanAttack() const override;
 	virtual void Attack() override;
 	virtual void Update(bool tick, float) override;
 	virtual Weapon* clone() override;

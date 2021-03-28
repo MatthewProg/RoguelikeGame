@@ -65,7 +65,7 @@ void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 	}
 }
 
-void SceneManager::UpdateEvent(sf::Event* ev, sf::Vector2f mousePos)
+void SceneManager::UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
 	if (_loadedScene == "") return;
 
@@ -99,12 +99,12 @@ void SceneManager::ToggleShowFocused()
 	SetShowFocused(!_showFocused);
 }
 
-bool SceneManager::GetShowFocused()
+bool SceneManager::GetShowFocused() const
 {
 	return _showFocused;
 }
 
-void SceneManager::LoadScene(std::string name)
+void SceneManager::LoadScene(const std::string& name)
 {
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
@@ -123,7 +123,7 @@ void SceneManager::UnloadCurrentScene()
 	_loadedScene = "";
 }
 
-std::string SceneManager::GetLoadedSceneName()
+const std::string& SceneManager::GetLoadedSceneName() const
 {
 	return _loadedScene;
 }
@@ -133,7 +133,7 @@ Scene* SceneManager::GetLoadedScene()
 	return GetScene(_loadedScene);
 }
 
-void SceneManager::AddScene(std::string name, Scene* element)
+void SceneManager::AddScene(const std::string& name, Scene* element)
 {
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
@@ -147,7 +147,7 @@ void SceneManager::AddScene(std::string name, Scene* element)
 }
 
 
-void SceneManager::RemoveScene(std::string name)
+void SceneManager::RemoveScene(const std::string& name)
 {
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
@@ -158,7 +158,7 @@ void SceneManager::RemoveScene(std::string name)
 	}
 }
 
-Scene* SceneManager::GetScene(std::string name)
+Scene* SceneManager::GetScene(const std::string& name)
 {
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
@@ -167,7 +167,7 @@ Scene* SceneManager::GetScene(std::string name)
 		return nullptr;
 }
 
-size_t SceneManager::GetNoOfScenes()
+size_t SceneManager::GetNoOfScenes() const
 {
 	return _scenes.size();
 }

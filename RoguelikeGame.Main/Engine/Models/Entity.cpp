@@ -65,7 +65,7 @@ void Entity::TakeDmg(float dmg)
 	}
 }
 
-bool Entity::IsDead()
+bool Entity::IsDead() const
 {
 	return (_isVisible == false && _health <= 0);
 }
@@ -81,62 +81,62 @@ std::string Entity::GetState()
 	return _state;
 }
 
-float Entity::GetHealth()
+float Entity::GetHealth() const
 {
 	return _health;
 }
 
-float Entity::GetSpeed()
+float Entity::GetSpeed() const
 {
 	return _speed;
 }
 
-float Entity::GetStep()
+float Entity::GetStep() const
 {
 	return _step;
 }
 
-bool Entity::GetVisibility()
+bool Entity::GetVisibility() const
 {
 	return _isVisible;
 }
 
-sf::Vector2f Entity::GetPosition()
+const sf::Vector2f& Entity::GetPosition() const
 {
 	return _transform.getPosition();
 }
 
-float Entity::GetRotation()
+float Entity::GetRotation() const
 {
 	return _transform.getRotation();
 }
 
-sf::Vector2f Entity::GetOrigin()
+const sf::Vector2f& Entity::GetOrigin() const
 {
 	return _transform.getOrigin();
 }
 
-sf::Vector2f Entity::GetScale()
+const sf::Vector2f& Entity::GetScale() const
 {
 	return _transform.getScale();
 }
 
-sf::Transformable Entity::GetTransform()
+const sf::Transformable& Entity::GetTransform() const
 {
 	return _transform;
 }
 
-sf::Color Entity::GetTakingDmgColor()
+const sf::Color& Entity::GetTakingDmgColor() const
 {
 	return _dmgColor;
 }
 
-unsigned short Entity::GetTakingDmgColorTicks()
+unsigned short Entity::GetTakingDmgColorTicks() const
 {
 	return _dmgColorTick;
 }
 
-sf::FloatRect Entity::GetView()
+sf::FloatRect Entity::GetView() const
 {
 	auto output = _viewRect;
 	auto pos = GetPosition();
@@ -147,13 +147,13 @@ sf::FloatRect Entity::GetView()
 	return output;
 }
 
-void Entity::SetState(std::string state)
+void Entity::SetState(const std::string& state)
 {
 	_state = state;
 	_animations.SetCurrentState(state);
 }
 
-void Entity::SetAnimations(sf::AnimationContainer container)
+void Entity::SetAnimations(const sf::AnimationContainer& container)
 {
 	_animations = container;
 	_animations.SetCurrentState(_state);
@@ -234,7 +234,7 @@ void Entity::SetTransform(const sf::Transformable& trans)
 	_animations.ApplySetScale(trans.getScale());
 }
 
-void Entity::SetTakingDmgColor(const sf::Color color)
+void Entity::SetTakingDmgColor(const sf::Color& color)
 {
 	_dmgColor = color;
 }
@@ -244,7 +244,7 @@ void Entity::SetTakingDmgColorTicks(unsigned short ticks)
 	_dmgColorTick = ticks;
 }
 
-void Entity::SetView(sf::FloatRect rect)
+void Entity::SetView(const sf::FloatRect& rect)
 {
 	_viewRect = rect;
 }
@@ -254,7 +254,7 @@ void Entity::SetSoundsManager(SoundsManager* manager)
 	_sounds = manager;
 }
 
-void Entity::AddTakingDmgSound(std::string sound)
+void Entity::AddTakingDmgSound(const std::string& sound)
 {
 	_takingDmgSounds.push_back(sound);
 }
@@ -264,7 +264,7 @@ void Entity::ClearTakingDmgSounds()
 	_takingDmgSounds.clear();
 }
 
-std::vector<std::string>* Entity::GetTakingDmgSounds()
+const std::vector<std::string>* Entity::GetTakingDmgSounds() const
 {
 	return &_takingDmgSounds;
 }

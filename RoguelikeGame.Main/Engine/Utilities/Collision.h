@@ -25,21 +25,21 @@ namespace sf
 		Collision(Collision& other);
 		~Collision();
 
-		sf::FloatRect GetCollisionBox();
-		sf::FloatRect GetCollisionBoxOffset();
-		sf::RectangleShape GetHitboxRectangle();
-		sf::Color GetHitboxColor();
-		sf::Color GetHitboxOutlineColor();
-		float GetHitboxOutlineThickness();
-		bool GetHitboxVisibility();
-		sf::Vector2f GetHitboxPosition();
+		sf::FloatRect GetCollisionBox() const;
+		sf::FloatRect GetCollisionBoxOffset() const;
+		const sf::RectangleShape& GetHitboxRectangle() const;
+		const sf::Color& GetHitboxColor() const;
+		const sf::Color& GetHitboxOutlineColor() const;
+		float GetHitboxOutlineThickness() const;
+		bool GetHitboxVisibility() const;
+		const sf::Vector2f& GetHitboxPosition() const;
 
-		void SetCollisionBoxOffset(sf::FloatRect rect);
+		void SetCollisionBoxOffset(const sf::FloatRect& rect);
 		void SetHitboxColor(const sf::Color& color);
 		void SetHitboxOutlineColor(const sf::Color& color);
 		void SetHitboxOutlineThickness(float thickness);
 		void SetHitboxVisibility(bool visible);
-		void SetHitboxPosition(sf::Vector2f pos);
+		void SetHitboxPosition(const sf::Vector2f& pos);
 		void SetHitboxPosition(float x, float y);
 	};
 }

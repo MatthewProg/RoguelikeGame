@@ -57,7 +57,7 @@ void FontsManager::LoadFromStream(const std::string& name, sf::InputStream& stre
 		_logger->Log(Logger::LogType::INFO, message + "OK");
 }
 
-sf::Font* FontsManager::GetFont(std::string name)
+const sf::Font* FontsManager::GetFont(const std::string& name)
 {
 	auto found = _fonts.find(name);
 	if (found != _fonts.end())
@@ -66,7 +66,7 @@ sf::Font* FontsManager::GetFont(std::string name)
 		return nullptr;
 }
 
-bool FontsManager::Exists(std::string name)
+bool FontsManager::Exists(const std::string& name) const
 {
 	if (_fonts.find(name) != _fonts.end())
 		return true;

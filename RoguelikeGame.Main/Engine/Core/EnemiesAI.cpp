@@ -108,8 +108,6 @@ EnemiesAI::EnemiesAI()
 	_enemyPath.clear();
 	_allPaths.clear();
 	_lastNeighbours.clear();
-
-	srand((unsigned int)time(NULL));
 }
 
 EnemiesAI::~EnemiesAI()
@@ -319,7 +317,7 @@ void EnemiesAI::ClearEnemiesPaths()
 	_lastTargetPos = sf::Vector2f(-1, -1);
 }
 
-void EnemiesAI::MoveStraightToPoint(Enemy* source, sf::Vector2f point, float deltaTime)
+void EnemiesAI::MoveStraightToPoint(Enemy* source, const sf::Vector2f& point, float deltaTime)
 {
 	if (source == nullptr) return;
 
@@ -340,7 +338,7 @@ void EnemiesAI::MoveStraightToPoint(Enemy* source, sf::Vector2f point, float del
 	source->SetPosition(source->GetPosition() + moveVector);
 }
 
-float EnemiesAI::GetBestAngle(float gotoAngle, std::vector<float> avoidAngle, uint8_t precision)
+float EnemiesAI::GetBestAngle(float gotoAngle, const std::vector<float>& avoidAngle, uint8_t precision)
 {
 	float maxWeight = -1.F;
 	float bestAngle = gotoAngle;
@@ -369,19 +367,19 @@ void EnemiesAI::SetPathfindVisibility(bool visible)
 	_showPathfindLines = visible;
 }
 
-void EnemiesAI::SetPathfindColor(sf::Color color)
+void EnemiesAI::SetPathfindColor(const sf::Color& color)
 {
 	for (size_t i = 0; i < _pathfindLines.getVertexCount(); i++)
 		_pathfindLines[i].color = color;
 	_pathfindLinesColor = color;
 }
 
-bool EnemiesAI::GetPathfindVisibility()
+bool EnemiesAI::GetPathfindVisibility() const
 {
 	return _showPathfindLines;
 }
 
-sf::Color EnemiesAI::GetPathfindColor()
+sf::Color EnemiesAI::GetPathfindColor() const
 {
 	return _pathfindLinesColor;
 }
@@ -408,7 +406,7 @@ void EnemiesAI::SetCollisionsManager(CollisionsManager* manager)
 	_collisions = manager;
 }
 
-void EnemiesAI::SetPathfindPoints(std::vector<sf::Vector2f> points)
+void EnemiesAI::SetPathfindPoints(const std::vector<sf::Vector2f>& points)
 {
 	_pathfind.GenerateBaseGraph(points, _collisions);
 }

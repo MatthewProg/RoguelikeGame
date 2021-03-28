@@ -27,10 +27,10 @@ public:
 	virtual UIElement* clone() = 0;
 	virtual ~UIElement() { ; }
 
-	void Init(sf::Vector2u size);
+	void Init(const sf::Vector2u& size);
 	virtual void Update(bool tick, float delta) = 0;
 	virtual void RedrawElement() = 0;
-	virtual void ProcessEvent(sf::Event* ev, sf::Vector2f mousePos) = 0;
+	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) = 0;
 
 	void SetVisibility(bool visible);
 	void SetMouseInput(bool active);
@@ -40,12 +40,12 @@ public:
 	void SetFocusOnHover(bool hover);
 	void SetInFocus(bool isFocused);
 
-	bool GetVisibility();
-	bool GetMouseInput();
-	bool GetKeyboardInput();
-	bool GetFocusOnHover();
-	bool GetInFocus();
-	virtual sf::FloatRect GetGlobalBounds();
-	sf::RenderTexture* GetTexture();
+	bool GetVisibility() const;
+	bool GetMouseInput() const;
+	bool GetKeyboardInput() const;
+	bool GetFocusOnHover() const;
+	bool GetInFocus() const;
+	virtual sf::FloatRect GetGlobalBounds() const;
+	const sf::RenderTexture* GetTexture() const;
 };
 

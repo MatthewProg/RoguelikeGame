@@ -106,7 +106,7 @@ void EnemiesManager::SetEnemiesHitboxVisibility(bool visibility)
 		it->SetHitboxVisibility(visibility);
 }
 
-bool EnemiesManager::GetEnemiesHitboxVisibility()
+bool EnemiesManager::GetEnemiesHitboxVisibility() const
 {
 	if(_enemies.size() > 0)
 		return _enemies[0]->GetHitboxVisibility();

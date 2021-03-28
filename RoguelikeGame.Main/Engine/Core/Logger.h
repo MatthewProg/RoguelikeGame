@@ -72,7 +72,7 @@ private:
 	std::map<LogType, std::string> _typeColorMap;
 
 	void TurnOnColorsSupport();
-	std::string MessageBuilder(LogType type, std::string message, bool colorType);
+	std::string MessageBuilder(const LogType& type, const std::string& message, bool colorType);
 };
 
 class Stopwatch
@@ -88,6 +88,6 @@ public:
 	Stopwatch(Stopwatch& other) = delete;
 	void operator=(const Stopwatch&) = delete;
 
-	void Start(std::string name);
-	std::chrono::microseconds Stop(std::string name);
+	void Start(const std::string& name);
+	std::chrono::microseconds Stop(const std::string& name);
 };

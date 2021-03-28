@@ -49,7 +49,7 @@ void DebugHelper::Status(bool tick)
 	_fpsTime = now;
 }
 
-void DebugHelper::SetMeasureEvery(std::chrono::milliseconds milis)
+void DebugHelper::SetMeasureEvery(const std::chrono::milliseconds& milis)
 {
 	_measureEvery = milis;
 }
@@ -61,12 +61,12 @@ void DebugHelper::SetDebug(bool debug)
 		Reset();
 }
 
-std::chrono::milliseconds DebugHelper::GetMeasureEvery()
+std::chrono::milliseconds DebugHelper::GetMeasureEvery() const
 {
 	return _measureEvery;
 }
 
-bool DebugHelper::GetDebug()
+bool DebugHelper::GetDebug() const
 {
 	return _debug;
 }

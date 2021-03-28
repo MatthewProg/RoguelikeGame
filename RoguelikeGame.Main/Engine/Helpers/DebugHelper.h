@@ -29,11 +29,11 @@ public:
 
 	void Status(bool tick);
 
-	void SetMeasureEvery(std::chrono::milliseconds milis);
+	void SetMeasureEvery(const std::chrono::milliseconds& milis);
 	void SetDebug(bool debug);
 
-	std::chrono::milliseconds GetMeasureEvery();
-	bool GetDebug();
+	std::chrono::milliseconds GetMeasureEvery() const;
+	bool GetDebug() const;
 
 	void ToggleFPSInfo();
 };

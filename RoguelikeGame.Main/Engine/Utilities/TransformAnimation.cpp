@@ -120,12 +120,12 @@ namespace sf
 			UpdateTarget(deltaTime);
 	}
 
-	void TransformAnimation::AddTransform(sf::Transformable transform, uint16_t ticks)
+	void TransformAnimation::AddTransform(const sf::Transformable& transform, uint16_t ticks)
 	{
 		_transforms.push_back(std::make_tuple(transform, ticks));
 	}
 
-	void TransformAnimation::AddTransform(std::tuple<sf::Transformable, uint16_t> tuple)
+	void TransformAnimation::AddTransform(const std::tuple<sf::Transformable, uint16_t>& tuple)
 	{
 		_transforms.push_back(tuple);
 	}
@@ -143,21 +143,21 @@ namespace sf
 		_currentTransformTicks = 0;
 	}
 
-	void TransformAnimation::SetTransformTuple(uint16_t transformIndex, std::tuple<sf::Transformable, uint16_t> tuple)
+	void TransformAnimation::SetTransformTuple(uint16_t transformIndex, const std::tuple<sf::Transformable, uint16_t>& tuple)
 	{
-		if (_transforms.size() < transformIndex)
+		if (transformIndex <_transforms.size())
 			_transforms[transformIndex] = tuple;
 	}
 
-	void TransformAnimation::SetTransformTransform(uint16_t transformIndex, sf::Transformable transform)
+	void TransformAnimation::SetTransformTransform(uint16_t transformIndex, const sf::Transformable& transform)
 	{
-		if (_transforms.size() < transformIndex)
+		if (transformIndex < _transforms.size())
 			std::get<0>(_transforms[transformIndex]) = transform;
 	}
 
 	void TransformAnimation::SetTransformTime(uint16_t transformIndex, uint16_t ticks)
 	{
-		if (_transforms.size() < transformIndex)
+		if (transformIndex < _transforms.size())
 			std::get<1>(_transforms[transformIndex]) = ticks;
 	}
 
@@ -166,38 +166,38 @@ namespace sf
 		_loop = loop;
 	}
 
-	std::tuple<sf::Transformable, uint16_t> TransformAnimation::GetTransformTuple(uint16_t transformIndex)
+	const std::tuple<sf::Transformable, uint16_t>* TransformAnimation::GetTransformTuple(uint16_t transformIndex) const
 	{
-		if (_transforms.size() < transformIndex)
-			return _transforms[transformIndex];
-		return std::tuple<sf::Transformable, uint16_t>();
+		if (transformIndex < _transforms.size())
+			return &_transforms[transformIndex];
+		return nullptr;
 	}
 
-	sf::Transformable TransformAnimation::GetTransformTransform(uint16_t transformIndex)
+	sf::Transformable TransformAnimation::GetTransformTransform(uint16_t transformIndex) const
 	{
-		if (_transforms.size() < transformIndex)
+		if (transformIndex < _transforms.size())
 			return std::get<0>(_transforms[transformIndex]);
 		return sf::Transformable();
 	}
 
-	uint16_t TransformAnimation::GetTransformTicks(uint16_t transformIndex)
+	uint16_t TransformAnimation::GetTransformTicks(uint16_t transformIndex) const
 	{
-		if (_transforms.size() < transformIndex)
+		if (transformIndex < _transforms.size())
 			return std::get<1>(_transforms[transformIndex]);
 		return uint16_t();
 	}
 
-	bool TransformAnimation::GetLoop()
+	bool TransformAnimation::GetLoop() const
 	{
 		return _loop;
 	}
 
-	uint16_t TransformAnimation::GetCurrentTransformIndex()
+	uint16_t TransformAnimation::GetCurrentTransformIndex() const
 	{
 		return _currentTransformIndex;
 	}
 
-	size_t TransformAnimation::GetNoOfTransforms()
+	size_t TransformAnimation::GetNoOfTransforms() const
 	{
 		return _transforms.size();
 	}
@@ -224,11 +224,11 @@ namespace sf
 		_isPlaying = false;
 		_isEnded = false;
 	}
-	bool TransformAnimation::IsPlaying()
+	bool TransformAnimation::IsPlaying() const
 	{
-		return false;
+		return _isPlaying;
 	}
-	bool TransformAnimation::IsEnded()
+	bool TransformAnimation::IsEnded() const
 	{
 		return _isEnded;
 	}

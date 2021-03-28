@@ -34,7 +34,7 @@ void SoundsManager::Update()
 	}
 }
 
-bool SoundsManager::Exists(std::string name)
+bool SoundsManager::Exists(const std::string& name) const
 {
 	auto found = _sounds.find(name);
 	if (found != _sounds.end())
@@ -48,7 +48,7 @@ void SoundsManager::SetExpectedSize(uint16_t size)
 	_expectedSize = size;
 }
 
-void SoundsManager::LoadFromFile(std::string name, std::string path)
+void SoundsManager::LoadFromFile(const std::string& name, const std::string& path)
 {
 	if (std::get<0>(_sounds[name]).loadFromFile(path) == true)
 	{
@@ -62,7 +62,7 @@ void SoundsManager::LoadFromFile(std::string name, std::string path)
 	}
 }
 
-void SoundsManager::LoadFromMemory(std::string name, const void* data, std::size_t sizeInBytes)
+void SoundsManager::LoadFromMemory(const std::string& name, const void* data, std::size_t sizeInBytes)
 {
 	if (std::get<0>(_sounds[name]).loadFromMemory(data, sizeInBytes) == true)
 	{
@@ -76,7 +76,7 @@ void SoundsManager::LoadFromMemory(std::string name, const void* data, std::size
 	}
 }
 
-void SoundsManager::LoadFromSamples(std::string name, const short* samples, uint64_t sampleCount, unsigned int channelCount, unsigned int sampleRate)
+void SoundsManager::LoadFromSamples(const std::string& name, const short* samples, uint64_t sampleCount, unsigned int channelCount, unsigned int sampleRate)
 {
 	if (std::get<0>(_sounds[name]).loadFromSamples(samples, sampleCount, channelCount, sampleRate) == true)
 	{
@@ -90,7 +90,7 @@ void SoundsManager::LoadFromSamples(std::string name, const short* samples, uint
 	}
 }
 
-void SoundsManager::LoadFromStream(std::string name, sf::InputStream& stream)
+void SoundsManager::LoadFromStream(const std::string& name, sf::InputStream& stream)
 {
 	if (std::get<0>(_sounds[name]).loadFromStream(stream) == true)
 	{
@@ -104,14 +104,14 @@ void SoundsManager::LoadFromStream(std::string name, sf::InputStream& stream)
 	}
 }
 
-void SoundsManager::RemoveSound(std::string name)
+void SoundsManager::RemoveSound(const std::string& name)
 {
 	auto found = _sounds.find(name);
 	if (found != _sounds.end())
 		_sounds.erase(found);
 }
 
-void SoundsManager::PlaySoundIndependent(std::string name)
+void SoundsManager::PlaySoundIndependent(const std::string& name)
 {
 	auto found = _sounds.find(name);
 	if (found != _sounds.end())
@@ -143,7 +143,7 @@ void SoundsManager::StopIndependentSounds()
 		e.stop();
 }
 
-sf::Sound* SoundsManager::GetSound(std::string name)
+sf::Sound* SoundsManager::GetSound(const std::string& name)
 {
 	auto found = _sounds.find(name);
 	if (found != _sounds.end())
@@ -152,7 +152,7 @@ sf::Sound* SoundsManager::GetSound(std::string name)
 		return nullptr;
 }
 
-sf::SoundBuffer* SoundsManager::GetSoundBuffer(std::string name)
+sf::SoundBuffer* SoundsManager::GetSoundBuffer(const std::string& name)
 {
 	auto found = _sounds.find(name);
 	if (found != _sounds.end())

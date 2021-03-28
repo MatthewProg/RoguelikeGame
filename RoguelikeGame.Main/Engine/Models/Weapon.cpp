@@ -49,12 +49,12 @@ void Weapon::ResetCooldown()
 	_cooldownCounter = 0;
 }
 
-float Weapon::GetWeaponDMG()
+float Weapon::GetWeaponDMG() const
 {
 	return _dmg;
 }
 
-uint16_t Weapon::GetWeaponCooldown()
+uint16_t Weapon::GetWeaponCooldown() const
 {
 	return _attackCooldown;
 }
@@ -64,7 +64,7 @@ bool Weapon::GetVisibility() const
 	return _isVisible;
 }
 
-float Weapon::GetCurrentAngle()
+float Weapon::GetCurrentAngle() const
 {
 	return _currentAngle;
 }
@@ -74,12 +74,12 @@ bool Weapon::GetHitboxVisibility() const
 	return _showHitbox;
 }
 
-sf::Color Weapon::GetHitboxColor()
+const sf::Color& Weapon::GetHitboxColor() const
 {
 	return _hitboxColor;
 }
 
-std::vector<sf::Vector2f> Weapon::GetHitbox()
+std::vector<sf::Vector2f> Weapon::GetHitbox() const
 {
 	auto &transform = getTransform();
 	std::vector<sf::Vector2f> output;
@@ -88,17 +88,17 @@ std::vector<sf::Vector2f> Weapon::GetHitbox()
 	return output;
 }
 
-WeaponType Weapon::GetWeaponType()
+const WeaponType& Weapon::GetWeaponType() const
 {
 	return _weaponType;
 }
 
-sf::Vector2f Weapon::GetRaycastHitpoint()
+const sf::Vector2f& Weapon::GetRaycastHitpoint() const
 {
 	return _raycast[1].position;
 }
 
-sf::Color Weapon::GetRaycastColor()
+const sf::Color& Weapon::GetRaycastColor() const
 {
 	return _raycastColor;
 }
@@ -128,7 +128,7 @@ void Weapon::SetHitboxVisibility(bool visibility)
 	_showHitbox = visibility;
 }
 
-void Weapon::SetHitboxColor(sf::Color color)
+void Weapon::SetHitboxColor(const sf::Color& color)
 {
 	_hitboxColor = color;
 
@@ -136,13 +136,13 @@ void Weapon::SetHitboxColor(sf::Color color)
 		_hitbox[i].color = _hitboxColor;
 }
 
-void Weapon::SetRaycastHitpoint(sf::Vector2f point)
+void Weapon::SetRaycastHitpoint(const sf::Vector2f& point)
 {
 	_raycast[0].position = getPosition();
 	_raycast[1].position = point;
 }
 
-void Weapon::SetRaycastColor(sf::Color color)
+void Weapon::SetRaycastColor(const sf::Color& color)
 {
 	_raycastColor = color;
 	_raycast[0].color = _raycastColor;
@@ -164,12 +164,12 @@ sf::TransformAnimation* Weapon::GetTransformAnimation()
 	return &_attackAnimation;
 }
 
-void Weapon::SetAnimation(sf::Animation animation)
+void Weapon::SetAnimation(const sf::Animation& animation)
 {
 	_weapon = animation;
 }
 
-void Weapon::SetTransformAnimation(sf::TransformAnimation transformAnimation)
+void Weapon::SetTransformAnimation(const sf::TransformAnimation& transformAnimation)
 {
 	_attackAnimation = transformAnimation;
 }

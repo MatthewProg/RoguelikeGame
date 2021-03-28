@@ -51,7 +51,7 @@ void sf::Animation::SetTexture(sf::Texture* texture)
 	_texture = texture;
 }
 
-void sf::Animation::SetFrameColor(unsigned int frame, sf::Color color)
+void sf::Animation::SetFrameColor(unsigned int frame, const sf::Color& color)
 {
 	if (frame >= _frameColor.size())
 		return;
@@ -76,59 +76,59 @@ void sf::Animation::SetLoop(bool loop)
 	_loop = loop;
 }
 
-const sf::Texture* sf::Animation::GetTexture()
+const sf::Texture* sf::Animation::GetTexture() const
 {
 	return _texture;
 }
 
-sf::Color sf::Animation::GetFrameColor(unsigned int frame)
+sf::Color sf::Animation::GetFrameColor(unsigned int frame) const
 {
 	if(frame >= _frameColor.size())
 		return sf::Color();
 	return _frameColor[frame];
 }
 
-bool sf::Animation::GetHorizontalFlip()
+bool sf::Animation::GetHorizontalFlip() const
 {
 	return _switchLeftRight;
 }
 
-bool sf::Animation::GetVerticalFlip()
+bool sf::Animation::GetVerticalFlip() const
 {
 	return _switchUpDown;
 }
 
-bool sf::Animation::GetLoop()
+bool sf::Animation::GetLoop() const
 {
 	return _loop;
 }
 
-bool sf::Animation::IsPaused()
+bool sf::Animation::IsPaused() const
 {
 	return _paused;
 }
 
-bool sf::Animation::IsEnded()
+bool sf::Animation::IsEnded() const
 {
 	return _ended;
 }
 
-bool sf::Animation::IsFrameSwitched()
+bool sf::Animation::IsFrameSwitched() const
 {
 	return _frameSwitched;
 }
 
-bool sf::Animation::IsTextureRepeated()
+bool sf::Animation::IsTextureRepeated() const
 {
 	return _texture->isRepeated();
 }
 
-bool sf::Animation::IsTextureSmooth()
+bool sf::Animation::IsTextureSmooth() const
 {
 	return _texture->isSmooth();
 }
 
-sf::IntRect sf::Animation::GetCurrentRect()
+const sf::IntRect& sf::Animation::GetCurrentRect() const
 {
 	return _rectFrames[_currentFrame];
 }
@@ -230,7 +230,7 @@ void sf::Animation::Tick(bool tick)
 	}
 }
 
-void sf::Animation::AddNewFrame(sf::IntRect rect)
+void sf::Animation::AddNewFrame(const sf::IntRect& rect)
 {
 	_rectFrames.push_back(rect);
 	_frameColor.push_back(sf::Color(255, 255, 255, 255));
@@ -249,12 +249,12 @@ void sf::Animation::RemoveAllFrames()
 	_frameColor.clear();
 }
 
-size_t sf::Animation::GetNoOfFrames()
+size_t sf::Animation::GetNoOfFrames() const
 {
 	return _rectFrames.size();
 }
 
-void sf::Animation::SetFrames(std::vector<sf::IntRect> frames)
+void sf::Animation::SetFrames(const std::vector<sf::IntRect>& frames)
 {
 	_rectFrames.clear();
 	_rectFrames = frames;
@@ -291,17 +291,17 @@ void sf::Animation::SetAnimationSpeed(float speed)
 	_animationSpeed = speed;
 }
 
-unsigned int sf::Animation::GetChangeFrameEvery()
+unsigned int sf::Animation::GetChangeFrameEvery() const
 {
 	return _changeEveryTicks;
 }
 
-float sf::Animation::GetAnimationSpeed()
+float sf::Animation::GetAnimationSpeed() const
 {
 	return _animationSpeed;
 }
 
-sf::FloatRect sf::Animation::GetGlobalBounds()
+sf::FloatRect sf::Animation::GetGlobalBounds() const
 {
 	sf::FloatRect output;
 	output.height = (float)_rectFrames[_currentFrame].height;
@@ -311,7 +311,7 @@ sf::FloatRect sf::Animation::GetGlobalBounds()
 	return getTransform().transformRect(output);
 }
 
-sf::FloatRect sf::Animation::GetLocalBounds()
+sf::FloatRect sf::Animation::GetLocalBounds() const
 {
 	return sf::FloatRect(0, 0, (float)_rectFrames[_currentFrame].width, (float)_rectFrames[_currentFrame].height);
 }

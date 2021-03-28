@@ -20,7 +20,7 @@ public:
 		_ptr = ptr;
 	}
 
-	void Rise(sf::Event::KeyEvent ev)
+	void Rise(const sf::Event::KeyEvent& ev)
 	{
 		EventKeyMapKey key;
 		key.alt = ev.alt;
@@ -39,7 +39,7 @@ public:
 		}
 	}
 
-	void NewOn(sf::Event::KeyEvent ev, void (T::* rise)())
+	void NewOn(const sf::Event::KeyEvent& ev, void (T::* rise)())
 	{
 		EventKeyMapKey key;
 		key.alt = ev.alt;
@@ -50,7 +50,7 @@ public:
 		_events[key].push_back(rise);
 	}
 
-	void DeleteOn(sf::Event::KeyEvent ev, void (T::* del)())
+	void DeleteOn(const sf::Event::KeyEvent& ev, void (T::* del)())
 	{
 		EventKeyMapKey key;
 		key.alt = ev.alt;
@@ -68,7 +68,7 @@ public:
 		}
 	}
 
-	void ClearOn(sf::Event::KeyEvent ev)
+	void ClearOn(const sf::Event::KeyEvent& ev)
 	{
 		EventKeyMapKey key;
 		key.alt = ev.alt;

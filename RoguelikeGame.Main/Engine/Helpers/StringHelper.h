@@ -6,6 +6,6 @@
  class StringHelper
 {
 public:
-	static std::string ReplaceAll(std::string input, std::string replace, std::string value);
+	static std::string ReplaceAll(const std::string& input, const std::string& replace, const std::string& value);
 };
 

@@ -61,17 +61,17 @@ namespace sf
 			_currentAnimation = &((*it).second);
 	}
 
-	void AnimationContainer::SetStateAnimation(std::string state, sf::Animation animation)
+	void AnimationContainer::SetStateAnimation(const std::string& state, const sf::Animation& animation)
 	{
 		_animationStates[state] = animation;
 	}
 
-	void AnimationContainer::SetAnimationStates(std::map<std::string, sf::Animation> animationStates)
+	void AnimationContainer::SetAnimationStates(const std::map<std::string, sf::Animation>& animationStates)
 	{
 		_animationStates = animationStates;
 	}
 
-	void AnimationContainer::SetCurrentState(std::string state)
+	void AnimationContainer::SetCurrentState(const std::string& state)
 	{
 		if (_currentState == state) return;
 
@@ -91,7 +91,7 @@ namespace sf
 		}
 	}
 
-	void AnimationContainer::SmoothStateChange(std::string state)
+	void AnimationContainer::SmoothStateChange(const std::string& state)
 	{
 		if(_smoothChangeState == "") //Not overriding real one
 			_smoothChangePrevLoop = _currentAnimation->GetLoop();
@@ -100,7 +100,7 @@ namespace sf
 		_currentAnimation->SetLoop(false);
 	}
 
-	void AnimationContainer::RenameState(std::string oldName, std::string newName)
+	void AnimationContainer::RenameState(const std::string& oldName, const std::string& newName)
 	{
 		auto it = _animationStates.find(oldName);
 		if (it != _animationStates.end()) {
@@ -112,7 +112,7 @@ namespace sf
 		}
 	}
 
-	void AnimationContainer::RemoveState(std::string state)
+	void AnimationContainer::RemoveState(const std::string& state)
 	{
 		_animationStates.erase(state);
 		if (_currentState == state)
@@ -228,7 +228,7 @@ namespace sf
 			iter->second.SetVerticalFlip(flip);
 	}
 
-	sf::Animation* AnimationContainer::GetStateAnimation(std::string state)
+	sf::Animation* AnimationContainer::GetStateAnimation(const std::string& state)
 	{
 		if (_animationStates.size() > 0 && _animationStates.count(state))
 			return &_animationStates[state];
@@ -241,7 +241,7 @@ namespace sf
 		return &_animationStates;
 	}
 
-	std::string AnimationContainer::GetCurrentState()
+	const std::string& AnimationContainer::GetCurrentState() const
 	{
 		return _currentState;
 	}

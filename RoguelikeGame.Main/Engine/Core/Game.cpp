@@ -121,17 +121,17 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	//Enemies
 	_enemies.SetPlayer(_player);
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	/*_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));*/
 	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	/*_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));*/
 	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
-	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	/*_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
 	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
-	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
 
 	//Sounds
 	_sounds.LoadFromFile("entities_dmg4", "./res/sounds/entities/dmg4.wav");

@@ -23,7 +23,7 @@ public:
 	~MeleeWeapon();
 
 	// Inherited via Weapon
-	bool CanAttack() override;
+	bool CanAttack() const override;
 	void Attack() override;
 	void Update(bool tick, float deltaTime) override;
 	virtual Weapon* clone() override;
@@ -31,8 +31,8 @@ public:
 	void SetHitboxAccuracy(unsigned short steps);
 
 	//Weapon getters
-	float GetWeaponAngle();
-	float GetWeaponRange();
+	float GetWeaponAngle() const;
+	float GetWeaponRange() const;
 
 	//Weapon setteres
 	void SetWeaponAngle(float angle);

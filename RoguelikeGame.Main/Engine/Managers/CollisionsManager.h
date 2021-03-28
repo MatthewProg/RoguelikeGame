@@ -33,36 +33,36 @@ public:
 	~CollisionsManager();
 
 	template<typename T>
-	void AddMap(MapLayerModel<T> map, T block);
+	void AddMap(const MapLayerModel<T>& map, const T& block);
 
 	void GenerateCommonMap();
 	void CovertTilesIntoEdges();
 
 	//Manager setters
-	void SetCollisionLinesColor(sf::Color color);
+	void SetCollisionLinesColor(const sf::Color& color);
 	void SetCollisionLinesVisibility(bool visible);
 	void ToggleCollisionLinesVisibility();
 
 	//Manager getters
-	sf::Color GetCollisionLinesColor();
-	bool GetCollisionLinesVisibility();
+	sf::Color GetCollisionLinesColor() const;
+	bool GetCollisionLinesVisibility() const;
 
 	//Collision methods
-	bool CheckTileCollision(const sf::FloatRect& rect);
-	bool CheckCircleCollision(const sf::Vector2f& center, float radius);
-	sf::Vector2f GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius);
-	sf::Vector2f GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos);
-	sf::Vector2f GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange);
-	bool RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint);
+	bool CheckTileCollision(const sf::FloatRect& rect) const;
+	bool CheckCircleCollision(const sf::Vector2f& center, float radius) const;
+	sf::Vector2f GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius) const;
+	sf::Vector2f GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos) const;
+	sf::Vector2f GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange) const;
+	bool RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint) const;
 
 	//Var access methods
-	std::vector<MapLayerModel<bool>>* GetStoredMaps();
-	MapLayerModel<bool>* GetCommonMap();
-	std::vector<std::tuple<sf::Vector2f, sf::Vector2f>> GetEdges();
+	const std::vector<MapLayerModel<bool>>* GetStoredMaps() const;
+	const MapLayerModel<bool>* GetCommonMap() const;
+	const std::vector<std::tuple<sf::Vector2f, sf::Vector2f>>* GetEdges() const;
 };
 
 	template<typename T>
-	inline void CollisionsManager::AddMap(MapLayerModel<T> map, T block)
+	inline void CollisionsManager::AddMap(const MapLayerModel<T>& map, const T& block)
 	{
 		MapLayerModel<bool> blocked;
 		blocked.id = map.id;

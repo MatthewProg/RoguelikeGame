@@ -278,7 +278,7 @@ Paths PathfindingManager::GetDijkstrasPath(const sf::Vector2f& startPos, Collisi
 	return output;
 }
 
-sf::Vector2f PathfindingManager::GetClosestNode(const Paths paths, const sf::Vector2f& startPos, CollisionsManager* collisions)
+sf::Vector2f PathfindingManager::GetClosestNode(const Paths& paths, const sf::Vector2f& startPos, CollisionsManager* collisions)
 {
 	std::list<std::tuple<sf::Vector2f, float>> nodesDistances;
 	for (auto &p : paths)
@@ -305,7 +305,7 @@ sf::Vector2f PathfindingManager::GetClosestNode(const Paths paths, const sf::Vec
 	return sf::Vector2f(INFINITY, INFINITY);
 }
 
-sf::Vector2f PathfindingManager::GetClosestVisibleNodeTo(const Paths paths, const sf::Vector2f& startPos, const sf::Vector2f& endPos, CollisionsManager* collisions)
+sf::Vector2f PathfindingManager::GetClosestVisibleNodeTo(const Paths& paths, const sf::Vector2f& startPos, const sf::Vector2f& endPos, CollisionsManager* collisions)
 {
 	std::list<std::tuple<sf::Vector2f, float>> nodesDistances;
 	for (auto& p : paths)

@@ -58,7 +58,7 @@ void Button::RedrawElement()
 	_render.display();
 }
 
-void Button::ProcessEvent(sf::Event* ev, sf::Vector2f mousePos)
+void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
 	std::string newState = "none";
 	if (_mouseInput == true)
@@ -165,7 +165,7 @@ Button::~Button()
 {
 }
 
-void Button::ForceState(std::string state)
+void Button::ForceState(const std::string& state)
 {
 	_forcedState = state;
 	RedrawElement();
@@ -177,25 +177,25 @@ void Button::ResetForcedState()
 	RedrawElement();
 }
 
-std::string Button::GetCurrentState()
+const std::string& Button::GetCurrentState() const
 {
 	if (_forcedState != "") return _forcedState;
 	else return _currentState;
 }
 
-bool Button::IsForcingState()
+bool Button::IsForcingState() const
 {
 	return (_forcedState != "");
 }
 
-void Button::AddState(std::string name, sf::Text textState, std::string textureName, sf::FloatRect backgroundRect)
+void Button::AddState(const std::string& name, const sf::Text& textState, const std::string& textureName, const sf::FloatRect& backgroundRect)
 {
 	_textStates[name] = textState;
 	_backgroundStates[name] = std::tuple<std::string, sf::FloatRect>(textureName, backgroundRect);
 	RedrawElement();
 }
 
-void Button::RemoveState(std::string name)
+void Button::RemoveState(const std::string& name)
 {
 	auto found = _textStates.find(name);
 	if (found != _textStates.end())
@@ -209,7 +209,7 @@ void Button::RemoveState(std::string name)
 	if (_currentState == name) _currentState = "none";
 }
 
-sf::Text* Button::EditTextState(std::string name)
+sf::Text* Button::EditTextState(const std::string& name)
 {
 	auto found = _textStates.find(name);
 	if (found != _textStates.end())
@@ -217,7 +217,7 @@ sf::Text* Button::EditTextState(std::string name)
 	return nullptr;
 }
 
-std::tuple<std::string, sf::FloatRect>* Button::EditBackgroundState(std::string name)
+std::tuple<std::string, sf::FloatRect>* Button::EditBackgroundState(const std::string& name)
 {
 	auto found = _backgroundStates.find(name);
 	if (found != _backgroundStates.end())
@@ -225,24 +225,24 @@ std::tuple<std::string, sf::FloatRect>* Button::EditBackgroundState(std::string 
 	return nullptr;
 }
 
-bool Button::Clicked()
+bool Button::Clicked() const
 {
 	return _lmbUp;
 }
 
-void Button::SetBackgroundSize(sf::Vector2f size)
+void Button::SetBackgroundSize(const sf::Vector2f& size)
 {
 	_backgroundSize = size;
 	RedrawElement();
 }
 
-void Button::ApplyText(std::string string)
+void Button::ApplyText(const std::string& string)
 {
 	for (auto& t : _textStates)
 		t.second.setString(string);
 }
 
-void Button::ApplyFont(sf::Font* font)
+void Button::ApplyFont(const sf::Font* font)
 {
 	for (auto& t : _textStates)
 		t.second.setFont(*font);
@@ -290,7 +290,7 @@ void Button::ApplyOutlineThickness(float thickness)
 		t.second.setOutlineThickness(thickness);
 }
 
-sf::Vector2f Button::GetBackgroundSize()
+const sf::Vector2f& Button::GetBackgroundSize() const
 {
 	return _backgroundSize;
 }

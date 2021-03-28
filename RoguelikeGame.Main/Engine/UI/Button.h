@@ -22,21 +22,21 @@ public:
 	Button(Button& other);
 	~Button();
 
-	void ForceState(std::string state);
+	void ForceState(const std::string& state);
 	void ResetForcedState();
-	std::string GetCurrentState();
-	bool IsForcingState();
+	const std::string& GetCurrentState() const;
+	bool IsForcingState() const;
 
-	void AddState(std::string name, sf::Text textState, std::string textureName, sf::FloatRect backgroundRect);
-	void RemoveState(std::string name);
-	sf::Text* EditTextState(std::string name);
-	std::tuple<std::string, sf::FloatRect>* EditBackgroundState(std::string name);
+	void AddState(const std::string& name, const sf::Text& textState, const std::string& textureName, const sf::FloatRect& backgroundRect);
+	void RemoveState(const std::string& name);
+	sf::Text* EditTextState(const std::string& name);
+	std::tuple<std::string, sf::FloatRect>* EditBackgroundState(const std::string& name);
 
-	bool Clicked();
+	bool Clicked() const;
 
-	void SetBackgroundSize(sf::Vector2f size);
-	void ApplyText(std::string string);
-	void ApplyFont(sf::Font* font);
+	void SetBackgroundSize(const sf::Vector2f& size);
+	void ApplyText(const std::string& string);
+	void ApplyFont(const sf::Font* font);
 	void ApplyCharacterSize(uint32_t size);
 	void ApplyLineSpacing(float spacing);
 	void ApplyLetterSpacing(float spacing);
@@ -45,12 +45,12 @@ public:
 	void ApplyOutlineColor(const sf::Color& color);
 	void ApplyOutlineThickness(float thickness);
 
-	sf::Vector2f GetBackgroundSize();
+	const sf::Vector2f& GetBackgroundSize() const;
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
 	virtual void Update(bool, float) override;
 	virtual void RedrawElement() override;
-	virtual void ProcessEvent(sf::Event* ev, sf::Vector2f mousePos) override;
+	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 };
 

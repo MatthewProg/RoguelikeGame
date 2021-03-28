@@ -14,7 +14,7 @@ public:
 	~AnimationBox();
 
 	//Setters
-	void SetAnimation(sf::Animation anim);
+	void SetAnimation(const sf::Animation& anim);
 
 	//Getters
 	sf::Animation* GetAnimation();
@@ -23,6 +23,6 @@ public:
 	virtual UIElement* clone() override;
 	virtual void Update(bool tick, float) override;
 	virtual void RedrawElement() override;
-	virtual void ProcessEvent(sf::Event*, sf::Vector2f) override;
+	virtual void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
 };
 

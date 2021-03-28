@@ -212,12 +212,12 @@ void CollisionsManager::CovertTilesIntoEdges()
 		}
 }
 
-std::vector<std::tuple<sf::Vector2f, sf::Vector2f>> CollisionsManager::GetEdges()
+const std::vector<std::tuple<sf::Vector2f, sf::Vector2f>>* CollisionsManager::GetEdges() const
 {
-	return _edges;
+	return &_edges;
 }
 
-void CollisionsManager::SetCollisionLinesColor(sf::Color color)
+void CollisionsManager::SetCollisionLinesColor(const sf::Color& color)
 {
 	_linesColor = color;
 	for (size_t i = 0; i < _edgesLines.getVertexCount(); i++)
@@ -236,37 +236,37 @@ void CollisionsManager::ToggleCollisionLinesVisibility()
 	SetCollisionLinesVisibility(!_showCollisionLines);
 }
 
-sf::Color CollisionsManager::GetCollisionLinesColor()
+sf::Color CollisionsManager::GetCollisionLinesColor() const
 {
 	return _linesColor;
 }
 
-bool CollisionsManager::GetCollisionLinesVisibility()
+bool CollisionsManager::GetCollisionLinesVisibility() const
 {
 	return _showCollisionLines;
 }
 
-bool CollisionsManager::CheckTileCollision(const sf::FloatRect& rect)
+bool CollisionsManager::CheckTileCollision(const sf::FloatRect& rect) const
 {
 	return CollisionHelper::CheckTileCollision(rect, &_sumMap);
 }
 
-bool CollisionsManager::CheckCircleCollision(const sf::Vector2f& center, float radius)
+bool CollisionsManager::CheckCircleCollision(const sf::Vector2f& center, float radius) const
 {
 	return CollisionHelper::CheckTileCollision(center, radius, &_sumMap);
 }
 
-sf::Vector2f CollisionsManager::GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius)
+sf::Vector2f CollisionsManager::GetCircleLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius) const
 {
 	return CollisionHelper::GetTileLimitPosition(startPos, endPos, radius, &_sumMap);
 }
 
-sf::Vector2f CollisionsManager::GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos)
+sf::Vector2f CollisionsManager::GetLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos) const
 {
 	return CollisionHelper::GetTileLimitPosition(startPos, endPos, &_sumMap);
 }
 
-sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange)
+sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float angle, float raycastRange) const
 {
 	auto endPoint = MathHelper::GetPointFromAngle(center, angle, raycastRange);
 
@@ -285,7 +285,7 @@ sf::Vector2f CollisionsManager::GetRayHitpoint(const sf::Vector2f& center, float
 	return closest;
 }
 
-bool CollisionsManager::RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint)
+bool CollisionsManager::RaycastHitsPoint(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float* distanceToHitpoint) const
 {
 	float precision = 0.05F;
 	auto angle = MathHelper::GetAngleBetweenPoints(startPos, endPos);
@@ -295,12 +295,12 @@ bool CollisionsManager::RaycastHitsPoint(const sf::Vector2f& startPos, const sf:
 	return (*distanceToHitpoint >= range - precision && *distanceToHitpoint <= range + precision);
 }
 
-std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps()
+const std::vector<MapLayerModel<bool>>* CollisionsManager::GetStoredMaps() const
 {
 	return &_maps;
 }
 
-MapLayerModel<bool>* CollisionsManager::GetCommonMap()
+const MapLayerModel<bool>* CollisionsManager::GetCommonMap() const
 {
 	return &_sumMap;
 }

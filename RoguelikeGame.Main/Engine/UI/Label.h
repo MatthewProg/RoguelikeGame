@@ -16,20 +16,20 @@ public:
 	~Label();
 
 	//Text getters
-	std::string GetText();
-	const sf::Font* GetFont();
-	uint32_t GetCharacterSize();
-	float GetLineSpacing();
-	float GetLetterSpacing();
-	uint32_t GetStyle();
-	const sf::Color& GetFillColor();
-	const sf::Color& GetOutlineColor();
-	float GetOutlineThickness();
-	sf::Vector2f FindCharacterPos(size_t index);
+	std::string GetText() const;
+	const sf::Font* GetFont() const;
+	uint32_t GetCharacterSize() const;
+	float GetLineSpacing() const;
+	float GetLetterSpacing() const;
+	uint32_t GetStyle() const;
+	const sf::Color& GetFillColor() const;
+	const sf::Color& GetOutlineColor() const;
+	float GetOutlineThickness() const;
+	sf::Vector2f FindCharacterPos(size_t index) const;
 
 	//Text setters
-	void SetText(std::string string);
-	void SetFont(sf::Font* font);
+	void SetText(const std::string& string);
+	void SetFont(const sf::Font& font);
 	void SetCharacterSize(uint32_t size);
 	void SetLineSpacing(float spacing);
 	void SetLetterSpacing(float spacing);
@@ -42,7 +42,7 @@ public:
 	virtual UIElement* clone() override;
 	virtual void Update(bool, float) override;
 	virtual void RedrawElement() override;
-	virtual void ProcessEvent(sf::Event*, sf::Vector2f) override;
-	virtual sf::FloatRect GetGlobalBounds() override;
+	virtual void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
+	virtual sf::FloatRect GetGlobalBounds() const override;
 };
 

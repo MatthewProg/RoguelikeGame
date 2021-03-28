@@ -22,12 +22,12 @@ sf::Collision::~Collision()
 {
 }
 
-sf::FloatRect sf::Collision::GetCollisionBox()
+sf::FloatRect sf::Collision::GetCollisionBox() const
 {
 	return _hitboxRecangle.getGlobalBounds();
 }
 
-sf::FloatRect sf::Collision::GetCollisionBoxOffset()
+sf::FloatRect sf::Collision::GetCollisionBoxOffset() const
 {
 	auto out = _hitboxOffset;
 	auto scale = _hitboxRecangle.getScale();
@@ -38,37 +38,37 @@ sf::FloatRect sf::Collision::GetCollisionBoxOffset()
 	return out;
 }
 
-sf::RectangleShape sf::Collision::GetHitboxRectangle()
+const sf::RectangleShape& sf::Collision::GetHitboxRectangle() const
 {
 	return _hitboxRecangle;
 }
 
-sf::Color sf::Collision::GetHitboxColor()
+const sf::Color& sf::Collision::GetHitboxColor() const
 {
 	return _hitboxRecangle.getFillColor();
 }
 
-sf::Color sf::Collision::GetHitboxOutlineColor()
+const sf::Color& sf::Collision::GetHitboxOutlineColor() const
 {
 	return _hitboxRecangle.getOutlineColor();
 }
 
-float sf::Collision::GetHitboxOutlineThickness()
+float sf::Collision::GetHitboxOutlineThickness() const
 {
 	return _hitboxRecangle.getOutlineThickness();
 }
 
-bool sf::Collision::GetHitboxVisibility()
+bool sf::Collision::GetHitboxVisibility() const
 {
 	return _showHitbox;
 }
 
-sf::Vector2f sf::Collision::GetHitboxPosition()
+const sf::Vector2f& sf::Collision::GetHitboxPosition() const
 {
 	return _hitboxRecangle.getPosition();
 }
 
-void sf::Collision::SetCollisionBoxOffset(sf::FloatRect rect)
+void sf::Collision::SetCollisionBoxOffset(const sf::FloatRect& rect)
 {
 	auto pos = _hitboxRecangle.getPosition();
 	auto scale = _hitboxRecangle.getScale();
@@ -99,7 +99,7 @@ void sf::Collision::SetHitboxVisibility(bool visible)
 	_showHitbox = visible;
 }
 
-void sf::Collision::SetHitboxPosition(sf::Vector2f pos)
+void sf::Collision::SetHitboxPosition(const sf::Vector2f& pos)
 {
 	auto scale = _hitboxRecangle.getScale();
 	_hitboxRecangle.setPosition(pos.x + (_hitboxOffset.left * scale.x), pos.y + (_hitboxOffset.top * scale.y));

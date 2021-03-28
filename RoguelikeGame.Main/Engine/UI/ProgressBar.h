@@ -27,31 +27,31 @@ public:
 	void SetMaxValue(float maxValue);
 
 	//Var getters
-	float GetCurrentValue();
-	float GetMaxValue();
+	float GetCurrentValue() const;
+	float GetMaxValue() const;
 
 	//Graphics setters
-	void AddProgressBarStep(sf::FloatRect step, std::string textureName);
-	void AddBackgroundLayer(sf::FloatRect layer, std::string textureName);
+	void AddProgressBarStep(const sf::FloatRect& step, const std::string& textureName);
+	void AddBackgroundLayer(const sf::FloatRect& layer, const std::string& textureName);
 	void ResetProgressBarSteps();
 	void ResetBackgroundLayers();
-	void ReplaceProgressBarStep(size_t index, std::tuple<sf::FloatRect, std::string> newTuple);
-	void ReplaceBackgroundLayer(size_t index, std::tuple<sf::FloatRect, std::string> newTuple);
+	void ReplaceProgressBarStep(size_t index, const std::tuple<sf::FloatRect, std::string>& newTuple);
+	void ReplaceBackgroundLayer(size_t index, const std::tuple<sf::FloatRect, std::string>& newTuple);
 	void RemoveProgressBarStep(size_t index);
 	void RemoveBackgroundLayer(size_t index);
-	void SetProgressBarStepsPos(sf::Vector2f pos);
+	void SetProgressBarStepsPos(const sf::Vector2f& pos);
 
 	//Graphics getters
-	size_t GetNoOfProgressBarSteps();
-	size_t GetNoOfBackgroundLayers();
-	std::tuple<sf::FloatRect, std::string> GetProgressBarStep(size_t index);
-	std::tuple<sf::FloatRect, std::string> GetBackgroundLayer(size_t index);
-	sf::Vector2f GetProgressBarStepsPos();
-	sf::FloatRect GetProgressBarStepsGlobalBounds();
+	size_t GetNoOfProgressBarSteps() const;
+	size_t GetNoOfBackgroundLayers() const;
+	std::tuple<sf::FloatRect, std::string> GetProgressBarStep(size_t index) const;
+	std::tuple<sf::FloatRect, std::string> GetBackgroundLayer(size_t index) const;
+	const sf::Vector2f& GetProgressBarStepsPos() const;
+	sf::FloatRect GetProgressBarStepsGlobalBounds() const;
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
 	virtual void RedrawElement() override;
 	virtual void Update(bool, float) override;
-	virtual void ProcessEvent(sf::Event* ev, sf::Vector2f mousePos) override;
+	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 };

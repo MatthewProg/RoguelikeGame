@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdlib>
-
 #include "../Managers/PathfindingManager.h"
 #include "../Managers/CollisionsManager.h"
 #include "../Managers/EnemiesManager.h"
@@ -38,23 +36,23 @@ public:
 
 	void Update(float deltaTime);
 	void ClearEnemiesPaths();
-	void MoveStraightToPoint(Enemy* source, sf::Vector2f point, float deltaTime);
-	float GetBestAngle(float gotoAngle, std::vector<float> avoidAngle, uint8_t precision = 8);
+	void MoveStraightToPoint(Enemy* source, const sf::Vector2f& point, float deltaTime);
+	float GetBestAngle(float gotoAngle, const std::vector<float>& avoidAngle, uint8_t precision = 8);
 
 	//EnemiesAI setters
 	void SetPathfindVisibility(bool visible);
-	void SetPathfindColor(sf::Color color);
+	void SetPathfindColor(const sf::Color& color);
 
 	//EnemiesAI getters
-	bool GetPathfindVisibility();
-	sf::Color GetPathfindColor();
+	bool GetPathfindVisibility() const;
+	sf::Color GetPathfindColor() const;
 
 	void TogglePathfindingVisibility();
 
 	void SetTarget(Entity* target);
 	void SetEnemiesManager(EnemiesManager* manager);
 	void SetCollisionsManager(CollisionsManager* manager);
-	void SetPathfindPoints(std::vector<sf::Vector2f> points);
+	void SetPathfindPoints(const std::vector<sf::Vector2f>& points);
 
 };
 

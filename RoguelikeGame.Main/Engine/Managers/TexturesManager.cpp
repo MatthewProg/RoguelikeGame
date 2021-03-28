@@ -70,7 +70,7 @@ void TexturesManager::LoadFromStream(const std::string& name, sf::InputStream& s
 		_logger->Log(Logger::LogType::INFO, message + "OK");
 }
 
-sf::Texture* TexturesManager::GetTexture(std::string name)
+sf::Texture* TexturesManager::GetTexture(const std::string& name)
 {
 	auto found = _textures.find(name);
 	if (found != _textures.end())
@@ -79,7 +79,7 @@ sf::Texture* TexturesManager::GetTexture(std::string name)
 		return nullptr;
 }
 
-bool TexturesManager::Exists(std::string name)
+bool TexturesManager::Exists(const std::string& name) const
 {
 	if (_textures.find(name) != _textures.end())
 		return true;

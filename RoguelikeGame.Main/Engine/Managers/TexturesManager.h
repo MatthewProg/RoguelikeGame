@@ -23,9 +23,9 @@ public:
 	void LoadFromMemory(const std::string& name, const void* data, size_t size, const sf::IntRect& area = sf::IntRect());
 	void LoadFromStream(const std::string& name, sf::InputStream& stream, const sf::IntRect& area = sf::IntRect());
 
-	sf::Texture* GetTexture(std::string name);
+	sf::Texture* GetTexture(const std::string& name);
 	
-	bool Exists(std::string name);
+	bool Exists(const std::string& name) const;
 
 	void SetExpectedSize(unsigned short size);
 

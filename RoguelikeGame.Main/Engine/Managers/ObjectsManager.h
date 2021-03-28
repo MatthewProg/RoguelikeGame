@@ -55,19 +55,19 @@ private:
 	Scene* CreateSceneGameUI();
 
 public:
-	MeleeWeapon* GetMeleeWeapon(std::string name);
-	HitboxWeapon* GetHitboxWeapon(std::string name);
-	Enemy* GetEnemy(std::string name);
-	Player* GetPlayer(std::string name);
+	MeleeWeapon* GetMeleeWeapon(const std::string& name);
+	HitboxWeapon* GetHitboxWeapon(const std::string& name);
+	Enemy* GetEnemy(const std::string& name);
+	Player* GetPlayer(const std::string& name);
 
-	ProgressBar* GetProgressBar(std::string name);
-	Button* GetButton(std::string name);
-	Scene* GetScene(std::string name);
+	ProgressBar* GetProgressBar(const std::string& name);
+	Button* GetButton(const std::string& name);
+	Scene* GetScene(const std::string& name);
 
 	void SetTexturesManager(TexturesManager* textures);
 	void SetFontsManager(FontsManager* fonts);
 	void SetSoundsManager(SoundsManager* sounds);
-	void SetWindowSize(sf::Vector2u size);
+	void SetWindowSize(const sf::Vector2u& size);
 
 	ObjectsManager();
 	~ObjectsManager();

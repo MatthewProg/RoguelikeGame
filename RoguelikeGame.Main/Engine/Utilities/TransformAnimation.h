@@ -36,30 +36,30 @@ namespace sf
 		void SetTarget(sf::Transformable* target);
 		void Update(float deltaTime);
 
-		void AddTransform(sf::Transformable transform, uint16_t ticks);
-		void AddTransform(std::tuple<sf::Transformable, uint16_t> tuple);
+		void AddTransform(const sf::Transformable& transform, uint16_t ticks);
+		void AddTransform(const std::tuple<sf::Transformable, uint16_t>& tuple);
 		void RemoveTransform(uint16_t transformIndex);
 		void ClearTransforms();
 
-		void SetTransformTuple(uint16_t transformIndex, std::tuple<sf::Transformable, uint16_t> tuple);
-		void SetTransformTransform(uint16_t transformIndex, sf::Transformable transform);
+		void SetTransformTuple(uint16_t transformIndex, const std::tuple<sf::Transformable, uint16_t>& tuple);
+		void SetTransformTransform(uint16_t transformIndex, const sf::Transformable& transform);
 		void SetTransformTime(uint16_t transformIndex, uint16_t ticks);
 		void SetLoop(bool loop);
 
-		std::tuple<sf::Transformable, uint16_t> GetTransformTuple(uint16_t transformIndex);
-		sf::Transformable GetTransformTransform(uint16_t transformIndex);
-		uint16_t GetTransformTicks(uint16_t transformIndex);
-		bool GetLoop();
+		const std::tuple<sf::Transformable, uint16_t>* GetTransformTuple(uint16_t transformIndex) const;
+		sf::Transformable GetTransformTransform(uint16_t transformIndex) const;
+		uint16_t GetTransformTicks(uint16_t transformIndex) const;
+		bool GetLoop() const;
 
-		uint16_t GetCurrentTransformIndex();
-		size_t GetNoOfTransforms();
+		uint16_t GetCurrentTransformIndex() const;
+		size_t GetNoOfTransforms() const;
 
 		void Start();
 		void Pause();
 		void Reset();
 
-		bool IsPlaying();
-		bool IsEnded();
+		bool IsPlaying() const;
+		bool IsEnded() const;
 	};
 }
 

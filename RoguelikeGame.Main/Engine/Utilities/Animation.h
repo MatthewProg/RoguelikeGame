@@ -54,11 +54,11 @@ namespace sf
 
 		void Tick(bool tick);
 		void UpdateVertices();
-		void AddNewFrame(sf::IntRect rect);
+		void AddNewFrame(const sf::IntRect& rect);
 		void RemoveFrame(int index);
 		void RemoveAllFrames();
-		size_t GetNoOfFrames();
-		void SetFrames(std::vector<sf::IntRect> frames);
+		size_t GetNoOfFrames() const;
+		void SetFrames(const std::vector<sf::IntRect>& frames);
 
 		sf::Transformable* ExternalTransform();
 
@@ -69,31 +69,31 @@ namespace sf
 		void SetChangeFrameEvery(unsigned int ticks);
 		void SetAnimationSpeed(float speed);
 		void SetTexture(sf::Texture* texture);
-		void SetFrameColor(unsigned int frame, sf::Color color);
+		void SetFrameColor(unsigned int frame, const sf::Color& color);
 		void SetHorizontalFlip(bool flip);
 		void SetVerticalFlip(bool flip);
 		void SetLoop(bool loop);
 
 		//Animation getters
-		unsigned int GetChangeFrameEvery();
-		float GetAnimationSpeed();
-		sf::IntRect GetCurrentRect();
-		const sf::Texture* GetTexture();
-		sf::Color GetFrameColor(unsigned int frame);
-		bool GetHorizontalFlip();
-		bool GetVerticalFlip();
-		bool GetLoop();
-		bool IsPaused();
-		bool IsEnded();
-		bool IsFrameSwitched();
+		unsigned int GetChangeFrameEvery() const;
+		float GetAnimationSpeed() const;
+		const sf::IntRect& GetCurrentRect() const;
+		const sf::Texture* GetTexture() const;
+		sf::Color GetFrameColor(unsigned int frame) const;
+		bool GetHorizontalFlip() const;
+		bool GetVerticalFlip() const;
+		bool GetLoop() const;
+		bool IsPaused() const;
+		bool IsEnded() const;
+		bool IsFrameSwitched() const;
 
 		//Texture getteres
-		bool IsTextureRepeated();
-		bool IsTextureSmooth();
+		bool IsTextureRepeated() const;
+		bool IsTextureSmooth() const;
 
 		//Frame getters
-		FloatRect GetGlobalBounds();
-		FloatRect GetLocalBounds();
+		FloatRect GetGlobalBounds() const;
+		FloatRect GetLocalBounds() const;
 	};
 }
 

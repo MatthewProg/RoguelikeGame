@@ -28,10 +28,10 @@ public:
 	void SetAI(bool enable);
 	void SetAvoidanceRadius(float radius);
 
-	bool GetTmpStop();
-	bool IsAttacking();
-	bool IsAiEnabled();
-	float GetAvoidanceRadius();
+	bool GetTmpStop() const;
+	bool IsAttacking() const;
+	bool IsAiEnabled() const;
+	float GetAvoidanceRadius() const;
 
 	//Weapon
 	Weapon* GetWeapon();

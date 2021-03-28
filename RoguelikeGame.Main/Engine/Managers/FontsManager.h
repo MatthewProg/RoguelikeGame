@@ -19,9 +19,9 @@ public:
 	void LoadFromMemory(const std::string& name, const void* data, size_t size);
 	void LoadFromStream(const std::string& name, sf::InputStream& stream);
 
-	sf::Font* GetFont(std::string name);
+	const sf::Font* GetFont(const std::string& name);
 
-	bool Exists(std::string name);
+	bool Exists(const std::string& name) const;
 
 	void SetExpectedSize(unsigned short size);
 };

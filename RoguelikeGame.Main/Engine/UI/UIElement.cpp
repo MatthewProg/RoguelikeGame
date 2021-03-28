@@ -30,7 +30,7 @@ UIElement::UIElement(UIElement& other)
 	setScale(other.getScale());
 }
 
-void UIElement::Init(sf::Vector2u size)
+void UIElement::Init(const sf::Vector2u& size)
 {
 	_render.create(size.x, size.y);
 	_render.clear(sf::Color::Transparent);
@@ -71,32 +71,32 @@ void UIElement::SetInFocus(bool isFocused)
 	_inFocus = isFocused;
 }
 
-bool UIElement::GetVisibility()
+bool UIElement::GetVisibility() const
 {
 	return _isVisible;
 }
 
-bool UIElement::GetMouseInput()
+bool UIElement::GetMouseInput() const
 {
 	return _mouseInput;
 }
 
-bool UIElement::GetKeyboardInput()
+bool UIElement::GetKeyboardInput() const
 {
 	return _keyboardInput;
 }
 
-bool UIElement::GetFocusOnHover()
+bool UIElement::GetFocusOnHover() const
 {
 	return _focusOnHover;
 }
 
-bool UIElement::GetInFocus()
+bool UIElement::GetInFocus() const
 {
 	return _inFocus;
 }
 
-sf::FloatRect UIElement::GetGlobalBounds()
+sf::FloatRect UIElement::GetGlobalBounds() const
 {
 	auto scale = getScale();
 	sf::Vector2f size((float)_render.getSize().x, (float)_render.getSize().y);
@@ -104,7 +104,7 @@ sf::FloatRect UIElement::GetGlobalBounds()
 	return sf::FloatRect(getPosition(), output);
 }
 
-sf::RenderTexture* UIElement::GetTexture()
+const sf::RenderTexture* UIElement::GetTexture() const
 {
 	return &_render;
 }

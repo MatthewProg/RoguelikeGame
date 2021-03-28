@@ -37,25 +37,25 @@ public:
 	~Entity();
 
 	void TakeDmg(float dmg);
-	bool IsDead();
+	bool IsDead() const;
 
 	sf::AnimationContainer* GetAnimations();
 	std::string GetState();
-	float GetHealth();
-	float GetSpeed();
-	float GetStep();
-	bool GetVisibility(); 
-	sf::Vector2f GetPosition();
-	float GetRotation();
-	sf::Vector2f GetOrigin();
-	sf::Vector2f GetScale();
-	sf::Transformable GetTransform();
-	sf::Color GetTakingDmgColor();
-	unsigned short GetTakingDmgColorTicks();
-	sf::FloatRect GetView();
+	float GetHealth() const;
+	float GetSpeed() const;
+	float GetStep() const;
+	bool GetVisibility() const; 
+	const sf::Vector2f& GetPosition() const;
+	float GetRotation() const;
+	const sf::Vector2f& GetOrigin() const;
+	const sf::Vector2f& GetScale() const;
+	const sf::Transformable& GetTransform() const;
+	const sf::Color& GetTakingDmgColor() const;
+	unsigned short GetTakingDmgColorTicks() const;
+	sf::FloatRect GetView() const;
 
-	void SetState(std::string state);
-	void SetAnimations(sf::AnimationContainer container);
+	void SetState(const std::string& state);
+	void SetAnimations(const sf::AnimationContainer& container);
 	void SetHealth(float health);
 	void SetSpeed(float speed);
 	void SetStep(float step);
@@ -68,13 +68,13 @@ public:
 	void SetScale(const sf::Vector2f& factors);
 	void SetScale(float factorX, float factorY);
 	void SetTransform(const sf::Transformable& trans);
-	void SetTakingDmgColor(const sf::Color color);
+	void SetTakingDmgColor(const sf::Color& color);
 	void SetTakingDmgColorTicks(unsigned short ticks);
-	void SetView(sf::FloatRect rect);
+	void SetView(const sf::FloatRect& rect);
 
 	void SetSoundsManager(SoundsManager* manager);
-	void AddTakingDmgSound(std::string sound);
+	void AddTakingDmgSound(const std::string& sound);
 	void ClearTakingDmgSounds();
-	std::vector<std::string>* GetTakingDmgSounds();
+	const std::vector<std::string>* GetTakingDmgSounds() const;
 };
 

@@ -32,17 +32,17 @@ namespace sf
 		void UpdateCurrentAnimationPtr();
 
 		//AnimationContainer setters
-		void SetStateAnimation(std::string state, sf::Animation animation);
-		void SetAnimationStates(std::map<std::string, sf::Animation> animationStates);
-		void SetCurrentState(std::string state);
-		void SmoothStateChange(std::string state);
-		void RenameState(std::string oldName, std::string newName);
-		void RemoveState(std::string state);
+		void SetStateAnimation(const std::string& state, const sf::Animation& animation);
+		void SetAnimationStates(const std::map<std::string, sf::Animation>& animationStates);
+		void SetCurrentState(const std::string& state);
+		void SmoothStateChange(const std::string& state);
+		void RenameState(const std::string& oldName, const std::string& newName);
+		void RemoveState(const std::string& state);
 
 		//AnimationContainer getters
-		sf::Animation* GetStateAnimation(std::string state);
+		sf::Animation* GetStateAnimation(const std::string& state);
 		std::map<std::string, sf::Animation>* GetAnimationStates();
-		std::string GetCurrentState();
+		const std::string& GetCurrentState() const;
 
 		//Animation setters
 		void ApplySetChangeFrameEvery(unsigned int ticks);

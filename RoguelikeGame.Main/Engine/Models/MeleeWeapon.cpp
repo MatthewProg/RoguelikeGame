@@ -52,7 +52,7 @@ MeleeWeapon::~MeleeWeapon()
 {
 }
 
-bool MeleeWeapon::CanAttack()
+bool MeleeWeapon::CanAttack() const
 {
 	return (_cooldownCounter >= GetWeaponCooldown());
 }
@@ -95,12 +95,12 @@ void MeleeWeapon::SetHitboxAccuracy(unsigned short steps)
 
 
 
-float MeleeWeapon::GetWeaponAngle()
+float MeleeWeapon::GetWeaponAngle() const
 {
 	return _angle;
 }
 
-float MeleeWeapon::GetWeaponRange()
+float MeleeWeapon::GetWeaponRange() const
 {
 	return _range;
 }

@@ -1,7 +1,7 @@
 #include "TilesHelper.h"
 
 
-sf::Texture TilesHelper::GetStandardTile(sf::Image img, unsigned int width, unsigned int height, int id)
+sf::Texture TilesHelper::GetStandardTile(const sf::Image& img, unsigned int width, unsigned int height, int id)
 {
 	sf::Texture output;
 
@@ -23,7 +23,7 @@ sf::Texture TilesHelper::GetStandardTile(sf::Image img, unsigned int width, unsi
 	return output;
 }
 
-sf::IntRect TilesHelper::GetTileRect(sf::Vector2u imgSize, unsigned int width, unsigned int height, int id)
+sf::IntRect TilesHelper::GetTileRect(const sf::Vector2u& imgSize, unsigned int width, unsigned int height, int id)
 {
 	if (imgSize.x <= 0 || imgSize.y <= 0 || height <= 0 || width <= 0)
 		return sf::IntRect(0, 0, 16, 16);
@@ -38,7 +38,7 @@ sf::IntRect TilesHelper::GetTileRect(sf::Vector2u imgSize, unsigned int width, u
 	return sf::IntRect(col * width, row * height, width, height);
 }
 
-sf::Texture TilesHelper::GetCustomTile(sf::Image img, unsigned int left, unsigned int top, unsigned int width, unsigned int height)
+sf::Texture TilesHelper::GetCustomTile(const sf::Image& img, unsigned int left, unsigned int top, unsigned int width, unsigned int height)
 {
 	sf::Texture output;
 

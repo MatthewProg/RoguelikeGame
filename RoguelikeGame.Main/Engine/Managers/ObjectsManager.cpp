@@ -15,7 +15,7 @@ void ObjectsManager::SetSoundsManager(SoundsManager* sounds)
 	_sounds = sounds;
 }
 
-void ObjectsManager::SetWindowSize(sf::Vector2u size)
+void ObjectsManager::SetWindowSize(const sf::Vector2u& size)
 {
 	_windowSize = size;
 }
@@ -74,7 +74,7 @@ ObjectsManager::~ObjectsManager()
 
 
 //Get
-MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
+MeleeWeapon* ObjectsManager::GetMeleeWeapon(const std::string& name)
 {
 	auto found = _meleeWeapons.find(name);
 	if (found != _meleeWeapons.end())
@@ -91,7 +91,7 @@ MeleeWeapon* ObjectsManager::GetMeleeWeapon(std::string name)
 	return new MeleeWeapon();
 }
 
-HitboxWeapon* ObjectsManager::GetHitboxWeapon(std::string name)
+HitboxWeapon* ObjectsManager::GetHitboxWeapon(const std::string& name)
 {
 	auto found = _hitboxWeapons.find(name);
 	if (found != _hitboxWeapons.end())
@@ -107,7 +107,7 @@ HitboxWeapon* ObjectsManager::GetHitboxWeapon(std::string name)
 	return new HitboxWeapon();
 }
 
-Enemy* ObjectsManager::GetEnemy(std::string name)
+Enemy* ObjectsManager::GetEnemy(const std::string& name)
 {
 	auto found = _enemies.find(name);
 	if (found != _enemies.end())
@@ -124,7 +124,7 @@ Enemy* ObjectsManager::GetEnemy(std::string name)
 	return new Enemy();
 }
 
-Player* ObjectsManager::GetPlayer(std::string name)
+Player* ObjectsManager::GetPlayer(const std::string& name)
 {
 	auto found = _players.find(name);
 	if (found != _players.end())
@@ -146,7 +146,7 @@ Player* ObjectsManager::GetPlayer(std::string name)
 	return new Player();
 }
 
-ProgressBar* ObjectsManager::GetProgressBar(std::string name)
+ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
 {
 	auto found = _progressBars.find(name);
 	if (found != _progressBars.end())
@@ -163,7 +163,7 @@ ProgressBar* ObjectsManager::GetProgressBar(std::string name)
 	return nullptr;
 }
 
-Button* ObjectsManager::GetButton(std::string name)
+Button* ObjectsManager::GetButton(const std::string& name)
 {
 	auto found = _buttons.find(name);
 	if (found != _buttons.end())
@@ -180,7 +180,7 @@ Button* ObjectsManager::GetButton(std::string name)
 	return nullptr;
 }
 
-Scene* ObjectsManager::GetScene(std::string name)
+Scene* ObjectsManager::GetScene(const std::string& name)
 {
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
@@ -467,7 +467,7 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	auto title = new Label();
 
 	//title
-	title->SetFont(_fonts->GetFont("menu"));
+	title->SetFont(*_fonts->GetFont("menu"));
 	title->SetFillColor(sf::Color::White);
 	title->SetText("Rogue Maze");
 	title->SetCharacterSize(50);
@@ -539,7 +539,7 @@ Scene* ObjectsManager::CreateSceneGameUI()
 
 	//money
 	money->Init(sf::Vector2u(200, 34));
-	money->SetFont(_fonts->GetFont("menu"));
+	money->SetFont(*_fonts->GetFont("menu"));
 	money->SetCharacterSize(32);
 	money->SetText("000000");
 	money->SetFillColor(sf::Color::White);

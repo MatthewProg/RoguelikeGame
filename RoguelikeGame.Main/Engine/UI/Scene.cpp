@@ -86,7 +86,7 @@ void Scene::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 			ClearFocus();
 }
 
-void Scene::UpdateEvent(sf::Event* ev, sf::Vector2f mousePos)
+void Scene::UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
 	for (auto& e : _uiElements)
 		e.second->ProcessEvent(ev, mousePos);
@@ -104,7 +104,7 @@ void Scene::RefreshElements()
 		e.second->RedrawElement();
 }
 
-void Scene::AddElement(std::string name, UIElement* element)
+void Scene::AddElement(const std::string& name, UIElement* element)
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
@@ -128,7 +128,7 @@ void Scene::RemoveElement(UIElement* element)
 		}
 }
 
-void Scene::RemoveElement(std::string name)
+void Scene::RemoveElement(const std::string& name)
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
@@ -139,7 +139,7 @@ void Scene::RemoveElement(std::string name)
 	}
 }
 
-UIElement* Scene::GetElement(std::string name)
+UIElement* Scene::GetElement(const std::string& name)
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
@@ -148,29 +148,29 @@ UIElement* Scene::GetElement(std::string name)
 		return nullptr;
 }
 
-std::tuple<std::string, UIElement*> Scene::GetFocused()
+const std::tuple<std::string, UIElement*>& Scene::GetFocused() const
 {
 	return _inFocus;
 }
 
-size_t Scene::GetNoOfElements()
+size_t Scene::GetNoOfElements() const
 {
 	return _uiElements.size();
 }
 
-void Scene::SetBackgroundColor(sf::Color color)
+void Scene::SetBackgroundColor(const sf::Color& color)
 {
 	_backgroundColor = color;
 }
 
-void Scene::SetElementVisibility(std::string name, bool visible)
+void Scene::SetElementVisibility(const std::string& name, bool visible)
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
 		found->second->SetVisibility(visible);
 }
 
-void Scene::SetFocus(std::string name)
+void Scene::SetFocus(const std::string& name)
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
@@ -184,12 +184,12 @@ void Scene::ClearFocus()
 	_inFocus = std::tuple<std::string, UIElement*>("", nullptr);
 }
 
-sf::Color Scene::GetBackgroundColor()
+const sf::Color& Scene::GetBackgroundColor() const
 {
 	return _backgroundColor;
 }
 
-bool Scene::GetElementVisibility(std::string name)
+bool Scene::GetElementVisibility(const std::string& name) const
 {
 	auto found = _uiElements.find(name);
 	if (found != _uiElements.end())
