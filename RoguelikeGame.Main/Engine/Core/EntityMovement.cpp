@@ -3,6 +3,7 @@
 EntityMovement::EntityMovement()
 {
 	_logger = Logger::GetInstance();
+	_settings = Settings::GetInstance();
 	_collisions = nullptr;
 	_entity = nullptr;
 	_idleState = "idle";
@@ -54,10 +55,10 @@ void EntityMovement::MoveBy(float x, float y, float deltaTime)
 
 bool EntityMovement::IsKeyPressed() const
 {
-	return (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
+	return (sf::Keyboard::isKeyPressed(_settings->MOVE_UP) ||
+		sf::Keyboard::isKeyPressed(_settings->MOVE_DOWN) ||
+		sf::Keyboard::isKeyPressed(_settings->MOVE_LEFT) ||
+		sf::Keyboard::isKeyPressed(_settings->MOVE_RIGHT));
 }
 
 sf::FloatRect EntityMovement::GetNextHitboxPosition(float deltaTime)
@@ -67,13 +68,13 @@ sf::FloatRect EntityMovement::GetNextHitboxPosition(float deltaTime)
 	float moveX = 0;
 	float moveY = 0;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(_settings->MOVE_RIGHT))
 		moveX += (_entity->GetStep() * deltaTime * _entity->GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(_settings->MOVE_LEFT))
 		moveX -= (_entity->GetStep() * deltaTime * _entity->GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (sf::Keyboard::isKeyPressed(_settings->MOVE_DOWN))
 		moveY += (_entity->GetStep() * deltaTime * _entity->GetSpeed());
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (sf::Keyboard::isKeyPressed(_settings->MOVE_UP))
 		moveY -= (_entity->GetStep() * deltaTime * _entity->GetSpeed());
 
 	auto rect = _entity->GetCollisionBox();

@@ -53,6 +53,7 @@
     <None Include="res\maps\map1.json">
       <Filter>Resource Files\maps</Filter>
     </None>
+    <None Include="settings.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h">
@@ -169,6 +170,9 @@
     <ClInclude Include="Engine\Managers\SoundsManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Models\Settings.h">
+      <Filter>Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -279,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Managers\SoundsManager.cpp">
       <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Models\Settings.cpp">
+      <Filter>Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

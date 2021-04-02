@@ -9,6 +9,7 @@ private:
 	Entity* _entity;
 	CollisionsManager* _collisions;
 	Logger* _logger;
+	Settings* _settings;
 
 	bool _lockMovement;
 	bool _noClip;

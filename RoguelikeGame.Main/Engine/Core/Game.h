@@ -18,6 +18,7 @@ class Game
 {
 private:
 	Logger* _logger;
+	Settings* _settings;
 	DebugHelper _debug;
 
 	double _delta;
@@ -72,7 +73,7 @@ private:
 #pragma endregion
 
 public:
-	Game(sf::VideoMode vmode, std::string title);
+	Game(LogOptions options);
 	~Game();
 
 	void Start();

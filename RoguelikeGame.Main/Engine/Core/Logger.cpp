@@ -20,10 +20,8 @@ Logger* Logger::GetInstance()
 
 Logger::~Logger()
 {
-	if (_options.outputStream == LogOptions::LogOutput::FILE || _options.outputStream == LogOptions::LogOutput::BOTH)
-	{
+	if (_outputStream.is_open() == true)
 		_outputStream.close();
-	}
 }
 
 void Logger::TurnOnColorsSupport()

@@ -4,6 +4,7 @@
 #include "SFML/Audio.hpp"
 
 #include "../Core/Logger.h"
+#include "../Models/Settings.h"
 
 class SoundsManager
 {
@@ -28,6 +29,7 @@ public:
 	void LoadFromStream(const std::string& name, sf::InputStream& stream);
 
 	void RemoveSound(const std::string& name);
+	void ApplyVolume(float volume);
 
 	void PlaySoundIndependent(const std::string& name);
 	void StartIndependentSounds();

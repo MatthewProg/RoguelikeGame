@@ -1,19 +1,21 @@
 #include "Engine/Core/Game.h"
 
-int main()
+int main(int argc, char* argv[])
 {
     LogOptions options;
     options.fileAppend = false;
     options.filePath = "game.log";
     options.loggingPattern = "[{type}] {date} {time} - {message}";
     options.outputStream = LogOptions::LogOutput::CONSOLE;
-#ifdef NDEBUG
-    //options.ignoredTypes["DEBUG"] = true;
-#endif
+    options.ignoredTypes["DEBUG"] = true;
 
-    Logger::GetInstance(options);
+    if (argc >= 2 && _stricmp(argv[1], "-d") == 0)
+    {
+        options.ignoredTypes["DEBUG"] = false;
+        Settings::GetInstance()->DEBUG.NewValue(true);
+    }
 
-    Game game(sf::VideoMode(1024, 576), "It's a game");
+    Game game(options);
     game.Start();
 
     while (game.isRunning())

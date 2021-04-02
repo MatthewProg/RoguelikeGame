@@ -53,6 +53,7 @@ void SoundsManager::LoadFromFile(const std::string& name, const std::string& pat
 	if (std::get<0>(_sounds[name]).loadFromFile(path) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
+		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
 		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
 	}
 	else
@@ -67,6 +68,7 @@ void SoundsManager::LoadFromMemory(const std::string& name, const void* data, st
 	if (std::get<0>(_sounds[name]).loadFromMemory(data, sizeInBytes) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
+		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
 		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
 	}
 	else
@@ -81,6 +83,7 @@ void SoundsManager::LoadFromSamples(const std::string& name, const short* sample
 	if (std::get<0>(_sounds[name]).loadFromSamples(samples, sampleCount, channelCount, sampleRate) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
+		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
 		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
 	}
 	else
@@ -95,6 +98,7 @@ void SoundsManager::LoadFromStream(const std::string& name, sf::InputStream& str
 	if (std::get<0>(_sounds[name]).loadFromStream(stream) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
+		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
 		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
 	}
 	else
@@ -111,6 +115,15 @@ void SoundsManager::RemoveSound(const std::string& name)
 		_sounds.erase(found);
 }
 
+void SoundsManager::ApplyVolume(float volume)
+{
+	for (auto& e : _sounds)
+		std::get<1>(e.second).setVolume(volume);
+
+	for (auto& e : _playQueue)
+		e.setVolume(volume);
+}
+
 void SoundsManager::PlaySoundIndependent(const std::string& name)
 {
 	auto found = _sounds.find(name);
@@ -118,7 +131,7 @@ void SoundsManager::PlaySoundIndependent(const std::string& name)
 	{
 		sf::Sound s;
 		s.setBuffer(std::get<0>(found->second));
-		s.setVolume(100);
+		s.setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
 		s.setLoop(false);
 		_playQueue.push_back(s);
 		_playQueue.back().play();

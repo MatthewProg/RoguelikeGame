@@ -1,17 +1,15 @@
 #include "Game.h"
 
-
-Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
+Game::Game(LogOptions options) : _logger(Logger::GetInstance(options)), _keyboardHandler(this)
 {
-	_logger = Logger::GetInstance();
+	_settings = Settings::GetInstance();
+
 	_camera.setCenter(128, 64);
-	_camera.setSize((float)vmode.width / 4, (float)vmode.height / 4);
-	_gui.setCenter(((float)vmode.width / 2.f), ((float)vmode.height / 2.f));
-	_gui.setSize((float)vmode.width / 1, (float)vmode.height / 1);
+	_camera.setSize(256.f, 144.f);
+	_gui.setCenter(512.f, 288.f);
+	_gui.setSize(1024.f, 576.f);
 	_gui.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-	_window.create(vmode, title);
-	//_window.setFramerateLimit(144);
-	_window.setView(_camera);
+
 	_delta = 1.0000000;
 	_tickCounter = 0.0;
 	_gameSpeed = 60;
@@ -19,6 +17,7 @@ Game::Game(sf::VideoMode vmode, std::string title) : _keyboardHandler(this)
 	_lastFrameTime = std::chrono::steady_clock::now();
 	_event = sf::Event();
 	_player = nullptr;
+
 	srand((uint32_t)time(NULL));
 }
 
@@ -134,6 +133,7 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
 
 	//Sounds
+	_sounds.SetExpectedSize(12);
 	_sounds.LoadFromFile("entities_dmg4", "./res/sounds/entities/dmg4.wav");
 	_sounds.LoadFromFile("entities_dmg5", "./res/sounds/entities/dmg5.wav");
 	_sounds.LoadFromFile("entities_dmg6", "./res/sounds/entities/dmg6.wav");
@@ -170,6 +170,42 @@ Game::~Game()
 void Game::Start()
 {
 	_logger->Log(Logger::LogType::INFO, "Starting...");
+
+	//Settings
+	if (_settings->LoadSettings("./settings.json"))
+		_logger->Log(Logger::LogType::INFO, "Loading settings.. OK");
+	else
+	{
+		_logger->Log(Logger::LogType::ERROR, "Loading settings.. ERROR");
+		_logger->Log(Logger::LogType::WARNING, "Starting with default settings");
+		if (_settings->SaveSettings("./settings.json"))
+			_logger->Log(Logger::LogType::INFO, "Created new settings file");
+		else
+			_logger->Log(Logger::LogType::ERROR, "Unable to create settings file");
+	}
+
+	//Window
+	sf::Vector2u winSize = _settings->WINDOW_SIZE;
+	sf::ContextSettings cs;
+	cs.antialiasingLevel = _settings->ANTIALIASING_LEVEL;
+	cs.attributeFlags = ((_settings->DEBUG) ? sf::ContextSettings::Attribute::Debug : sf::ContextSettings::Attribute::Default);
+	_window.create(sf::VideoMode(winSize.x, winSize.y), "It's a game", _settings->WINDOW_STYLE, cs);
+	if (_settings->VSYNC_ENABLED)
+	{
+		_window.setVerticalSyncEnabled(true);
+		_window.setFramerateLimit(0U);
+	}
+	else
+	{
+		_window.setVerticalSyncEnabled(false);
+		_window.setFramerateLimit(_settings->FRAMERATE_LIMIT);
+	}
+
+	//Cameras
+	_camera.setSize((float)winSize.x / 4.f, (float)winSize.y / 4.f);
+	_gui.setCenter(((float)winSize.x / 2.f), ((float)winSize.y / 2.f));
+	_gui.setSize((float)winSize.x, (float)winSize.y);
+	_window.setView(_camera);
 
 	//Textures
 	_textures.SetExpectedSize(4);
