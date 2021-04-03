@@ -8,7 +8,7 @@ float MathHelper::GetAngleBetweenPoints(const sf::Vector2f& first, const sf::Vec
 
 float MathHelper::GetDistanceBetweenPoints(const sf::Vector2f& first, const sf::Vector2f& second)
 {
-    return sqrt(pow(first.x - second.x, 2) + pow(first.y - second.y, 2));
+    return sqrtf(powf(first.x - second.x, 2) + powf(first.y - second.y, 2));
 }
 
 sf::Vector2f MathHelper::GetPointFromAngle(const sf::Vector2f& start, float angle, float radius)

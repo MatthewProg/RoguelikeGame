@@ -148,6 +148,11 @@ UIElement* Scene::GetElement(const std::string& name)
 		return nullptr;
 }
 
+const std::map<std::string, UIElement*>& Scene::GetElements() const
+{
+	return _uiElements;
+}
+
 const std::tuple<std::string, UIElement*>& Scene::GetFocused() const
 {
 	return _inFocus;

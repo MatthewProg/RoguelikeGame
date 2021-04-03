@@ -20,6 +20,7 @@ private:
 	TexturesManager* _textures;
 	FontsManager* _fonts;
 	SoundsManager* _sounds;
+	Settings* _settings;
 	sf::Vector2u _windowSize;
 
 	std::map<std::string, HitboxWeapon*> _hitboxWeapons;
@@ -52,6 +53,7 @@ private:
 
 	//Scenes
 	Scene* CreateSceneMainMenu();
+	Scene* CreateSceneOptions();
 	Scene* CreateSceneGameUI();
 
 public:

@@ -122,7 +122,7 @@ const sf::Vector2u& GameMap<T>::GetMapSize() const
 }
 
 template<typename T>
-unsigned int GameMap<T>::GetNoOfLayers() const
+size_t GameMap<T>::GetNoOfLayers() const
 {
 	return _layersIds.size();
 }
@@ -307,7 +307,7 @@ template<typename T>
 void GameMap<T>::SetActionMapVisibility(bool visibility)
 {
 	_actionMap.visible = visibility;
-	PrepareActionMapLayer();
+	if(_actionMap.visible) PrepareActionMapLayer();
 }
 
 template<typename T>
@@ -357,7 +357,7 @@ template<typename T>
 void GameMap<T>::ToggleGridVisibility()
 {
 	std::string status = (!_showGrid) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show grid: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show grid: " + status);
 	SetActionMapGridVisibility(!_showGrid);
 }
 
@@ -365,7 +365,7 @@ template<typename T>
 void GameMap<T>::ToggleActionMapVisibility()
 {
 	std::string status = (!_actionMap.visible) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show action map: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show action map: " + status);
 	SetActionMapVisibility(!_actionMap.visible);
 }
 
@@ -460,7 +460,7 @@ void GameMap<T>::PrepareFrame()
 		else
 			texture = _tilesTextures[tilesName];
 
-		vertex->resize(height * width * 4);
+		vertex->resize((size_t)height * (size_t)width * 4);
 		for (size_t no = 0; no < _map[id].data.size(); no++)
 		{
 			if (layer->second.data[no] == 0) continue; //if empty tile
@@ -488,6 +488,9 @@ void GameMap<T>::PrepareFrame()
 		}
 		_layerTransform[id].setPosition(offsetX, offsetY);
 	}
+
+	if (_showGrid) PrepareActionMapGrid();
+	if (_actionMap.visible) PrepareActionMapLayer();
 }
 
 template<typename T>
@@ -519,7 +522,7 @@ void GameMap<T>::PrepareActionMapLayer()
 	else
 		texture = _tilesTextures[tilesName];
 
-	vertex->resize(height * width * 4);
+	vertex->resize((size_t)height * (size_t)width * 4);
 	for (size_t no = 0; no < _actionMap.data.size(); no++)
 	{
 		if (layer->data[no] == 0) continue; //if empty tile
@@ -554,7 +557,7 @@ void GameMap<T>::PrepareActionMapGrid()
 	_actionMapTransform.setPosition(_actionMap.offsetX, _actionMap.offsetY);
 
 	_actionMapGrid.setPrimitiveType(sf::Lines);
-	_actionMapGrid.resize(_actionMap.height * _actionMap.width * 8);
+	_actionMapGrid.resize((size_t)_actionMap.height * (size_t)_actionMap.width * 8);
 
 	auto width = _actionMap.width;
 	auto tileWidth = _actionMap.tileWidth;
@@ -616,7 +619,7 @@ template bool GameMap<int>::LoadFromFile(const std::string& path);
 template void GameMap<int>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<int>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<int>::GetMapSize() const;
-template unsigned int GameMap<int>::GetNoOfLayers() const;
+template size_t GameMap<int>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<int>::GetLayersIds() const;
 template std::vector<std::string> GameMap<int>::GetLayersTilesNames() const;
 template bool GameMap<int>::GetLayerVisibility(unsigned int layerId) const;
@@ -653,7 +656,7 @@ template bool GameMap<char>::LoadFromFile(const std::string& path);
 template void GameMap<char>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<char>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<char>::GetMapSize() const;
-template unsigned int GameMap<char>::GetNoOfLayers() const;
+template size_t GameMap<char>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<char>::GetLayersIds() const;
 template std::vector<std::string> GameMap<char>::GetLayersTilesNames() const;
 template bool GameMap<char>::GetLayerVisibility(unsigned int layerId) const;
@@ -690,7 +693,7 @@ template bool GameMap<short>::LoadFromFile(const std::string& path);
 template void GameMap<short>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<short>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<short>::GetMapSize() const;
-template unsigned int GameMap<short>::GetNoOfLayers() const;
+template size_t GameMap<short>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<short>::GetLayersIds() const;
 template std::vector<std::string> GameMap<short>::GetLayersTilesNames() const;
 template bool GameMap<short>::GetLayerVisibility(unsigned int layerId) const;
@@ -729,7 +732,7 @@ template bool GameMap<unsigned int>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned int>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<unsigned int>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<unsigned int>::GetMapSize() const;
-template unsigned int GameMap<unsigned int>::GetNoOfLayers() const;
+template size_t GameMap<unsigned int>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<unsigned int>::GetLayersIds() const;
 template std::vector<std::string> GameMap<unsigned int>::GetLayersTilesNames() const;
 template bool GameMap<unsigned int>::GetLayerVisibility(unsigned int layerId) const;
@@ -766,7 +769,7 @@ template bool GameMap<unsigned char>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned char>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<unsigned char>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<unsigned char>::GetMapSize() const;
-template unsigned int GameMap<unsigned char>::GetNoOfLayers() const;
+template size_t GameMap<unsigned char>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<unsigned char>::GetLayersIds() const;
 template std::vector<std::string> GameMap<unsigned char>::GetLayersTilesNames() const;
 template bool GameMap<unsigned char>::GetLayerVisibility(unsigned int layerId) const;
@@ -803,7 +806,7 @@ template bool GameMap<unsigned short>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned short>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
 template bool GameMap<unsigned short>::AutoSetTilesTextures(TexturesManager* manager);
 template const sf::Vector2u& GameMap<unsigned short>::GetMapSize() const;
-template unsigned int GameMap<unsigned short>::GetNoOfLayers() const;
+template size_t GameMap<unsigned short>::GetNoOfLayers() const;
 template const std::vector<unsigned int>& GameMap<unsigned short>::GetLayersIds() const;
 template std::vector<std::string> GameMap<unsigned short>::GetLayersTilesNames() const;
 template bool GameMap<unsigned short>::GetLayerVisibility(unsigned int layerId) const;

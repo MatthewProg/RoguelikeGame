@@ -40,6 +40,7 @@ public:
 	const sf::Color& GetBackgroundColor() const;
 	bool GetElementVisibility(const std::string& name) const;
 	UIElement* GetElement(const std::string& name);
+	const std::map<std::string, UIElement*>& GetElements() const;
 	const std::tuple<std::string, UIElement*>& GetFocused() const;
 	size_t GetNoOfElements() const;
 };

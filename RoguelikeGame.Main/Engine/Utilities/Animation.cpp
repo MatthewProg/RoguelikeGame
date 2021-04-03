@@ -51,7 +51,7 @@ void sf::Animation::SetTexture(sf::Texture* texture)
 	_texture = texture;
 }
 
-void sf::Animation::SetFrameColor(unsigned int frame, const sf::Color& color)
+void sf::Animation::SetFrameColor(size_t frame, const sf::Color& color)
 {
 	if (frame >= _frameColor.size())
 		return;
@@ -81,7 +81,7 @@ const sf::Texture* sf::Animation::GetTexture() const
 	return _texture;
 }
 
-sf::Color sf::Animation::GetFrameColor(unsigned int frame) const
+sf::Color sf::Animation::GetFrameColor(size_t frame) const
 {
 	if(frame >= _frameColor.size())
 		return sf::Color();
@@ -237,7 +237,7 @@ void sf::Animation::AddNewFrame(const sf::IntRect& rect)
 	Reset();
 }
 
-void sf::Animation::RemoveFrame(int index)
+void sf::Animation::RemoveFrame(size_t index)
 {
 	_rectFrames.erase(_rectFrames.begin() + index);
 	_frameColor.erase(_frameColor.begin() + index);

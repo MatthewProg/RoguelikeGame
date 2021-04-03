@@ -1,6 +1,6 @@
 #include "EnemiesAI.h"
 
-bool EnemiesAI::DirectLineOfSight(Enemy* source, sf::Vector2f* raycastHitpoint)
+bool EnemiesAI::DirectLineOfSight(Enemy* source, sf::Vector2f& raycastHitpoint)
 {
 	if (source == nullptr || _target == nullptr) return false;
 
@@ -12,8 +12,8 @@ bool EnemiesAI::DirectLineOfSight(Enemy* source, sf::Vector2f* raycastHitpoint)
 
 	//Calc distances and hitpoint
 	auto distance = MathHelper::GetDistanceBetweenPoints(enemyCenter, targetCenter);
-	*raycastHitpoint = _collisions->GetRayHitpoint(enemyCenter, angle, distance);
-	auto enemyRaycastDistance = MathHelper::GetDistanceBetweenPoints(enemyCenter, *raycastHitpoint);
+	raycastHitpoint = _collisions->GetRayHitpoint(enemyCenter, angle, distance);
+	auto enemyRaycastDistance = MathHelper::GetDistanceBetweenPoints(enemyCenter, raycastHitpoint);
 
 	//Decide if direct line of sight
 	bool directHit = false;
@@ -27,7 +27,7 @@ bool EnemiesAI::DirectLineOfSight(Enemy* source, sf::Vector2f* raycastHitpoint)
 	if (wpn != nullptr)
 	{
 		wpn->SetCurrentAngle(angle);
-		wpn->SetRaycastHitpoint(*raycastHitpoint);
+		wpn->SetRaycastHitpoint(raycastHitpoint);
 		if (directHit)
 			wpn->SetRaycastColor(sf::Color::Yellow);
 		else
@@ -174,7 +174,7 @@ void EnemiesAI::Update(float deltaTime)
 		}
 
 		sf::Vector2f gotoPoint = currentEnemyPos;
-		bool direct = DirectLineOfSight(currentEnemy, &gotoPoint);
+		bool direct = DirectLineOfSight(currentEnemy, gotoPoint);
 		if (direct == false) //If no direct, find path
 		{
 			if (currentEnemy->IsAiEnabled() == false) continue;
@@ -387,7 +387,7 @@ sf::Color EnemiesAI::GetPathfindColor() const
 void EnemiesAI::TogglePathfindingVisibility()
 {
 	std::string status = (!_showPathfindLines) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show pathfinding lines: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show pathfinding lines: " + status);
 	SetPathfindVisibility(!_showPathfindLines);
 }
 

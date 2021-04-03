@@ -134,6 +134,6 @@ std::string EntityMovement::GetMoveStateName() const
 void EntityMovement::ToggleNoClip()
 {
 	std::string status = (!_noClip) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Toggle no clip: " + status);
+	_logger->Log(Logger::LogType::DEBUG , "Toggle no clip: " + status);
 	SetNoClip(!_noClip);
 }

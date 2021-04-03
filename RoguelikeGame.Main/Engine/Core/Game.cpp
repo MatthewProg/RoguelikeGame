@@ -74,7 +74,7 @@ void Game::CheckButtons()
 		if (_sceneManager.GetLoadedSceneName() == "main_menu")
 		{
 			if (((Button*)loaded->GetElement("exit"))->Clicked()) Close();
-			else if (((Button*)loaded->GetElement("options"))->Clicked()) { ; }
+			else if (((Button*)loaded->GetElement("options"))->Clicked()) { _sceneManager.LoadScene("options"); }
 			else if (((Button*)loaded->GetElement("play"))->Clicked()) { LoadLevel("./res/maps/map1.json", "male_elf"); }
 		}
 	}
@@ -202,7 +202,7 @@ void Game::Start()
 	}
 
 	//Cameras
-	_camera.setSize((float)winSize.x / 4.f, (float)winSize.y / 4.f);
+	_camera.setSize(256.f, 144.f);
 	_gui.setCenter(((float)winSize.x / 2.f), ((float)winSize.y / 2.f));
 	_gui.setSize((float)winSize.x, (float)winSize.y);
 	_window.setView(_camera);
@@ -238,6 +238,7 @@ void Game::Start()
 	//UI elements
 	_sceneManager.AddScene("game", _objTemplates.GetScene("game"));
 	_sceneManager.AddScene("main_menu", _objTemplates.GetScene("main_menu"));
+	_sceneManager.AddScene("options", _objTemplates.GetScene("options"));
 	_sceneManager.LoadScene("main_menu");
 	_sceneManager.SetShowFocused(false);
 
@@ -245,25 +246,28 @@ void Game::Start()
 	_gameMap.SetActionMapOpacity(0.25);
 
 	//Keybinds
-	sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true };
-	sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
-	sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
-	sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
-	sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
-	sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true };
-	sf::Event::KeyEvent ctrlAltN = { sf::Keyboard::N, true, true };
-	sf::Event::KeyEvent ctrlAltU = { sf::Keyboard::U, true, true };
-	_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
-	_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
-	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
-	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleEnemiesHitboxVisibility);
-	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleMapCollisionLinesVisibility);
-	_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleWeaponHitboxVisibility);
-	_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
-	_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
-	_keyboardHandler.NewOn(ctrlAltP, &Game::TogglePathfindingVisibility);
-	_keyboardHandler.NewOn(ctrlAltN, &Game::ToggleNoClip);
-	_keyboardHandler.NewOn(ctrlAltU, &Game::ToggleUIFrames);
+	if (_settings->DEBUG)
+	{
+		sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true };
+		sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
+		sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
+		sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
+		sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
+		sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true };
+		sf::Event::KeyEvent ctrlAltN = { sf::Keyboard::N, true, true };
+		sf::Event::KeyEvent ctrlAltU = { sf::Keyboard::U, true, true };
+		_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
+		_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
+		_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);
+		_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleEnemiesHitboxVisibility);
+		_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleMapCollisionLinesVisibility);
+		_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleWeaponHitboxVisibility);
+		_keyboardHandler.NewOn(ctrlAltD, &Game::ToggleConsoleInfo);
+		_keyboardHandler.NewOn(ctrlAltR, &Game::ToggleRaycastVisibility);
+		_keyboardHandler.NewOn(ctrlAltP, &Game::TogglePathfindingVisibility);
+		_keyboardHandler.NewOn(ctrlAltN, &Game::ToggleNoClip);
+		_keyboardHandler.NewOn(ctrlAltU, &Game::ToggleUIFrames);
+	}
 
 	//Reset timings
 	SetDeltaAndTick();
@@ -363,7 +367,8 @@ void Game::ToggleActionMapVisibility()
 
 void Game::ToggleHitboxVisibility()
 {
-	_player->ToggleHitboxVisibility();
+	if(_player != nullptr)
+		_player->ToggleHitboxVisibility();
 }
 
 void Game::ToggleConsoleInfo()
@@ -373,23 +378,29 @@ void Game::ToggleConsoleInfo()
 
 void Game::ToggleWeaponHitboxVisibility()
 {
-	_player->ToggleWeaponHitboxVisibility();
+	if(_player != nullptr)
+		_player->ToggleWeaponHitboxVisibility();
 }
 
 void Game::ToggleEnemiesHitboxVisibility()
 {
-	_enemies.ToggleEnemiesHitboxVisibility();
+	if (_player != nullptr)
+		_enemies.ToggleEnemiesHitboxVisibility();
 }
 
 void Game::ToggleMapCollisionLinesVisibility()
 {
-	_collisionsManager.ToggleCollisionLinesVisibility();
+	if (_player != nullptr)
+		_collisionsManager.ToggleCollisionLinesVisibility();
 }
 
 void Game::ToggleRaycastVisibility()
 {
-	_player->ToggleRaycastVisibility();
-	_enemies.ToggleEnemiesRaycastVisibility();
+	if (_player != nullptr)
+	{
+		_player->ToggleRaycastVisibility();
+		_enemies.ToggleEnemiesRaycastVisibility();
+	}
 }
 
 void Game::TogglePathfindingVisibility()

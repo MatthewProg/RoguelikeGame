@@ -25,6 +25,7 @@ ObjectsManager::ObjectsManager()
 	_textures = nullptr;
 	_fonts = nullptr;
 	_sounds = nullptr;
+	_settings = Settings::GetInstance();
 
 	_meleeWeapons["sword"] = nullptr;
 
@@ -39,6 +40,7 @@ ObjectsManager::ObjectsManager()
 	_buttons["default_red"] = nullptr;
 
 	_scenes["main_menu"] = nullptr;
+	_scenes["options"] = nullptr;
 	_scenes["game"] = nullptr;
 }
 ObjectsManager::~ObjectsManager()
@@ -188,6 +190,7 @@ Scene* ObjectsManager::GetScene(const std::string& name)
 		if (found->second == nullptr)
 		{
 			if (name == "main_menu") found->second = CreateSceneMainMenu();
+			else if (name == "options") found->second = CreateSceneOptions();
 			else if (name == "game") found->second = CreateSceneGameUI();
 		}
 		Scene* obj = new Scene(*(found->second));
@@ -335,12 +338,12 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 
 	playerAnimations.SetStateAnimation("idle", idle);
 	playerAnimations.SetStateAnimation("move", move);
-	playerAnimations.ApplySetScale(1, 1);
+	playerAnimations.ApplySetScale(1.f, 1.f);
 
 	pl->SetAnimations(playerAnimations);
 	pl->SetState("idle");
-	pl->SetCollisionBoxOffset(sf::FloatRect(3, 6, 9, 15));
-	pl->SetPosition(sf::Vector2f(296, 472));
+	pl->SetCollisionBoxOffset(sf::FloatRect(3.f, 6.f, 9.f, 15.f));
+	pl->SetPosition(sf::Vector2f(296.f, 472.f));
 
 	//Weapon
 	pl->SetWeapon(GetMeleeWeapon("sword"));
@@ -361,20 +364,20 @@ ProgressBar* ObjectsManager::CreateProgressBarHeart()
 	ProgressBar* hb = new ProgressBar();
 	hb->SetCurrentValue(3.F);
 	hb->SetMaxValue(3.f);
-	hb->setPosition(sf::Vector2f(0, 0));
+	hb->setPosition(sf::Vector2f(0.f, 0.f));
 
 	hb->SetSoundsManager(_sounds);
 	hb->SetTexturesManager(_textures);
-	hb->AddProgressBarStep(sf::FloatRect(51, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(35, 134, 15, 15), "ui");
-	hb->AddProgressBarStep(sf::FloatRect(19, 134, 15, 15), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(51.f, 134.f, 15.f, 15.f), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(35.f, 134.f, 15.f, 15.f), "ui");
+	hb->AddProgressBarStep(sf::FloatRect(19.f, 134.f, 15.f, 15.f), "ui");
 
 	hb->SetVisibility(true);
 	hb->SetMouseInput(false);
 	hb->SetKeyboardInput(false);
 
 	hb->Init(sf::Vector2u(45, 15));
-	hb->setScale(sf::Vector2f(4.f, 4.f));
+	hb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
 
 	return hb;
 }
@@ -384,31 +387,31 @@ Button* ObjectsManager::CreateButtonDefaultRed()
 	Button* btn = new Button();
 
 	//Init
-	btn->Init(sf::Vector2u(170, 96));
+	btn->Init(sf::Vector2u(uint32_t(170.f * _settings->SCALE_RATIO) + 1, uint32_t(96.f * _settings->SCALE_RATIO) + 1));
 	btn->SetTexturesManager(_textures);
 	btn->SetSoundsManager(_sounds);
-	btn->SetBackgroundSize(sf::Vector2f(170, 96));
+	btn->SetBackgroundSize(sf::Vector2f(170.f * _settings->SCALE_RATIO, 96.f * _settings->SCALE_RATIO));
 	btn->setPosition(0.f, 0.f);
 
 	//text general
 	sf::Text text;
 	text.setFont(*_fonts->GetFont("menu"));
-	text.setCharacterSize(17);
+	text.setCharacterSize(uint32_t(17.f * _settings->SCALE_RATIO));
 	text.setFillColor(sf::Color::White);
 	text.setString("[default]");
 
 	//none
-	text.setPosition(5.f, 36.f);
-	btn->AddState("none", text, "ui", sf::FloatRect(15, 159, 34, 24));
+	text.setPosition(roundf(5.f * _settings->SCALE_RATIO), roundf(36.f * _settings->SCALE_RATIO));
+	btn->AddState("none", text, "ui", sf::FloatRect(15.f, 159.f, 34.f, 24.f));
 
 	//hover
-	text.setPosition(5.f, 36.f);
-	btn->AddState("hover", text, "ui", sf::FloatRect(15, 186, 34, 24));
+	text.setPosition(roundf(5.f * _settings->SCALE_RATIO), roundf(36.f * _settings->SCALE_RATIO));
+	btn->AddState("hover", text, "ui", sf::FloatRect(15.f, 186.f, 34.f, 24.f));
 
 	//click
-	text.setPosition(10.f, 40.f);
+	text.setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(40.f * _settings->SCALE_RATIO));
 	text.setFillColor(sf::Color(230, 230, 230, 255));
-	btn->AddState("click", text, "ui", sf::FloatRect(15, 210, 34, 24));
+	btn->AddState("click", text, "ui", sf::FloatRect(15.f, 210.f, 34.f, 24.f));
 
 	return btn;
 }
@@ -431,14 +434,15 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	lc.SetLoop(true);
 	lc.SetTexture(_textures->GetTexture("players"));
 	lc.setPosition(0.f, 0.f);
-	lc.setScale(12.8f, 12.8f);
+	lc.setScale(12.8f * _settings->SCALE_RATIO, 12.8f * _settings->SCALE_RATIO);
 	lc.AddNewFrame(sf::IntRect(0, 112, 14, 20));
 	lc.AddNewFrame(sf::IntRect(16, 112, 14, 20));
 	lc.AddNewFrame(sf::IntRect(32, 112, 14, 20));
 	lc.AddNewFrame(sf::IntRect(48, 112, 14, 20));
 	lc.Start();
 
-	leftCharacter->Init(sf::Vector2u(180, 256));
+	auto bounds = lc.GetGlobalBounds();
+	leftCharacter->Init(sf::Vector2u((uint32_t)bounds.width, (uint32_t)bounds.height));
 	leftCharacter->SetAnimation(lc);
 	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.2f, 0.6f, 1.f, 1.f), leftCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	leftCharacter->setPosition(pos.left, pos.top);
@@ -451,14 +455,15 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	rc.SetLoop(true);
 	rc.SetTexture(_textures->GetTexture("tiles2"));
 	rc.setPosition(0.f, 0.f);
-	rc.setScale(9.6f, 9.6f);
+	rc.setScale(9.6f * _settings->SCALE_RATIO, 9.6f * _settings->SCALE_RATIO);
 	rc.AddNewFrame(sf::IntRect(22, 277, 20, 27));
 	rc.AddNewFrame(sf::IntRect(54, 277, 20, 27));
 	rc.AddNewFrame(sf::IntRect(86, 277, 20, 27));
 	rc.AddNewFrame(sf::IntRect(118, 277, 20, 27));
 	rc.Start();
 
-	rightCharacter->Init(sf::Vector2u(192, 260));
+	bounds = rc.GetGlobalBounds();
+	rightCharacter->Init(sf::Vector2u((uint32_t)bounds.width, (uint32_t)bounds.height));
 	rightCharacter->SetAnimation(rc);
 	pos = ViewHelper::GetScaled(sf::FloatRect(0.8f, 0.6f, 1.f, 1.f), rightCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	rightCharacter->setPosition(pos.left, pos.top);
@@ -470,10 +475,10 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	title->SetFont(*_fonts->GetFont("menu"));
 	title->SetFillColor(sf::Color::White);
 	title->SetText("Rogue Maze");
-	title->SetCharacterSize(50);
+	title->SetCharacterSize(uint32_t(50.f * _settings->SCALE_RATIO));
 	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.15f, 1.f, 1.f), title->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	title->setPosition(pos.left, pos.top);
-	title->Init(sf::Vector2u((int)pos.width, (int)pos.height));
+	title->Init(sf::Vector2u((uint32_t)pos.width, (uint32_t)pos.height));
 
 	//Buttons
 	auto playButton = GetButton("default_red");
@@ -482,30 +487,30 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 
 	//playButton	
 	playButton->ApplyText("Play");
-	playButton->ApplyCharacterSize(24);
-	playButton->EditTextState("none")->setPosition(33.f, 33.f);
-	playButton->EditTextState("hover")->setPosition(33.f, 33.f);
-	playButton->EditTextState("click")->setPosition(38.f, 37.f);
+	playButton->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
+	playButton->EditTextState("none")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	playButton->EditTextState("hover")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	playButton->EditTextState("click")->setPosition(roundf(38.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
 
 	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.4f, 1.f, 1.f), playButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	playButton->setPosition(pos.left, pos.top);
 	
 	//optionsButton
 	optionsButton->ApplyText("Options");
-	optionsButton->ApplyCharacterSize(20);
-	optionsButton->EditTextState("none")->setPosition(8.f, 35.f);
-	optionsButton->EditTextState("hover")->setPosition(8.f, 35.f);
-	optionsButton->EditTextState("click")->setPosition(13.f, 40.f);
+	optionsButton->ApplyCharacterSize(uint32_t(20.f * _settings->SCALE_RATIO));
+	optionsButton->EditTextState("none")->setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(35.f * _settings->SCALE_RATIO));
+	optionsButton->EditTextState("hover")->setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(35.f * _settings->SCALE_RATIO));
+	optionsButton->EditTextState("click")->setPosition(roundf(15.f * _settings->SCALE_RATIO), roundf(40.f * _settings->SCALE_RATIO));
 
 	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.6f, 1.f, 1.f), optionsButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	optionsButton->setPosition(pos.left, pos.top);
 	
 	//exitButton
 	exitButton->ApplyText("Exit");
-	exitButton->ApplyCharacterSize(24);
-	exitButton->EditTextState("none")->setPosition(33.f, 33.f);
-	exitButton->EditTextState("hover")->setPosition(33.f, 33.f);
-	exitButton->EditTextState("click")->setPosition(38.f, 37.f);
+	exitButton->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
+	exitButton->EditTextState("none")->setPosition(roundf(34.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	exitButton->EditTextState("hover")->setPosition(roundf(34.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	exitButton->EditTextState("click")->setPosition(roundf(39.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
 
 	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.8f, 1.f, 1.f), exitButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	exitButton->setPosition(pos.left, pos.top);
@@ -520,7 +525,17 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 
 	return sc;
 }
+Scene* ObjectsManager::CreateSceneOptions()
+{
+	Scene* sc = new Scene();
 
+	//Scene settings
+	sc->SetBackgroundColor(sf::Color(66, 40, 53, 255));
+
+
+
+	return sc;
+}
 Scene* ObjectsManager::CreateSceneGameUI()
 {
 	Scene* sc = new Scene();
@@ -538,12 +553,12 @@ Scene* ObjectsManager::CreateSceneGameUI()
 	auto money = new Label();
 
 	//money
-	money->Init(sf::Vector2u(200, 34));
+	money->Init(sf::Vector2u(uint32_t(200.f * _settings->SCALE_RATIO) + 1, uint32_t(34.f * _settings->SCALE_RATIO) + 1));
 	money->SetFont(*_fonts->GetFont("menu"));
-	money->SetCharacterSize(32);
+	money->SetCharacterSize(uint32_t(32.f * _settings->SCALE_RATIO));
 	money->SetText("000000");
 	money->SetFillColor(sf::Color::White);
-	money->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - 8, 4);
+	money->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - (8.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
 
 	//AnimationBoxes
 	auto coin = new AnimationBox();
@@ -555,16 +570,16 @@ Scene* ObjectsManager::CreateSceneGameUI()
 	c.SetLoop(true);
 	c.SetTexture(_textures->GetTexture("tiles2"));
 	c.setPosition(0.f, 0.f);
-	c.setScale(4.f, 4.f);
+	c.setScale(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO);
 	c.AddNewFrame(sf::IntRect(289, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(297, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(305, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(313, 273, 6, 7));
 	c.Start();
 
-	coin->Init(sf::Vector2u(24, 28));
+	coin->Init(sf::Vector2u(uint32_t(24.f * _settings->SCALE_RATIO) + 1, uint32_t(28.f * _settings->SCALE_RATIO) + 1));
 	coin->SetAnimation(c);
-	coin->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - 40, 4);
+	coin->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - (40.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
 
 	//Add to scene
 	sc->AddElement("healthBar", heart);

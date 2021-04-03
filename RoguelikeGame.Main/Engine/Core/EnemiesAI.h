@@ -24,7 +24,7 @@ private:
 	sf::Color _pathfindLinesColor;
 	bool _showPathfindLines;
 
-	bool DirectLineOfSight(Enemy* source, sf::Vector2f* raycastHitpoint);
+	bool DirectLineOfSight(Enemy* source, sf::Vector2f& raycastHitpoint);
 	void PrepareVertex();
 	float WeightFunction(float x);
 

@@ -41,7 +41,7 @@ void Player::Update(bool tick, float delta)
 void Player::ToggleHitboxVisibility()
 {
 	std::string status = (!GetHitboxVisibility()) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show player hitbox: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show player hitbox: " + status);
 	SetHitboxVisibility(!GetHitboxVisibility());
 }
 
@@ -51,7 +51,7 @@ void Player::ToggleWeaponHitboxVisibility()
 	{
 		bool rev = _weapon->GetHitboxVisibility();
 		std::string status = (!rev) ? "true" : "false";
-		_logger->Log(Logger::LogType::INFO, "Show current weapon rays: " + status);
+		_logger->Log(Logger::LogType::DEBUG, "Show current weapon rays: " + status);
 		_weapon->SetHitboxVisibility(!rev);
 	}
 }
@@ -61,7 +61,7 @@ void Player::ToggleRaycastVisibility()
 	if (_weapon != nullptr)
 	{
 		std::string status = (!_weapon->GetRaycastVisibility()) ? "true" : "false";
-		_logger->Log(Logger::LogType::INFO, "Show player weapon raycast: " + status);
+		_logger->Log(Logger::LogType::DEBUG, "Show player weapon raycast: " + status);
 		_weapon->SetRaycastVisibility(!_weapon->GetRaycastVisibility());
 	}
 }

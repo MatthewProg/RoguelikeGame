@@ -55,7 +55,7 @@ namespace sf
 		void Tick(bool tick);
 		void UpdateVertices();
 		void AddNewFrame(const sf::IntRect& rect);
-		void RemoveFrame(int index);
+		void RemoveFrame(size_t index);
 		void RemoveAllFrames();
 		size_t GetNoOfFrames() const;
 		void SetFrames(const std::vector<sf::IntRect>& frames);
@@ -69,7 +69,7 @@ namespace sf
 		void SetChangeFrameEvery(unsigned int ticks);
 		void SetAnimationSpeed(float speed);
 		void SetTexture(sf::Texture* texture);
-		void SetFrameColor(unsigned int frame, const sf::Color& color);
+		void SetFrameColor(size_t frame, const sf::Color& color);
 		void SetHorizontalFlip(bool flip);
 		void SetVerticalFlip(bool flip);
 		void SetLoop(bool loop);
@@ -79,7 +79,7 @@ namespace sf
 		float GetAnimationSpeed() const;
 		const sf::IntRect& GetCurrentRect() const;
 		const sf::Texture* GetTexture() const;
-		sf::Color GetFrameColor(unsigned int frame) const;
+		sf::Color GetFrameColor(size_t frame) const;
 		bool GetHorizontalFlip() const;
 		bool GetVerticalFlip() const;
 		bool GetLoop() const;

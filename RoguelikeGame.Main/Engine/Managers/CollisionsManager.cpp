@@ -33,7 +33,7 @@ void CollisionsManager::GenerateCommonMap()
 	_sumMap.height = std::max_element(_maps.begin(), _maps.end(), compareMapHeight)->height;
 	_sumMap.width = std::max_element(_maps.begin(), _maps.end(), compareMapWidth)->width;
 
-	_sumMap.data.resize(_sumMap.height * _sumMap.width, false);
+	_sumMap.data.resize((size_t)_sumMap.height * (size_t)_sumMap.width, false);
 	for (auto it = _maps.begin(); it != _maps.end(); it++)
 		for (size_t i = 0; i < it->data.size(); i++)
 			if (it->data[i])
@@ -46,11 +46,11 @@ void CollisionsManager::CovertTilesIntoEdges()
 
 	struct Cell
 	{
-		int edge_id[4] = { 0,0,0,0 };
+		size_t edge_id[4] = { 0,0,0,0 };
 		bool edge_exist[4] = { false,false,false,false };
 		bool exist = false;
 	};
-	std::vector<Cell> grid(_sumMap.width * _sumMap.height);
+	std::vector<Cell> grid((size_t)_sumMap.width * (size_t)_sumMap.height);
 
 	for (size_t i = 0; i < grid.size(); i++)
 	{
@@ -90,7 +90,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						std::get<1>(edge) = sf::Vector2f(posX, posY + _sumMap.tileHeight); //End pos
 
 						// Add edge to pool
-						int edge_id = _edges.size();
+						size_t edge_id = _edges.size();
 						_edges.push_back(edge);
 
 						// Update tile information with edge information
@@ -120,7 +120,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						std::get<1>(edge) = sf::Vector2f(posX, posY + _sumMap.tileHeight); //End pos
 
 						// Add edge to Polygon Pool
-						int edge_id = _edges.size();
+						size_t edge_id = _edges.size();
 						_edges.push_back(edge);
 
 						// Update tile information with edge information
@@ -150,7 +150,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						std::get<1>(edge) = sf::Vector2f(posX + _sumMap.tileWidth, posY); //End pos
 
 						// Add edge to Polygon Pool
-						int edge_id = _edges.size();
+						size_t edge_id = _edges.size();
 						_edges.push_back(edge);
 
 						// Update tile information with edge information
@@ -180,7 +180,7 @@ void CollisionsManager::CovertTilesIntoEdges()
 						std::get<1>(edge) = sf::Vector2f(posX + _sumMap.tileWidth, posY); //End pos
 
 						// Add edge to Polygon Pool
-						int edge_id = _edges.size();
+						size_t edge_id = _edges.size();
 						_edges.push_back(edge);
 
 						// Update tile information with edge information
@@ -232,7 +232,7 @@ void CollisionsManager::SetCollisionLinesVisibility(bool visible)
 void CollisionsManager::ToggleCollisionLinesVisibility()
 {
 	std::string status = (!_showCollisionLines) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show map collision lines: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show map collision lines: " + status);
 	SetCollisionLinesVisibility(!_showCollisionLines);
 }
 

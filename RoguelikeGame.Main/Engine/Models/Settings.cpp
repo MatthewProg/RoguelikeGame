@@ -6,8 +6,9 @@ Settings* Settings::_settings = nullptr;
 Settings::Settings()
 {
 	DEBUG = false;
+	SCALE_RATIO = 1.f;
 
-	WINDOW_STYLE = 7;
+	WINDOW_STYLE = 5;
 	WINDOW_SIZE = sf::Vector2u(1024, 576);
 	ANTIALIASING_LEVEL = 0;
 
@@ -62,6 +63,8 @@ bool Settings::LoadSettings(std::string path)
 	IF_EXIST_ASSIGN(doc, "MOVE_DOWN", MOVE_DOWN.data);
 	IF_EXIST_ASSIGN(doc, "MOVE_LEFT", MOVE_LEFT.data);
 	IF_EXIST_ASSIGN(doc, "MOVE_RIGHT", MOVE_RIGHT.data);
+
+	SCALE_RATIO = float(WINDOW_SIZE.data.x) / 1024.f;
 
 	return true;
 }

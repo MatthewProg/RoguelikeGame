@@ -1,5 +1,30 @@
 #include "SceneManager.h"
 
+void SceneManager::UpdateAllBoundsOutline()
+{
+	if (_loadedScene == "") return;
+
+	auto found = _scenes.find(_loadedScene);
+	if (found == _scenes.end()) return;
+	else if (found->second == nullptr) return;
+
+	_allOutline.clear();
+	sf::Vertex v;
+	v.color = sf::Color::Blue;
+
+	for (auto& e : found->second->GetElements())
+	{
+		auto bounds = CollisionHelper::GetRectPoints(e.second->GetGlobalBounds());
+		for (size_t i = 0; i < bounds.size(); i++)
+		{
+			v.position = bounds[i];
+			_allOutline.append(v);
+			v.position = bounds[(i + 1) % bounds.size()];
+			_allOutline.append(v);
+		}
+	}
+}
+
 void SceneManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
 	if (_loadedScene == "") return;
@@ -9,6 +34,8 @@ void SceneManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 	else if (found->second == nullptr) return;
 
 	target.draw(*found->second);
+	if (_showAllBounds)
+		target.draw(_allOutline);
 	if (_showFocused)
 		target.draw(_focusedOutline);
 }
@@ -19,11 +46,13 @@ SceneManager::SceneManager()
 	_scenes.clear();
 	_loadedScene = "";
 	_showFocused = false;
+	_showAllBounds = false;
 	_focusedOutline.setPrimitiveType(sf::LinesStrip);
 	_focusedOutline.resize(5);
+	_allOutline.setPrimitiveType(sf::Lines);
 	for (uint8_t i = 0; i < 5; i++)
 	{
-		_focusedOutline[i].color = sf::Color::Blue;
+		_focusedOutline[i].color = sf::Color::Yellow;
 		_focusedOutline[i].position = sf::Vector2f(-1, -1);
 	}
 }
@@ -50,12 +79,12 @@ void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 		auto focus = loaded->second->GetFocused();
 		if (std::get<1>(focus) != nullptr)
 		{
-			auto bounds = std::get<1>(focus)->GetGlobalBounds();
-			_focusedOutline[0].position = sf::Vector2f(bounds.left, bounds.top);
-			_focusedOutline[1].position = sf::Vector2f(bounds.left + bounds.width, bounds.top);
-			_focusedOutline[2].position = sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height);
-			_focusedOutline[3].position = sf::Vector2f(bounds.left, bounds.top + bounds.height);
-			_focusedOutline[4].position = sf::Vector2f(bounds.left, bounds.top);
+			auto bounds = CollisionHelper::GetRectPoints(std::get<1>(focus)->GetGlobalBounds());
+			for (size_t i = 0; i < bounds.size(); i++)
+			{
+				_focusedOutline[i].position = bounds[i];
+				_focusedOutline[i + 1].position = bounds[(i + 1) % bounds.size()];
+			}
 		}
 		else
 		{
@@ -92,11 +121,31 @@ void SceneManager::SetShowFocused(bool show)
 	_showFocused = show;
 }
 
+void SceneManager::SetShowAllBounds(bool show)
+{
+	_showAllBounds = show;
+	UpdateAllBoundsOutline();
+}
+
 void SceneManager::ToggleShowFocused()
 {
-	std::string status = (!_showFocused) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Toggle show UI frames: " + status);
-	SetShowFocused(!_showFocused);
+	if (_showFocused == true && _showAllBounds == false)
+	{
+		SetShowFocused(false);
+		SetShowAllBounds(true);
+		_logger->Log(Logger::LogType::DEBUG, "Toggle show UI frames: all");
+	}
+	else if (_showFocused == false && _showAllBounds == true)
+	{
+		SetShowAllBounds(false);
+		_logger->Log(Logger::LogType::DEBUG, "Toggle show UI frames: none");
+	}
+	else
+	{
+		SetShowFocused(true);
+		SetShowAllBounds(false);
+		_logger->Log(Logger::LogType::DEBUG, "Toggle show UI frames: focused");
+	}
 }
 
 bool SceneManager::GetShowFocused() const
@@ -112,6 +161,7 @@ void SceneManager::LoadScene(const std::string& name)
 		_loadedScene = name;
 		if (found->second != nullptr)
 			found->second->ClearFocus();
+		UpdateAllBoundsOutline();
 		_logger->Log(Logger::LogType::DEBUG, "Loaded scene: " + name);
 	}
 	else
@@ -121,6 +171,7 @@ void SceneManager::LoadScene(const std::string& name)
 void SceneManager::UnloadCurrentScene()
 {
 	_loadedScene = "";
+	UpdateAllBoundsOutline();
 }
 
 const std::string& SceneManager::GetLoadedSceneName() const
@@ -152,6 +203,9 @@ void SceneManager::RemoveScene(const std::string& name)
 	auto found = _scenes.find(name);
 	if (found != _scenes.end())
 	{
+		if (name == _loadedScene)
+			UnloadCurrentScene();
+
 		if (found->second != nullptr)
 			delete found->second;
 		_scenes.erase(found);

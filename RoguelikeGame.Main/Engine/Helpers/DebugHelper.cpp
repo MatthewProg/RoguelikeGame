@@ -74,6 +74,6 @@ bool DebugHelper::GetDebug() const
 void DebugHelper::ToggleFPSInfo()
 {
 	std::string status = (!_debug) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show debug info: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show debug info: " + status);
 	SetDebug(!_debug);
 }

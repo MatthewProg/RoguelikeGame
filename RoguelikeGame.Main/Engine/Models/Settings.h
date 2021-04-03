@@ -35,6 +35,8 @@ public:
 
 	//Only runtime, it's not stored in file
 	Option<bool> DEBUG;
+	Option<float> SCALE_RATIO;
+	//////////
 
 	Option<uint32_t> WINDOW_STYLE;
 	Option<sf::Vector2u> WINDOW_SIZE;

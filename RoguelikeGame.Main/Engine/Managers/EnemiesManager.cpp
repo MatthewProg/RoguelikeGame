@@ -116,7 +116,7 @@ bool EnemiesManager::GetEnemiesHitboxVisibility() const
 void EnemiesManager::ToggleEnemiesHitboxVisibility()
 {
 	std::string status = (!GetEnemiesHitboxVisibility()) ? "true" : "false";
-	_logger->Log(Logger::LogType::INFO, "Show enemies hitbox: " + status);
+	_logger->Log(Logger::LogType::DEBUG, "Show enemies hitbox: " + status);
 	SetEnemiesHitboxVisibility(!GetEnemiesHitboxVisibility());
 }
 
@@ -134,7 +134,7 @@ void EnemiesManager::ToggleEnemiesRaycastVisibility()
 			{
 				status = enemyWeapon->GetRaycastVisibility();
 				std::string mess = (!status) ? "true" : "false";
-				_logger->Log(Logger::LogType::INFO, "Show enemies weapon raycast: " + mess);
+				_logger->Log(Logger::LogType::DEBUG, "Show enemies weapon raycast: " + mess);
 				logged = true;
 			}
 			enemyWeapon->SetRaycastVisibility(!status);

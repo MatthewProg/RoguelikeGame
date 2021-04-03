@@ -65,7 +65,7 @@ public:
 
 	//Map getters
 	const sf::Vector2u& GetMapSize() const;
-	unsigned int GetNoOfLayers() const;
+	size_t GetNoOfLayers() const;
 	const std::vector<unsigned int>& GetLayersIds() const;
 	std::vector<std::string> GetLayersTilesNames() const;
 	bool GetLayerVisibility(unsigned int layerId) const;
