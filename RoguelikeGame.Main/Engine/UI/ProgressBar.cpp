@@ -164,8 +164,8 @@ sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds() const
 		return bounds;
 
 	auto startPos = sf::Vector2f(bounds.left, bounds.top) + _progressBarStepsPos;
-	auto width = _progressBarSteps.size() * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width;
-	auto endPos = startPos + sf::Vector2f(width, std::get<0>(_progressBarSteps[0]).height);
+	auto width = _progressBarSteps.size() * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width * getScale().x;
+	auto endPos = startPos + sf::Vector2f(width, std::get<0>(_progressBarSteps[0]).height * getScale().y);
 	return sf::FloatRect(startPos, endPos - startPos);
 }
 

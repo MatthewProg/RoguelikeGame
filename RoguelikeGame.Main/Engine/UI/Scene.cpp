@@ -119,7 +119,7 @@ void Scene::AddElement(const std::string& name, UIElement* element)
 
 void Scene::RemoveElement(UIElement* element)
 {
-	for(auto p : _uiElements)
+	for(auto& p : _uiElements)
 		if (p.second == element)
 		{
 			if (p.second != nullptr)

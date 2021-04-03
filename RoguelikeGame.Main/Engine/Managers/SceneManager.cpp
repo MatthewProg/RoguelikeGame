@@ -131,12 +131,13 @@ void SceneManager::ToggleShowFocused()
 {
 	if (_showFocused == true && _showAllBounds == false)
 	{
-		SetShowFocused(false);
+		SetShowFocused(true);
 		SetShowAllBounds(true);
 		_logger->Log(Logger::LogType::DEBUG, "Toggle show UI frames: all");
 	}
-	else if (_showFocused == false && _showAllBounds == true)
+	else if (_showFocused == true && _showAllBounds == true)
 	{
+		SetShowFocused(false);
 		SetShowAllBounds(false);
 		_logger->Log(Logger::LogType::DEBUG, "Toggle show UI frames: none");
 	}

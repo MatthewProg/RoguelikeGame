@@ -173,6 +173,9 @@
     <ClInclude Include="Engine\Models\Settings.h">
       <Filter>Models</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\FocusContainer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Models\Settings.cpp">
       <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\FocusContainer.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

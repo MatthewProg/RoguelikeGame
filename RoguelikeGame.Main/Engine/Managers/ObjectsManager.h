@@ -8,6 +8,7 @@
 #include "../Models/MeleeWeapon.h"
 #include "../Models/Player.h"
 #include "../Models/Enemy.h"
+#include "../UI/FocusContainer.h"
 #include "../UI/AnimationBox.h"
 #include "../UI/ProgressBar.h"
 #include "../UI/Button.h"
@@ -28,6 +29,7 @@ private:
 	std::map<std::string, Enemy*> _enemies;
 	std::map<std::string, Player*> _players;
 
+	std::map<std::string, FocusContainer*> _focusContainers;
 	std::map<std::string, ProgressBar*> _progressBars;
 	std::map<std::string, Button*> _buttons;
 	std::map<std::string, Scene*> _scenes;
@@ -44,6 +46,9 @@ private:
 
 	//Players
 	Player* CreatePlayerMaleElf();
+
+	//FocusContainers
+	FocusContainer* CreateFocusContainerOptionBar();
 
 	//ProgressBars
 	ProgressBar* CreateProgressBarHeart();
@@ -62,6 +67,7 @@ public:
 	Enemy* GetEnemy(const std::string& name);
 	Player* GetPlayer(const std::string& name);
 
+	FocusContainer* GetFocusContainer(const std::string& name);
 	ProgressBar* GetProgressBar(const std::string& name);
 	Button* GetButton(const std::string& name);
 	Scene* GetScene(const std::string& name);

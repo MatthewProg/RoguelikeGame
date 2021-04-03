@@ -30,8 +30,8 @@ public:
 	static Settings* GetInstance();
 	~Settings();
 
-	bool LoadSettings(std::string path);
-	bool SaveSettings(std::string path);
+	bool LoadSettings(const std::string& path);
+	bool SaveSettings(const std::string& path);
 
 	//Only runtime, it's not stored in file
 	Option<bool> DEBUG;

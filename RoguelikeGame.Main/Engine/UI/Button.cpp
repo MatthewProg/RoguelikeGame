@@ -60,11 +60,12 @@ void Button::RedrawElement()
 
 void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
-	std::string newState = "none";
+	std::string newState = _currentState;
 	if (_mouseInput == true)
 	{
 		_lmbUp = false;
 		auto bounds = GetGlobalBounds();
+
 		if (ev->type == sf::Event::MouseMoved)
 			if (bounds.contains(mousePos))
 			{
@@ -73,12 +74,16 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 				else
 					newState = "hover";
 			}
+			else
+				newState = "none";
+
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			if (bounds.contains(mousePos))
 			{
 				_lmbWasDown = true;
 				newState = "click";
 			}
+
 		if (ev->type == sf::Event::MouseButtonReleased && ev->mouseButton.button == sf::Mouse::Left)
 		{
 			if (bounds.contains(mousePos) && _lmbWasDown == true)
@@ -108,7 +113,10 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		if (ev->type == sf::Event::KeyReleased && ev->key.code == sf::Keyboard::Enter)
 		{
 			if (_inFocus == true)
+			{
+				_lmbWasDown = false;
 				_lmbUp = true;
+			}
 			newState = "none";
 		}
 	}

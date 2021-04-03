@@ -35,6 +35,8 @@ ObjectsManager::ObjectsManager()
 
 	_players["male_elf"] = nullptr;
 
+	_focusContainers["option_bar"] = nullptr;
+
 	_progressBars["heart"] = nullptr;
 
 	_buttons["default_red"] = nullptr;
@@ -45,31 +47,35 @@ ObjectsManager::ObjectsManager()
 }
 ObjectsManager::~ObjectsManager()
 {
-	for (auto v : _meleeWeapons)
+	for (auto& v : _meleeWeapons)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _hitboxWeapons)
+	for (auto& v : _hitboxWeapons)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _enemies)
+	for (auto& v : _enemies)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _players)
+	for (auto& v : _players)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _progressBars)
+	for (auto& v : _focusContainers)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _buttons)
+	for (auto& v : _progressBars)
 		if (v.second != nullptr)
 			delete v.second;
 
-	for (auto v : _scenes)
+	for (auto& v : _buttons)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto& v : _scenes)
 		if (v.second != nullptr)
 			delete v.second;
 }
@@ -146,6 +152,23 @@ Player* ObjectsManager::GetPlayer(const std::string& name)
 		return obj;
 	}
 	return new Player();
+}
+
+FocusContainer* ObjectsManager::GetFocusContainer(const std::string& name)
+{
+	auto found = _focusContainers.find(name);
+	if (found != _focusContainers.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "option_bar") found->second = CreateFocusContainerOptionBar();
+		}
+
+		FocusContainer* obj = new FocusContainer(*(found->second));
+		obj->RedrawElement();
+		return obj;
+	}
+	return nullptr;
 }
 
 ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
@@ -359,6 +382,45 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 	return pl;
 }
 
+FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
+{
+	FocusContainer* obj = new FocusContainer();
+
+	obj->SetFocusColor(sf::Color(0, 0, 0, 80));
+	obj->SetHoverColor(sf::Color(0, 0, 0, 48));
+	obj->SetKeyboardInput(true);
+	obj->SetMouseInput(true);
+	obj->SetPassHover(true);
+	obj->SetPassClick(false);
+	obj->setPosition(50.f, 50.f);
+
+	//Elements
+	auto label = new Label();
+	auto pb = GetProgressBar("heart");
+
+	label->SetFont(*_fonts->GetFont("menu"));
+	label->SetText("Sound volume");
+	label->SetCharacterSize(26);
+	label->SetFillColor(sf::Color::White);
+	label->SetMouseInput(false);
+	label->SetKeyboardInput(false);
+	label->setPosition(10.f, 10.f);
+	auto bounds = label->GetGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(bounds.width + 10.f), uint32_t(bounds.height + 10.f)));
+
+	pb->SetKeyboardInput(true);
+	pb->SetMouseInput(true);
+	pb->setPosition(_windowSize.x - 110.f - pb->GetGlobalBounds().width, 10.f);
+
+	obj->AddElement("label", label);
+	obj->AddElement("bar", pb);
+	
+	bounds = obj->GetElementsGlobalBounds();
+	obj->Init(sf::Vector2u(uint32_t(bounds.width + 10.f), uint32_t(bounds.height + 10.f)));
+
+	return obj;
+}
+
 ProgressBar* ObjectsManager::CreateProgressBarHeart()
 {
 	ProgressBar* hb = new ProgressBar();
@@ -532,7 +594,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	//Scene settings
 	sc->SetBackgroundColor(sf::Color(66, 40, 53, 255));
 
-
+	auto btn = GetFocusContainer("option_bar");
+	sc->AddElement("btn", btn);
 
 	return sc;
 }

@@ -36,7 +36,7 @@ Settings::~Settings()
 	;
 }
 
-bool Settings::LoadSettings(std::string path)
+bool Settings::LoadSettings(const std::string& path)
 {
 	std::ifstream stream;
 	stream.open(path, std::ios::in);
@@ -69,7 +69,7 @@ bool Settings::LoadSettings(std::string path)
 	return true;
 }
 
-bool Settings::SaveSettings(std::string path)
+bool Settings::SaveSettings(const std::string& path)
 {
 	nlohmann::json doc
 	{
