@@ -9,6 +9,7 @@
 #include "../Managers/FontsManager.h"
 #include "../Managers/SceneManager.h"
 #include "../Helpers/DebugHelper.h"
+#include "../Helpers/UIHelper.h"
 #include "../Core/EntityMovement.h"
 #include "../Core/EnemiesAI.h"
 #include "../Models/GameMap.h"
@@ -52,6 +53,7 @@ private:
 	void UpdateUI();
 	void UpdateGame();
 	void CheckButtons();
+	void SaveSettings();
 	void LoadLevel(std::string path, std::string playerTemplate);
 
 	bool Tick();

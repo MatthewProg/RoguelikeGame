@@ -6,6 +6,7 @@ ProgressBar::ProgressBar()
 	_backgroundLayers.clear();
 
 	_currentValue = 3.F;
+	_step = 0.f;
 	_maxValue = 3.F;
 
 	_prevValue = _currentValue;
@@ -20,6 +21,7 @@ ProgressBar::ProgressBar(ProgressBar& other) : UIElement(other)
 {
 	_currentValue = other._currentValue;
 	_maxValue = other._maxValue;
+	_step = other._step;
 	_prevValue = other._prevValue;
 	_prevMaxValue = other._prevMaxValue;
 	_progressBarSteps = other._progressBarSteps;
@@ -52,6 +54,11 @@ void ProgressBar::SetMaxValue(float maxValue)
 	}
 }
 
+void ProgressBar::SetForceStep(float step)
+{
+	_step = step;
+}
+
 float ProgressBar::GetCurrentValue() const
 {
 	return _currentValue;
@@ -60,6 +67,14 @@ float ProgressBar::GetCurrentValue() const
 float ProgressBar::GetMaxValue() const
 {
 	return _maxValue;
+}
+
+float ProgressBar::GetStep() const
+{
+	if (_step != 0.f)
+		return _step;
+	else
+		return (1.f / (float(_progressBarSteps.size())-1.f));
 }
 
 void ProgressBar::AddProgressBarStep(const sf::FloatRect& step, const std::string& textureName)
@@ -163,8 +178,8 @@ sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds() const
 	if (_progressBarSteps.size() == 0)
 		return bounds;
 
-	auto startPos = sf::Vector2f(bounds.left, bounds.top) + _progressBarStepsPos;
-	auto width = _progressBarSteps.size() * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width * getScale().x;
+	auto startPos = sf::Vector2f(bounds.left + (_progressBarStepsPos.x * getScale().x), bounds.top + (_progressBarStepsPos.y * getScale().y));
+	auto width = (_maxValue / GetStep()) * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width * getScale().x;
 	auto endPos = startPos + sf::Vector2f(width, std::get<0>(_progressBarSteps[0]).height * getScale().y);
 	return sf::FloatRect(startPos, endPos - startPos);
 }
@@ -218,21 +233,23 @@ void ProgressBar::RedrawElement()
 	else if (tex->getSize().x == 0 || tex->getSize().y == 0)
 		tex = _noTexture;
 	int fullSteps = -1;
-	for (int i = 0; i < (int)_currentValue; i++)
+	float valueStep = (_step != 0.f) ? _step : 1.f;
+	for (float i = 0; i <= _currentValue - valueStep; i+=valueStep)
 	{
-		t.setPosition(_progressBarStepsPos.x + (size.width * i), _progressBarStepsPos.y);
+		fullSteps++;
+
+		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
 		rs.transform = t.getTransform();
 		rs.texture = tex;
 		_render.draw(step, rs);
-
-		fullSteps = i;
 	}
 
 	//Draw partialy filled step
-	float rest = (float)(_currentValue - (int)_currentValue);
-	if (rest != 0.f && _maxValue > 0.f && _currentValue > 0.f)
+	float rest = _currentValue - (valueStep * (fullSteps + 1));
+	if (rest > 0.f && _maxValue > 0.f && _currentValue > 0.f)
 	{
-		size_t id = (size_t)roundf((float)(_progressBarSteps.size() - 1) * rest);
+		fullSteps++;
+		size_t id = (size_t)roundf((float)(_progressBarSteps.size() - 1) * (rest / valueStep));
 		auto& newSize = std::get<0>(_progressBarSteps[id]);
 		step[0].position = sf::Vector2f(0, 0);
 		step[1].position = sf::Vector2f(newSize.width, 0);
@@ -242,7 +259,7 @@ void ProgressBar::RedrawElement()
 		step[1].texCoords = sf::Vector2f(newSize.left + newSize.width, newSize.top);
 		step[2].texCoords = sf::Vector2f(newSize.left + newSize.width, newSize.top + newSize.height);
 		step[3].texCoords = sf::Vector2f(newSize.left, newSize.top + newSize.height);
-		t.setPosition(_progressBarStepsPos.x + (size.width * (fullSteps + 1)), _progressBarStepsPos.y);
+		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
 		tex = _texturesManager->GetTexture(std::get<1>(_progressBarSteps[id]));
 		if (tex == nullptr)
 			tex = _noTexture;
@@ -251,13 +268,11 @@ void ProgressBar::RedrawElement()
 		rs.texture = tex;
 		rs.transform = t.getTransform();
 		_render.draw(step, rs);
-		fullSteps++;
 	}
 
 
 	//Draw empty steps
-	if (fullSteps > -1) 
-		fullSteps++;
+	fullSteps++;
 
 	auto& emptyStep = std::get<0>(_progressBarSteps[0]);
 	step[0].position = sf::Vector2f(0, 0);
@@ -274,12 +289,13 @@ void ProgressBar::RedrawElement()
 	else if (tex->getSize().x == 0 || tex->getSize().y == 0)
 		tex = _noTexture;
 
-	for (int j = fullSteps; j < (int)_maxValue; j++)
+	for (float j = (float)fullSteps * valueStep; j < _maxValue; j+=valueStep)
 	{
-		t.setPosition(_progressBarStepsPos.x + (size.width * j), _progressBarStepsPos.y);
+		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
 		rs.transform = t.getTransform();
 		rs.texture = tex;
 		_render.draw(step, rs);
+		fullSteps++;
 	}
 
 	_render.display();
@@ -314,8 +330,7 @@ void ProgressBar::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		{
 			if (ev->type == sf::Event::KeyReleased)
 			{
-				auto divide = (_progressBarSteps.size() - 1 == 0) ? 1 : _progressBarSteps.size() - 1;
-				float step = 1.f / float(divide);
+				float step = GetStep();
 				if (ev->key.code == sf::Keyboard::Left)
 				{
 					if (_currentValue - step < 0) SetCurrentValue(0.F);

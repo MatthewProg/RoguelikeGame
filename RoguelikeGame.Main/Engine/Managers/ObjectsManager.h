@@ -52,6 +52,7 @@ private:
 
 	//ProgressBars
 	ProgressBar* CreateProgressBarHeart();
+	ProgressBar* CreateProgressBarOptions();
 
 	//Buttons
 	Button* CreateButtonDefaultRed();

@@ -185,6 +185,17 @@ void FocusContainer::RemoveElement(const std::string& name)
 	}
 }
 
+void FocusContainer::RenameElement(const std::string& oldName, const std::string& newName)
+{
+	auto found = _uiElements.find(oldName);
+	if (found != _uiElements.end())
+	{
+		RemoveElement(newName);
+		_uiElements.insert(*found);
+		_uiElements.erase(found);
+	}
+}
+
 UIElement* FocusContainer::GetElement(const std::string& name)
 {
 	auto found = _uiElements.find(name);

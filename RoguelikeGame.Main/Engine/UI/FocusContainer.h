@@ -26,6 +26,7 @@ public:
 	void AddElement(const std::string& name, UIElement* element);
 	void RemoveElement(UIElement* element);
 	void RemoveElement(const std::string& name);
+	void RenameElement(const std::string& oldName, const std::string& newName);
 	UIElement* GetElement(const std::string& name);
 	const std::map<std::string, UIElement*>& GetElements() const;
 

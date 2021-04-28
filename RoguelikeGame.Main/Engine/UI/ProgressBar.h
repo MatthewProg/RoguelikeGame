@@ -14,6 +14,7 @@ private:
 	float _prevMaxValue;
 
 	float _currentValue;
+	float _step;
 	float _maxValue;
 
 	bool _sthChanged;
@@ -25,10 +26,12 @@ public:
 	//Var setters
 	void SetCurrentValue(float value);
 	void SetMaxValue(float maxValue);
+	void SetForceStep(float step);
 
 	//Var getters
 	float GetCurrentValue() const;
 	float GetMaxValue() const;
+	float GetStep() const;
 
 	//Graphics setters
 	void AddProgressBarStep(const sf::FloatRect& step, const std::string& textureName);

@@ -77,7 +77,23 @@ void Game::CheckButtons()
 			else if (((Button*)loaded->GetElement("options"))->Clicked()) { _sceneManager.LoadScene("options"); }
 			else if (((Button*)loaded->GetElement("play"))->Clicked()) { LoadLevel("./res/maps/map1.json", "male_elf"); }
 		}
+		else if (_sceneManager.GetLoadedSceneName() == "options")
+		{
+			if (((Button*)loaded->GetElement("save_button"))->Clicked()) { SaveSettings(); _sceneManager.LoadScene("main_menu"); }
+		}
 	}
+}
+
+void Game::SaveSettings()
+{
+	auto sc = _sceneManager.GetScene("options");
+	if (sc == nullptr) return;
+
+	_settings->SOUNDS_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "sound_volume", "bar"));
+	_settings->MUSIC_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "music_volume", "bar"));
+
+	if (_settings->SaveSettings("./settings.json") == false)
+		_logger->Log(Logger::LogType::ERROR, "Unable to save settings");
 }
 
 void Game::LoadLevel(std::string path, std::string playerTemplate)
@@ -241,6 +257,11 @@ void Game::Start()
 	_sceneManager.AddScene("options", _objTemplates.GetScene("options"));
 	_sceneManager.LoadScene("main_menu");
 	_sceneManager.SetShowFocused(false);
+
+	//Update options scene
+	auto opt = _sceneManager.GetScene("options");
+	((ProgressBar*)((FocusContainer*)opt->GetElement("sound_volume"))->GetElement("bar"))->SetCurrentValue(_settings->SOUNDS_VOLUME);
+	((ProgressBar*)((FocusContainer*)opt->GetElement("music_volume"))->GetElement("bar"))->SetCurrentValue(_settings->MUSIC_VOLUME);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);

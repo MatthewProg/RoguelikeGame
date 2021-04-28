@@ -185,7 +185,13 @@ void Scene::SetFocus(const std::string& name)
 void Scene::ClearFocus()
 {
 	if (std::get<1>(_inFocus) != nullptr)
+	{
 		std::get<1>(_inFocus)->SetInFocus(false);
+		auto ev = new sf::Event;
+		ev->type = sf::Event::MouseMoved;
+		std::get<1>(_inFocus)->ProcessEvent(ev, sf::Vector2f(-1.f, -1.f));
+		delete ev;
+	}
 	_inFocus = std::tuple<std::string, UIElement*>("", nullptr);
 }
 

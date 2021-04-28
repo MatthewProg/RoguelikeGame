@@ -161,6 +161,7 @@
     <ClCompile Include="Engine\Helpers\MathHelper.cpp" />
     <ClCompile Include="Engine\Helpers\StringHelper.cpp" />
     <ClCompile Include="Engine\Helpers\TilesHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\UIHelper.cpp" />
     <ClCompile Include="Engine\Helpers\ViewHelper.cpp" />
     <ClCompile Include="Engine\Managers\CollisionsManager.cpp" />
     <ClCompile Include="Engine\Managers\EnemiesManager.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Engine\Helpers\MathHelper.h" />
     <ClInclude Include="Engine\Helpers\StringHelper.h" />
     <ClInclude Include="Engine\Helpers\TilesHelper.h" />
+    <ClInclude Include="Engine\Helpers\UIHelper.h" />
     <ClInclude Include="Engine\Helpers\ViewHelper.h" />
     <ClInclude Include="Engine\Managers\CollisionsManager.h" />
     <ClInclude Include="Engine\Managers\EnemiesManager.h" />

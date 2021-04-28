@@ -38,6 +38,7 @@ ObjectsManager::ObjectsManager()
 	_focusContainers["option_bar"] = nullptr;
 
 	_progressBars["heart"] = nullptr;
+	_progressBars["options"] = nullptr;
 
 	_buttons["default_red"] = nullptr;
 
@@ -179,6 +180,7 @@ ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
 		if (found->second == nullptr)
 		{
 			if (name == "heart") found->second = CreateProgressBarHeart();
+			else if (name == "options") found->second = CreateProgressBarOptions();
 		}
 
 		ProgressBar* obj = new ProgressBar(*(found->second));
@@ -392,11 +394,11 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 	obj->SetMouseInput(true);
 	obj->SetPassHover(true);
 	obj->SetPassClick(false);
-	obj->setPosition(50.f, 50.f);
+	obj->setPosition(0.f, 0.f);
 
 	//Elements
 	auto label = new Label();
-	auto pb = GetProgressBar("heart");
+	auto pb = GetProgressBar("options");
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("Sound volume");
@@ -442,6 +444,31 @@ ProgressBar* ObjectsManager::CreateProgressBarHeart()
 	hb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
 
 	return hb;
+}
+ProgressBar* ObjectsManager::CreateProgressBarOptions()
+{
+	ProgressBar* pb = new ProgressBar();
+
+	pb->SetCurrentValue(100.F);
+	pb->SetMaxValue(100.f);
+	pb->SetForceStep(10.f);
+	pb->setPosition(sf::Vector2f(0.f, 0.f));
+	
+	pb->SetSoundsManager(_sounds);
+	pb->SetTexturesManager(_textures);
+	pb->AddBackgroundLayer(sf::FloatRect(11.f, 120.f, 48.f, 10.f), "ui");
+	pb->AddProgressBarStep(sf::FloatRect(0.f, 0.f, 4.f, 6.f), "ui");
+	pb->AddProgressBarStep(sf::FloatRect(42.f, 15.f, 4.f, 6.f), "ui");
+	pb->SetProgressBarStepsPos(sf::Vector2f(4.f, 2.f));
+	
+	pb->SetVisibility(true);
+	pb->SetMouseInput(true);
+	pb->SetKeyboardInput(true);
+	
+	pb->Init(sf::Vector2u(50, 10));
+	pb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
+
+	return pb;
 }
 
 Button* ObjectsManager::CreateButtonDefaultRed()
@@ -594,8 +621,35 @@ Scene* ObjectsManager::CreateSceneOptions()
 	//Scene settings
 	sc->SetBackgroundColor(sf::Color(66, 40, 53, 255));
 
-	auto btn = GetFocusContainer("option_bar");
-	sc->AddElement("btn", btn);
+	//Vars
+	auto sounds = GetFocusContainer("option_bar");
+	auto music = GetFocusContainer("option_bar");
+	auto saveBtn = GetButton("default_red");
+
+	//Sounds
+	((Label*)sounds->GetElement("label"))->SetText("Sound volume");
+	sounds->setPosition(50.f * _settings->SCALE_RATIO, 50.f * _settings->SCALE_RATIO);
+
+	//Music
+	((Label*)music->GetElement("label"))->SetText("Music volume");
+	auto prevBounds = sounds->GetGlobalBounds();
+	music->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
+
+	//Save button
+	saveBtn->ApplyText("Save");
+	saveBtn->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
+	saveBtn->EditTextState("none")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	saveBtn->EditTextState("hover")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
+	saveBtn->EditTextState("click")->setPosition(roundf(38.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
+
+	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.93f, 0.92f, 1.f, 1.f), saveBtn->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	saveBtn->setPosition(pos.left, pos.top);
+	saveBtn->setScale(0.75f, 0.75f);
+
+	//Add
+	sc->AddElement("sound_volume", sounds);
+	sc->AddElement("music_volume", music);
+	sc->AddElement("save_button", saveBtn);
 
 	return sc;
 }
