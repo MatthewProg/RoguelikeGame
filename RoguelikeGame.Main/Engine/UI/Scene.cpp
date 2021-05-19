@@ -66,7 +66,7 @@ void Scene::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 		if (focused->GetGlobalBounds().contains(mousePos))
 			return;
 
-	for (auto pair : _uiElements)
+	for (auto &pair : _uiElements)
 	{
 		if (pair.second != nullptr)
 			if (pair.second->GetMouseInput() == true || pair.second->GetKeyboardInput() == true)

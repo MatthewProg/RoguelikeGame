@@ -48,11 +48,27 @@ void FocusContainer::RedrawElement()
 				_render.draw(draw, rs);
 			}
 		}
+
+	if (_enabled == false)
+	{
+		for (size_t i = 0; i < _background.getVertexCount(); i++)
+			draw[i].color = sf::Color(0, 0, 0, 128);
+
+		auto b = GetGlobalBounds();
+		draw[0].position = sf::Vector2f(0.f, 0.f);
+		draw[1].position = sf::Vector2f(b.width, 0.f);
+		draw[2].position = sf::Vector2f(b.width, b.height);
+		draw[3].position = sf::Vector2f(0.f, b.height);
+		_render.draw(draw);
+	}
 	_render.display();
 }
 
 void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
+	if (_enabled == false)
+		return;
+
 	bool contains = false;
 	if (GetGlobalBounds().contains(mousePos)) contains = true;
 
@@ -129,6 +145,7 @@ FocusContainer::FocusContainer()
 	_keyboardInput = true;
 	_mouseInput = true;
 	_focusOnHover = false;
+	_enabled = true;
 }
 
 FocusContainer::FocusContainer(FocusContainer& other) : UIElement(other)
@@ -141,6 +158,7 @@ FocusContainer::FocusContainer(FocusContainer& other) : UIElement(other)
 	_focusColor = other._focusColor;
 	_background = other._background;
 	_sthChanged = other._sthChanged;
+	_enabled = other._enabled;
 }
 
 FocusContainer::~FocusContainer()
@@ -230,6 +248,25 @@ void FocusContainer::SetFocusColor(const sf::Color& color)
 	_focusColor = color;
 }
 
+void FocusContainer::SetEnabled(bool enabled)
+{
+	if (enabled != _enabled)
+	{
+		if (enabled == false)
+		{
+			ChangeColor(sf::Color::Transparent);
+			SetInFocus(false);
+			for (auto& e : _uiElements)
+			{
+				if (e.second == nullptr) continue;
+				e.second->SetInFocus(false);
+			}
+		}
+		_enabled = enabled;
+		_sthChanged = true;
+	}
+}
+
 bool FocusContainer::GetPassFocus() const
 {
 	return _passFocus;
@@ -264,4 +301,9 @@ sf::FloatRect FocusContainer::GetElementsGlobalBounds() const
 	}
 
 	return sf::FloatRect(getPosition(), size);
+}
+
+bool FocusContainer::IsEnabled() const
+{
+	return _enabled;
 }

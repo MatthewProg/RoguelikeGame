@@ -12,7 +12,7 @@
 class Utilities
 {
 protected:
-	Utilities() { Generate(16, 16); }
+	Utilities() { Generate(16, 16); _noTxt16x16.setRepeated(true); }
 	static Utilities* _utilities;
 private:
 	sf::Texture _noTxt16x16;

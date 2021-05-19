@@ -50,6 +50,14 @@ void Game::UpdateUI()
 		ProgressBar* hb = (ProgressBar*)sc->GetElement("healthBar");
 		hb->SetCurrentValue(_player->GetHealth());
 	}
+	auto ls = _sceneManager.GetLoadedScene();
+	if (ls != nullptr && _sceneManager.GetLoadedSceneName() == "options")
+	{
+		//if (UIHelper::ExtractCheckBoxValue(ls, "vsync", "checkbox") == true)
+		//	((FocusContainer*)ls->GetElement("music_volume"))->SetEnabled(false); //CHANGE TO FPS LIMIT WHEN ADDED
+		//else
+		//	((FocusContainer*)ls->GetElement("music_volume"))->SetEnabled(true); //CHANGE TO FPS LIMIT WHEN ADDED
+	}
 	CheckButtons();
 }
 
@@ -91,6 +99,7 @@ void Game::SaveSettings()
 
 	_settings->SOUNDS_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "sound_volume", "bar"));
 	_settings->MUSIC_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "music_volume", "bar"));
+	_settings->VSYNC_ENABLED.NewValue(UIHelper::ExtractCheckBoxValue(sc, "vsync", "checkbox"));
 
 	if (_settings->SaveSettings("./settings.json") == false)
 		_logger->Log(Logger::LogType::ERROR, "Unable to save settings");
@@ -262,6 +271,7 @@ void Game::Start()
 	auto opt = _sceneManager.GetScene("options");
 	((ProgressBar*)((FocusContainer*)opt->GetElement("sound_volume"))->GetElement("bar"))->SetCurrentValue(_settings->SOUNDS_VOLUME);
 	((ProgressBar*)((FocusContainer*)opt->GetElement("music_volume"))->GetElement("bar"))->SetCurrentValue(_settings->MUSIC_VOLUME);
+	((CheckBox*)((FocusContainer*)opt->GetElement("vsync"))->GetElement("checkbox"))->SetChecked(_settings->VSYNC_ENABLED);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);

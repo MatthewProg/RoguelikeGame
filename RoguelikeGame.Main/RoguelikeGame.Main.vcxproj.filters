@@ -179,6 +179,9 @@
     <ClInclude Include="Engine\Helpers\UIHelper.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\CheckBox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -298,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Helpers\UIHelper.cpp">
       <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\CheckBox.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

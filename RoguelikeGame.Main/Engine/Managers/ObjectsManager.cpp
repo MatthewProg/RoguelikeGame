@@ -36,9 +36,12 @@ ObjectsManager::ObjectsManager()
 	_players["male_elf"] = nullptr;
 
 	_focusContainers["option_bar"] = nullptr;
+	_focusContainers["option_checkbox"] = nullptr;
 
 	_progressBars["heart"] = nullptr;
 	_progressBars["options"] = nullptr;
+
+	_checkBoxes["default"] = nullptr;
 
 	_buttons["default_red"] = nullptr;
 
@@ -69,6 +72,10 @@ ObjectsManager::~ObjectsManager()
 			delete v.second;
 
 	for (auto& v : _progressBars)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto& v : _checkBoxes)
 		if (v.second != nullptr)
 			delete v.second;
 
@@ -163,6 +170,7 @@ FocusContainer* ObjectsManager::GetFocusContainer(const std::string& name)
 		if (found->second == nullptr)
 		{
 			if (name == "option_bar") found->second = CreateFocusContainerOptionBar();
+			else if (name == "option_checkbox") found->second = CreateFocusContainerOptionCheckBox();
 		}
 
 		FocusContainer* obj = new FocusContainer(*(found->second));
@@ -184,6 +192,23 @@ ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
 		}
 
 		ProgressBar* obj = new ProgressBar(*(found->second));
+		obj->RedrawElement();
+		return obj;
+	}
+	return nullptr;
+}
+
+CheckBox* ObjectsManager::GetCheckBox(const std::string& name)
+{
+	auto found = _checkBoxes.find(name);
+	if (found != _checkBoxes.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "default") found->second = CreateCheckBoxDefault();
+		}
+
+		CheckBox* obj = new CheckBox(*(found->second));
 		obj->RedrawElement();
 		return obj;
 	}
@@ -402,23 +427,69 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("Sound volume");
-	label->SetCharacterSize(26);
+	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
 	label->SetFillColor(sf::Color::White);
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
-	label->setPosition(10.f, 10.f);
+	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
 	auto bounds = label->GetGlobalBounds();
-	label->Init(sf::Vector2u(uint32_t(bounds.width + 10.f), uint32_t(bounds.height + 10.f)));
+	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	pb->SetKeyboardInput(true);
 	pb->SetMouseInput(true);
-	pb->setPosition(_windowSize.x - 110.f - pb->GetGlobalBounds().width, 10.f);
+	pb->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - pb->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
 
 	obj->AddElement("label", label);
 	obj->AddElement("bar", pb);
 	
 	bounds = obj->GetElementsGlobalBounds();
-	obj->Init(sf::Vector2u(uint32_t(bounds.width + 10.f), uint32_t(bounds.height + 10.f)));
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetGlobalBounds(), bounds);
+	auto pbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), pb->GetGlobalBounds(), bounds);
+	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
+	pb->setPosition(bounds.left + bounds.width - pb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), pbPos.top);
+	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	return obj;
+}
+FocusContainer* ObjectsManager::CreateFocusContainerOptionCheckBox()
+{
+	FocusContainer* obj = new FocusContainer();
+
+	obj->SetFocusColor(sf::Color(0, 0, 0, 80));
+	obj->SetHoverColor(sf::Color(0, 0, 0, 48));
+	obj->SetKeyboardInput(true);
+	obj->SetMouseInput(true);
+	obj->SetPassHover(true);
+	obj->SetPassClick(false);
+	obj->setPosition(0.f, 0.f);
+
+	//Elements
+	auto label = new Label();
+	auto cb = GetCheckBox("default");
+
+	label->SetFont(*_fonts->GetFont("menu"));
+	label->SetText("V-Sync");
+	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetFillColor(sf::Color::White);
+	label->SetMouseInput(false);
+	label->SetKeyboardInput(false);
+	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	auto bounds = label->GetGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	cb->SetKeyboardInput(true);
+	cb->SetMouseInput(true);
+	cb->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - cb->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+
+	obj->AddElement("label", label);
+	obj->AddElement("checkbox", cb);
+
+	bounds = obj->GetElementsGlobalBounds();
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetGlobalBounds(), bounds);
+	auto cbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), cb->GetGlobalBounds(), bounds);
+	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
+	cb->setPosition(bounds.left + bounds.width - cb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), cbPos.top);
+	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
 }
@@ -465,10 +536,29 @@ ProgressBar* ObjectsManager::CreateProgressBarOptions()
 	pb->SetMouseInput(true);
 	pb->SetKeyboardInput(true);
 	
-	pb->Init(sf::Vector2u(50, 10));
+	pb->Init(sf::Vector2u(48, 10));
 	pb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
 
 	return pb;
+}
+
+CheckBox* ObjectsManager::CreateCheckBoxDefault()
+{
+	CheckBox* cb = new CheckBox();
+
+	//Init
+	cb->Init(sf::Vector2u(23, 23));
+	cb->SetTexturesManager(_textures);
+	cb->SetSoundsManager(_sounds);
+	cb->setPosition(0.f, 0.f);
+	cb->setScale(2.f * _settings->SCALE_RATIO, 2.f * _settings->SCALE_RATIO);
+
+	cb->SetTextureName("ui");
+	cb->SetUncheckedRect(sf::FloatRect(108.f, 40.f, 23.f, 23.f));
+	cb->SetCheckedRect(sf::FloatRect(134.f, 40.f, 23.f, 23.f));
+	cb->SetChecked(false);
+
+	return cb;
 }
 
 Button* ObjectsManager::CreateButtonDefaultRed()
@@ -624,6 +714,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	//Vars
 	auto sounds = GetFocusContainer("option_bar");
 	auto music = GetFocusContainer("option_bar");
+	auto vsync = GetFocusContainer("option_checkbox");
 	auto saveBtn = GetButton("default_red");
 
 	//Sounds
@@ -634,6 +725,11 @@ Scene* ObjectsManager::CreateSceneOptions()
 	((Label*)music->GetElement("label"))->SetText("Music volume");
 	auto prevBounds = sounds->GetGlobalBounds();
 	music->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
+
+	//Vsync
+	((Label*)vsync->GetElement("label"))->SetText("V-Sync");
+	prevBounds = music->GetGlobalBounds();
+	vsync->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
 
 	//Save button
 	saveBtn->ApplyText("Save");
@@ -649,8 +745,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	//Add
 	sc->AddElement("sound_volume", sounds);
 	sc->AddElement("music_volume", music);
+	sc->AddElement("vsync", vsync);
 	sc->AddElement("save_button", saveBtn);
-
 	return sc;
 }
 Scene* ObjectsManager::CreateSceneGameUI()

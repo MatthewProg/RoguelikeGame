@@ -11,6 +11,7 @@
 #include "../UI/FocusContainer.h"
 #include "../UI/AnimationBox.h"
 #include "../UI/ProgressBar.h"
+#include "../UI/CheckBox.h"
 #include "../UI/Button.h"
 #include "../UI/Label.h"
 #include "../UI/Scene.h"
@@ -31,6 +32,7 @@ private:
 
 	std::map<std::string, FocusContainer*> _focusContainers;
 	std::map<std::string, ProgressBar*> _progressBars;
+	std::map<std::string, CheckBox*> _checkBoxes;
 	std::map<std::string, Button*> _buttons;
 	std::map<std::string, Scene*> _scenes;
 
@@ -49,10 +51,14 @@ private:
 
 	//FocusContainers
 	FocusContainer* CreateFocusContainerOptionBar();
+	FocusContainer* CreateFocusContainerOptionCheckBox();
 
 	//ProgressBars
 	ProgressBar* CreateProgressBarHeart();
 	ProgressBar* CreateProgressBarOptions();
+
+	//CheckBoxes
+	CheckBox* CreateCheckBoxDefault();
 
 	//Buttons
 	Button* CreateButtonDefaultRed();
@@ -70,6 +76,7 @@ public:
 
 	FocusContainer* GetFocusContainer(const std::string& name);
 	ProgressBar* GetProgressBar(const std::string& name);
+	CheckBox* GetCheckBox(const std::string& name);
 	Button* GetButton(const std::string& name);
 	Scene* GetScene(const std::string& name);
 

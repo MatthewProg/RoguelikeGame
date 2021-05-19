@@ -140,30 +140,16 @@ void sf::Animation::UpdateVertices()
 	_vertices[2].position = sf::Vector2f((float)_rectFrames[_currentFrame].width, (float)_rectFrames[_currentFrame].height);
 	_vertices[3].position = sf::Vector2f(0, (float)_rectFrames[_currentFrame].height);
 
-	float x = 0;
-	float y = 0;
-
+	auto texRect = _rectFrames[_currentFrame];
 	if (_texture == nullptr)
-	{
-		x = 0;
-		y = 0;
-	}
-	else if (_texture->getSize() == sf::Vector2u())
-	{
-		x = 0;
-		y = 0;
-	}
-	else
-	{
-		x = (float)_rectFrames[_currentFrame].left;
-		y = (float)_rectFrames[_currentFrame].top;
-	}
+		texRect = sf::IntRect(0, 0, 16, 16);
+	else if (_texture->getSize().x == 0)
+		texRect = sf::IntRect(0, 0, 16, 16);
 
-
-	_vertices[0].texCoords = sf::Vector2f(x, y);
-	_vertices[1].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y);
-	_vertices[2].texCoords = sf::Vector2f(x + (float)_rectFrames[_currentFrame].width, y + (float)_rectFrames[_currentFrame].height);
-	_vertices[3].texCoords = sf::Vector2f(x, y + (float)_rectFrames[_currentFrame].height);
+	_vertices[0].texCoords = sf::Vector2f((float)texRect.left, (float)texRect.top);
+	_vertices[1].texCoords = sf::Vector2f((float)texRect.left + (float)texRect.width, (float)texRect.top);
+	_vertices[2].texCoords = sf::Vector2f((float)texRect.left + (float)texRect.width, (float)texRect.top + (float)texRect.height);
+	_vertices[3].texCoords = sf::Vector2f((float)texRect.left, (float)texRect.top + (float)texRect.height);
 
 	if (_switchLeftRight) //horizontal
 	{

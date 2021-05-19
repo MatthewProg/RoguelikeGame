@@ -181,6 +181,7 @@
     <ClCompile Include="Engine\Models\Weapon.cpp" />
     <ClCompile Include="Engine\UI\AnimationBox.cpp" />
     <ClCompile Include="Engine\UI\Button.cpp" />
+    <ClCompile Include="Engine\UI\CheckBox.cpp" />
     <ClCompile Include="Engine\UI\FocusContainer.cpp" />
     <ClCompile Include="Engine\UI\Label.cpp" />
     <ClCompile Include="Engine\UI\ProgressBar.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Engine\Models\Weapon.h" />
     <ClInclude Include="Engine\UI\AnimationBox.h" />
     <ClInclude Include="Engine\UI\Button.h" />
+    <ClInclude Include="Engine\UI\CheckBox.h" />
     <ClInclude Include="Engine\UI\FocusContainer.h" />
     <ClInclude Include="Engine\UI\Label.h" />
     <ClInclude Include="Engine\UI\ProgressBar.h" />

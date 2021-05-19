@@ -10,6 +10,7 @@ private:
 
 	bool _passFocus;
 	bool _passClick;
+	bool _enabled;
 
 	bool _sthChanged;
 
@@ -35,6 +36,7 @@ public:
 	void SetPassClick(bool pass);
 	void SetHoverColor(const sf::Color& color);
 	void SetFocusColor(const sf::Color& color);
+	void SetEnabled(bool enabled);
 
 	//Getters
 	bool GetPassFocus() const;
@@ -42,6 +44,7 @@ public:
 	const sf::Color& GetHoverColor() const;
 	const sf::Color& GetFocusColor() const;
 	sf::FloatRect GetElementsGlobalBounds() const;
+	bool IsEnabled() const;
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
