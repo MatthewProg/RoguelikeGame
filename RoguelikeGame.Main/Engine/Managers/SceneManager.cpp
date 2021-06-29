@@ -14,13 +14,16 @@ void SceneManager::UpdateAllBoundsOutline()
 
 	for (auto& e : found->second->GetElements())
 	{
-		auto bounds = CollisionHelper::GetRectPoints(e.second->GetGlobalBounds());
-		for (size_t i = 0; i < bounds.size(); i++)
+		auto bounds = e.second->GetAllBoundsPoints();
+		for (size_t i = 0; i < (bounds.size() / 4); i++)
 		{
-			v.position = bounds[i];
-			_allOutline.append(v);
-			v.position = bounds[(i + 1) % bounds.size()];
-			_allOutline.append(v);
+			for (size_t j = 0; j < 4; j++)
+			{
+				v.position = bounds[(i*4)+j];
+				_allOutline.append(v);
+				v.position = bounds[(i*4)+((j+1)%4)];
+				_allOutline.append(v);
+			}
 		}
 	}
 }
@@ -79,17 +82,17 @@ void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 		auto focus = loaded->second->GetFocused();
 		if (std::get<1>(focus) != nullptr)
 		{
-			auto bounds = CollisionHelper::GetRectPoints(std::get<1>(focus)->GetGlobalBounds());
-			for (size_t i = 0; i < bounds.size(); i++)
+			auto bounds = std::get<1>(focus)->GetDeepestInFocusBoundsPoints();
+			for (uint8_t i = 0; i < 4; i++)
 			{
 				_focusedOutline[i].position = bounds[i];
-				_focusedOutline[i + 1].position = bounds[(i + 1) % bounds.size()];
+				_focusedOutline[i + 1].position = bounds[(i + 1) % 4];
 			}
 		}
 		else
 		{
 			for (uint8_t i = 0; i < 5; i++)
-				_focusedOutline[i].position = sf::Vector2f(-1, -1);
+				_focusedOutline[i].position = sf::Vector2f(-1.f, -1.f);
 		}
 	}
 }
@@ -113,6 +116,8 @@ void SceneManager::Update(bool tick, float delta)
 	if (loaded == _scenes.end()) return;
 	else if (loaded->second == nullptr) return;
 
+	if (_showAllBounds == true && tick == true)
+		UpdateAllBoundsOutline();
 	loaded->second->Update(tick, delta);
 }
 

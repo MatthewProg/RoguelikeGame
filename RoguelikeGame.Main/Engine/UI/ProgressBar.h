@@ -57,4 +57,5 @@ public:
 	virtual void RedrawElement() override;
 	virtual void Update(bool, float) override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
 };

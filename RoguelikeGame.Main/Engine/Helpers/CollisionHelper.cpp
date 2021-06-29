@@ -65,14 +65,14 @@ bool CollisionHelper::CheckTileCollision(const sf::Vector2f& center, float radiu
             circleDistance.x = abs(center.x - tileCenter.x);
             circleDistance.y = abs(center.y - tileCenter.y);
 
-            if (circleDistance.x > (tiles->tileWidth / 2 + radius)) { continue; }
-            if (circleDistance.y > (tiles->tileHeight / 2 + radius)) { continue; }
+            if (circleDistance.x > (tiles->tileWidth / 2.f + radius)) { continue; }
+            if (circleDistance.y > (tiles->tileHeight / 2.f + radius)) { continue; }
 
-            if (circleDistance.x <= (tiles->tileWidth / 2)) { return true; }
-            if (circleDistance.y <= (tiles->tileHeight / 2)) { return true; }
+            if (circleDistance.x <= (tiles->tileWidth / 2.f)) { return true; }
+            if (circleDistance.y <= (tiles->tileHeight / 2.f)) { return true; }
 
-            auto cX = circleDistance.x - (tiles->tileWidth / 2);
-            auto cY = circleDistance.y - (tiles->tileHeight / 2);
+            auto cX = circleDistance.x - (tiles->tileWidth / 2.f);
+            auto cY = circleDistance.y - (tiles->tileHeight / 2.f);
             if (cX * cX + cY * cY <= radius * radius) return true;
         }
     return false;

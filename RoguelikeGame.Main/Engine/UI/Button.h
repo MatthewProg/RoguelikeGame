@@ -17,6 +17,7 @@ private:
 
 	bool _lmbWasDown;
 	bool _lmbUp;
+	bool _holdingKey;
 public:
 	Button();
 	Button(Button& other);
@@ -52,5 +53,6 @@ public:
 	virtual void Update(bool, float) override;
 	virtual void RedrawElement() override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
 };
 

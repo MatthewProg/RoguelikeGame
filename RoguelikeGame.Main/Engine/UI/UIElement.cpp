@@ -69,6 +69,8 @@ void UIElement::SetFocusOnHover(bool hover)
 void UIElement::SetInFocus(bool isFocused)
 {
 	_inFocus = isFocused;
+	if (_mouseInput == false && _keyboardInput == false)
+		_inFocus = false;
 }
 
 bool UIElement::GetVisibility() const
@@ -98,10 +100,23 @@ bool UIElement::GetInFocus() const
 
 sf::FloatRect UIElement::GetGlobalBounds() const
 {
-	auto scale = getScale();
+	auto &scale = getScale();
 	sf::Vector2f size((float)_render.getSize().x, (float)_render.getSize().y);
 	sf::Vector2f output(size.x * scale.x, size.y * scale.y);
 	return sf::FloatRect(getPosition(), output);
+}
+
+std::vector<sf::Vector2f> UIElement::GetAllBoundsPoints() const
+{
+	return CollisionHelper::GetRectPoints(GetGlobalBounds());
+}
+
+std::vector<sf::Vector2f> UIElement::GetDeepestInFocusBoundsPoints() const
+{
+	if (_inFocus)
+		return UIElement::GetAllBoundsPoints();
+	std::vector<sf::Vector2f> output{ sf::Vector2f(-1.f,-1.f), sf::Vector2f(-1.f,-1.f), sf::Vector2f(-1.f,-1.f), sf::Vector2f(-1.f,-1.f) };
+	return output;
 }
 
 const sf::RenderTexture* UIElement::GetTexture() const

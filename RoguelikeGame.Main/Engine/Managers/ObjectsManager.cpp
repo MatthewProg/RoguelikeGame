@@ -37,9 +37,12 @@ ObjectsManager::ObjectsManager()
 
 	_focusContainers["option_bar"] = nullptr;
 	_focusContainers["option_checkbox"] = nullptr;
+	_focusContainers["option_listselect"] = nullptr;
 
 	_progressBars["heart"] = nullptr;
 	_progressBars["options"] = nullptr;
+
+	_listSelects["options"] = nullptr;
 
 	_checkBoxes["default"] = nullptr;
 
@@ -72,6 +75,10 @@ ObjectsManager::~ObjectsManager()
 			delete v.second;
 
 	for (auto& v : _progressBars)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto& v : _listSelects)
 		if (v.second != nullptr)
 			delete v.second;
 
@@ -171,6 +178,7 @@ FocusContainer* ObjectsManager::GetFocusContainer(const std::string& name)
 		{
 			if (name == "option_bar") found->second = CreateFocusContainerOptionBar();
 			else if (name == "option_checkbox") found->second = CreateFocusContainerOptionCheckBox();
+			else if (name == "option_listselect") found->second = CreateFocusContainerOptionListSelect();
 		}
 
 		FocusContainer* obj = new FocusContainer(*(found->second));
@@ -192,6 +200,23 @@ ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
 		}
 
 		ProgressBar* obj = new ProgressBar(*(found->second));
+		obj->RedrawElement();
+		return obj;
+	}
+	return nullptr;
+}
+
+ListSelect* ObjectsManager::GetListSelect(const std::string& name)
+{
+	auto found = _listSelects.find(name);
+	if (found != _listSelects.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "options") found->second = CreateListSelectOptions();
+		}
+
+		ListSelect* obj = new ListSelect(*(found->second));
 		obj->RedrawElement();
 		return obj;
 	}
@@ -432,7 +457,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
 	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
-	auto bounds = label->GetGlobalBounds();
+	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	pb->SetKeyboardInput(true);
@@ -443,7 +468,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 	obj->AddElement("bar", pb);
 	
 	bounds = obj->GetElementsGlobalBounds();
-	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetGlobalBounds(), bounds);
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto pbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), pb->GetGlobalBounds(), bounds);
 	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
 	pb->setPosition(bounds.left + bounds.width - pb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), pbPos.top);
@@ -474,7 +499,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionCheckBox()
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
 	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
-	auto bounds = label->GetGlobalBounds();
+	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	cb->SetKeyboardInput(true);
@@ -485,10 +510,51 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionCheckBox()
 	obj->AddElement("checkbox", cb);
 
 	bounds = obj->GetElementsGlobalBounds();
-	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetGlobalBounds(), bounds);
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto cbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), cb->GetGlobalBounds(), bounds);
 	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
 	cb->setPosition(bounds.left + bounds.width - cb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), cbPos.top);
+	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	return obj;
+}
+
+FocusContainer* ObjectsManager::CreateFocusContainerOptionListSelect()
+{
+	FocusContainer* obj = new FocusContainer();
+
+	obj->SetFocusColor(sf::Color(0, 0, 0, 80));
+	obj->SetHoverColor(sf::Color(0, 0, 0, 48));
+	obj->SetKeyboardInput(true);
+	obj->SetMouseInput(true);
+	obj->SetPassHover(true);
+	obj->SetPassClick(false);
+	obj->setPosition(0.f, 0.f);
+
+	//Elements
+	auto label = new Label();
+	auto ls = GetListSelect("options");
+
+	label->SetFont(*_fonts->GetFont("menu"));
+	label->SetText("Display mode");
+	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetFillColor(sf::Color::White);
+	label->SetMouseInput(false);
+	label->SetKeyboardInput(false);
+	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	auto bounds = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	ls->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - ls->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+
+	obj->AddElement("label", label);
+	obj->AddElement("listselect", ls);
+
+	bounds = obj->GetElementsGlobalBounds();
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
+	auto lsPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), ls->GetGlobalBounds(), bounds);
+	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
+	ls->setPosition(bounds.left + bounds.width - ls->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), lsPos.top);
 	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
@@ -527,7 +593,7 @@ ProgressBar* ObjectsManager::CreateProgressBarOptions()
 	
 	pb->SetSoundsManager(_sounds);
 	pb->SetTexturesManager(_textures);
-	pb->AddBackgroundLayer(sf::FloatRect(11.f, 120.f, 48.f, 10.f), "ui");
+	pb->AddBackgroundLayer(sf::FloatRect(11.f, 120.f, 49.f, 10.f), "ui");
 	pb->AddProgressBarStep(sf::FloatRect(0.f, 0.f, 4.f, 6.f), "ui");
 	pb->AddProgressBarStep(sf::FloatRect(42.f, 15.f, 4.f, 6.f), "ui");
 	pb->SetProgressBarStepsPos(sf::Vector2f(4.f, 2.f));
@@ -536,10 +602,45 @@ ProgressBar* ObjectsManager::CreateProgressBarOptions()
 	pb->SetMouseInput(true);
 	pb->SetKeyboardInput(true);
 	
-	pb->Init(sf::Vector2u(48, 10));
+	pb->Init(sf::Vector2u(49, 10));
 	pb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
 
 	return pb;
+}
+
+ListSelect* ObjectsManager::CreateListSelectOptions()
+{
+	ListSelect* ls = new ListSelect(_sounds, _textures);
+
+	ls->Init(sf::Vector2u(250, 29));
+	ls->SetMouseInput(true);
+	ls->SetKeyboardInput(true);
+
+	ls->SetLeftArrowSize(sf::Vector2f(16.f, 29.f));
+	ls->AddLeftArrowState("none", "ui", sf::FloatRect(110.f, 74.f, 11.f, 20.f));
+	ls->AddLeftArrowState("hover", "ui", sf::FloatRect(121.f, 74.f, 11.f, 20.f));
+	ls->AddLeftArrowState("click", "ui", sf::FloatRect(132.0f, 74.f, 11.f, 20.f));
+	ls->TransformLeftArrow()->setPosition(0.f, 0.f);
+
+	ls->SetRightArrowSize(sf::Vector2f(16.f, 29.f));
+	ls->AddRightArrowState("none", "ui", sf::FloatRect(110.f, 94.f, 11.f, 20.f));
+	ls->AddRightArrowState("hover", "ui", sf::FloatRect(121.f, 94.f, 11.f, 20.f));
+	ls->AddRightArrowState("click", "ui", sf::FloatRect(132.0f, 94.f, 11.f, 20.f));
+	ls->TransformRightArrow()->setPosition(234.f, 0.f);
+
+	ls->SetTextSize(sf::Vector2f(208.f, 20.f));
+	ls->SetFont(*_fonts->GetFont("menu"));
+	ls->SetCharacterSize(20);
+	ls->TransformText()->setPosition(21.f, 4.f);
+
+	ls->AddValue("Windowed");
+	ls->AddValue("Borderless");
+	ls->AddValue("Fullscreen");
+	ls->SetCurrentIndex(0);
+	ls->SetHorizontalAlignment(UIElement::Align::MIDDLE);
+
+	ls->setPosition(150.f, 400.f);
+	return ls;
 }
 
 CheckBox* ObjectsManager::CreateCheckBoxDefault()
@@ -547,15 +648,15 @@ CheckBox* ObjectsManager::CreateCheckBoxDefault()
 	CheckBox* cb = new CheckBox();
 
 	//Init
-	cb->Init(sf::Vector2u(23, 23));
+	cb->Init(sf::Vector2u(24, 24));
 	cb->SetTexturesManager(_textures);
 	cb->SetSoundsManager(_sounds);
 	cb->setPosition(0.f, 0.f);
 	cb->setScale(2.f * _settings->SCALE_RATIO, 2.f * _settings->SCALE_RATIO);
 
 	cb->SetTextureName("ui");
-	cb->SetUncheckedRect(sf::FloatRect(108.f, 40.f, 23.f, 23.f));
-	cb->SetCheckedRect(sf::FloatRect(134.f, 40.f, 23.f, 23.f));
+	cb->SetUncheckedRect(sf::FloatRect(108.f, 40.f, 24.f, 24.f));
+	cb->SetCheckedRect(sf::FloatRect(134.f, 40.f, 24.f, 24.f));
 	cb->SetChecked(false);
 
 	return cb;
@@ -655,7 +756,7 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	title->SetFillColor(sf::Color::White);
 	title->SetText("Rogue Maze");
 	title->SetCharacterSize(uint32_t(50.f * _settings->SCALE_RATIO));
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.15f, 1.f, 1.f), title->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.15f, 1.f, 1.f), title->GetTextGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
 	title->setPosition(pos.left, pos.top);
 	title->Init(sf::Vector2u((uint32_t)pos.width, (uint32_t)pos.height));
 
@@ -715,21 +816,35 @@ Scene* ObjectsManager::CreateSceneOptions()
 	auto sounds = GetFocusContainer("option_bar");
 	auto music = GetFocusContainer("option_bar");
 	auto vsync = GetFocusContainer("option_checkbox");
+	auto displayMode = GetFocusContainer("option_listselect");
 	auto saveBtn = GetButton("default_red");
 
 	//Sounds
 	((Label*)sounds->GetElement("label"))->SetText("Sound volume");
 	sounds->setPosition(50.f * _settings->SCALE_RATIO, 50.f * _settings->SCALE_RATIO);
+	sounds->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	sounds->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Music
 	((Label*)music->GetElement("label"))->SetText("Music volume");
 	auto prevBounds = sounds->GetGlobalBounds();
 	music->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
+	music->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	music->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Vsync
 	((Label*)vsync->GetElement("label"))->SetText("V-Sync");
 	prevBounds = music->GetGlobalBounds();
 	vsync->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
+	vsync->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	vsync->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Display mode
+	((Label*)displayMode->GetElement("label"))->SetText("Display mode");
+	prevBounds = vsync->GetGlobalBounds();
+	displayMode->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
+	displayMode->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	displayMode->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Save button
 	saveBtn->ApplyText("Save");
@@ -746,6 +861,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	sc->AddElement("sound_volume", sounds);
 	sc->AddElement("music_volume", music);
 	sc->AddElement("vsync", vsync);
+	sc->AddElement("display_mode", displayMode);
 	sc->AddElement("save_button", saveBtn);
 	return sc;
 }
@@ -771,7 +887,7 @@ Scene* ObjectsManager::CreateSceneGameUI()
 	money->SetCharacterSize(uint32_t(32.f * _settings->SCALE_RATIO));
 	money->SetText("000000");
 	money->SetFillColor(sf::Color::White);
-	money->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - (8.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
+	money->setPosition((float)_windowSize.x - money->GetTextGlobalBounds().width - (8.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
 
 	//AnimationBoxes
 	auto coin = new AnimationBox();
@@ -792,7 +908,7 @@ Scene* ObjectsManager::CreateSceneGameUI()
 
 	coin->Init(sf::Vector2u(uint32_t(24.f * _settings->SCALE_RATIO) + 1, uint32_t(28.f * _settings->SCALE_RATIO) + 1));
 	coin->SetAnimation(c);
-	coin->setPosition((float)_windowSize.x - money->GetGlobalBounds().width - (40.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
+	coin->setPosition((float)_windowSize.x - money->GetTextGlobalBounds().width - (40.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
 
 	//Add to scene
 	sc->AddElement("healthBar", heart);

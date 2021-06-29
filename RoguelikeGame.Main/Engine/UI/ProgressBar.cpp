@@ -368,6 +368,14 @@ void ProgressBar::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 	}
 }
 
+std::vector<sf::Vector2f> ProgressBar::GetAllBoundsPoints() const
+{
+	std::vector<sf::Vector2f> output = UIElement::GetAllBoundsPoints();
+	auto steps = CollisionHelper::GetRectPoints(GetProgressBarStepsGlobalBounds());
+	output.insert(output.end(), std::make_move_iterator(steps.begin()), std::make_move_iterator(steps.end()));
+	return output;
+}
+
 UIElement* ProgressBar::clone()
 {
 	return new ProgressBar(*this);

@@ -30,7 +30,7 @@ sf::FloatRect sf::Collision::GetCollisionBox() const
 sf::FloatRect sf::Collision::GetCollisionBoxOffset() const
 {
 	auto out = _hitboxOffset;
-	auto scale = _hitboxRecangle.getScale();
+	auto &scale = _hitboxRecangle.getScale();
 	out.top *= scale.y;
 	out.height *= scale.y;
 	out.left *= scale.x;
@@ -70,8 +70,8 @@ const sf::Vector2f& sf::Collision::GetHitboxPosition() const
 
 void sf::Collision::SetCollisionBoxOffset(const sf::FloatRect& rect)
 {
-	auto pos = _hitboxRecangle.getPosition();
-	auto scale = _hitboxRecangle.getScale();
+	auto &pos = _hitboxRecangle.getPosition();
+	auto &scale = _hitboxRecangle.getScale();
 
 	_hitboxRecangle.setPosition(pos.x - (_hitboxOffset.left * scale.x) + (rect.left * scale.x), pos.y - (_hitboxOffset.top * scale.y) + (rect.top * scale.y));
 	_hitboxRecangle.setSize(sf::Vector2f(rect.width, rect.height));
@@ -101,13 +101,13 @@ void sf::Collision::SetHitboxVisibility(bool visible)
 
 void sf::Collision::SetHitboxPosition(const sf::Vector2f& pos)
 {
-	auto scale = _hitboxRecangle.getScale();
+	auto &scale = _hitboxRecangle.getScale();
 	_hitboxRecangle.setPosition(pos.x + (_hitboxOffset.left * scale.x), pos.y + (_hitboxOffset.top * scale.y));
 }
 
 void sf::Collision::SetHitboxPosition(float x, float y)
 {
-	auto scale = _hitboxRecangle.getScale();
+	auto &scale = _hitboxRecangle.getScale();
 	_hitboxRecangle.setPosition(x + (_hitboxOffset.left * scale.x), y + (_hitboxOffset.top * scale.y));
 }
 
@@ -115,7 +115,7 @@ void sf::Collision::SetHitboxScale(const sf::Vector2f& scale)
 {
 	_hitboxRecangle.setScale(scale);
 
-	auto acc = _hitboxRecangle.getPosition();
+	auto &acc = _hitboxRecangle.getPosition();
 	_hitboxRecangle.setPosition(acc.x - _hitboxOffset.left + (_hitboxOffset.left * scale.x), acc.y - _hitboxOffset.top + (_hitboxOffset.top * scale.y));
 }
 

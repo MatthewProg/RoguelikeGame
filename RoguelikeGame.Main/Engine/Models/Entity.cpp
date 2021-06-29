@@ -139,7 +139,7 @@ unsigned short Entity::GetTakingDmgColorTicks() const
 sf::FloatRect Entity::GetView() const
 {
 	auto output = _viewRect;
-	auto pos = GetPosition();
+	auto &pos = GetPosition();
 
 	output.left += pos.x;
 	output.top  += pos.y;

@@ -184,6 +184,7 @@
     <ClCompile Include="Engine\UI\CheckBox.cpp" />
     <ClCompile Include="Engine\UI\FocusContainer.cpp" />
     <ClCompile Include="Engine\UI\Label.cpp" />
+    <ClCompile Include="Engine\UI\ListSelect.cpp" />
     <ClCompile Include="Engine\UI\ProgressBar.cpp" />
     <ClCompile Include="Engine\UI\Scene.cpp" />
     <ClCompile Include="Engine\UI\UIElement.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Engine\UI\CheckBox.h" />
     <ClInclude Include="Engine\UI\FocusContainer.h" />
     <ClInclude Include="Engine\UI\Label.h" />
+    <ClInclude Include="Engine\UI\ListSelect.h" />
     <ClInclude Include="Engine\UI\ProgressBar.h" />
     <ClInclude Include="Engine\UI\Scene.h" />
     <ClInclude Include="Engine\UI\UIElement.h" />

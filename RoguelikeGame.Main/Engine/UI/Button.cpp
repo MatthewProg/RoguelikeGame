@@ -61,7 +61,7 @@ void Button::RedrawElement()
 void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
 	std::string newState = _currentState;
-	if (_mouseInput == true)
+	if (_mouseInput == true && _holdingKey == false)
 	{
 		_lmbUp = false;
 		auto bounds = GetGlobalBounds();
@@ -70,7 +70,10 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 			if (bounds.contains(mousePos))
 			{
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
 					newState = "click";
+					SetInFocus(true);
+				}
 				else
 					newState = "hover";
 			}
@@ -82,6 +85,7 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 			{
 				_lmbWasDown = true;
 				newState = "click";
+				SetInFocus(true);
 			}
 
 		if (ev->type == sf::Event::MouseButtonReleased && ev->mouseButton.button == sf::Mouse::Left)
@@ -106,7 +110,10 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		if (ev->type == sf::Event::KeyPressed && ev->key.code == sf::Keyboard::Enter)
 		{
 			if (_inFocus == true)
+			{
 				newState = "click";
+				_holdingKey = true;
+			}
 			else
 				newState = "none";
 		}
@@ -118,6 +125,7 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 				_lmbUp = true;
 			}
 			newState = "none";
+			_holdingKey = false;
 		}
 	}
 
@@ -141,6 +149,20 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 	}
 }
 
+std::vector<sf::Vector2f> Button::GetAllBoundsPoints() const
+{
+	auto output = UIElement::GetAllBoundsPoints();
+	auto found = _textStates.find(_currentState);
+	if (found != _textStates.end())
+	{
+		auto text = CollisionHelper::GetRectPoints(found->second.getGlobalBounds());
+		for (auto& p : text)
+			p = getTransform().transformPoint(p);
+		output.insert(output.end(), std::make_move_iterator(text.begin()), std::make_move_iterator(text.end()));
+	}
+	return output;
+}
+
 UIElement* Button::clone() 
 {
 	return new Button(*this);
@@ -156,6 +178,7 @@ Button::Button()
 	_lmbUp = false;
 	_keyboardInput = false;
 	_mouseInput = true;
+	_holdingKey = false;
 }
 
 Button::Button(Button& other) : UIElement(other)
@@ -167,6 +190,7 @@ Button::Button(Button& other) : UIElement(other)
 	_backgroundSize = other._backgroundSize;
 	_lmbWasDown = other._lmbWasDown;
 	_lmbUp = other._lmbUp;
+	_holdingKey = other._holdingKey;
 }
 
 Button::~Button()

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Helpers/CollisionHelper.h"
 #include "../Managers/TexturesManager.h"
 #include "../Managers/SoundsManager.h"
 #include "../Utilities/Utilities.h"
@@ -22,6 +23,8 @@ protected:
 	TexturesManager* _texturesManager;
 	SoundsManager* _soundsManager;
 public:
+	enum class Align { START, MIDDLE, END };
+
 	UIElement();
 	UIElement(UIElement& other);
 	virtual UIElement* clone() = 0;
@@ -46,6 +49,8 @@ public:
 	bool GetFocusOnHover() const;
 	bool GetInFocus() const;
 	virtual sf::FloatRect GetGlobalBounds() const;
+	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const;
+	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;
 	const sf::RenderTexture* GetTexture() const;
 };
 

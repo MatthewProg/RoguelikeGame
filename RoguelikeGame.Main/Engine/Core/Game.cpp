@@ -87,7 +87,7 @@ void Game::CheckButtons()
 		}
 		else if (_sceneManager.GetLoadedSceneName() == "options")
 		{
-			if (((Button*)loaded->GetElement("save_button"))->Clicked()) { SaveSettings(); _sceneManager.LoadScene("main_menu"); }
+			if (((Button*)loaded->GetElement("save_button"))->Clicked()) { SaveSettings(); ApplySettings(); _sceneManager.LoadScene("main_menu"); }
 		}
 	}
 }
@@ -103,6 +103,11 @@ void Game::SaveSettings()
 
 	if (_settings->SaveSettings("./settings.json") == false)
 		_logger->Log(Logger::LogType::ERROR, "Unable to save settings");
+}
+
+void Game::ApplySettings()
+{
+	_sounds.ApplyVolume(_settings->SOUNDS_VOLUME);
 }
 
 void Game::LoadLevel(std::string path, std::string playerTemplate)

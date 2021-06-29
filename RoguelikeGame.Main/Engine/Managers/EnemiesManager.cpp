@@ -54,7 +54,7 @@ void EnemiesManager::CheckForHit()
 		{
 			auto enemyHitboxPoints = CollisionHelper::GetRectPoints(obj->GetCollisionBox());
 			MeleeWeapon* wep = (MeleeWeapon*)weapon;
-			for (auto p : enemyHitboxPoints)
+			for (auto &p : enemyHitboxPoints)
 			{
 				if (CollisionHelper::CheckCircleCollision(p, playerCenter, wep->GetWeaponRange(), wep->GetWeaponAngle(), wep->GetCurrentAngle()))
 				{

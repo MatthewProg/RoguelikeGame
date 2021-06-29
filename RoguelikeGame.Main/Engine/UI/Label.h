@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Helpers/ViewHelper.h"
 #include "../UI/UIElement.h"
 
 #include "SFML/Graphics/Text.hpp"
@@ -9,7 +10,12 @@ class Label : public UIElement
 private:
 	sf::Text _text;
 
+	Align _horizontalAlignment;
+	Align _verticalAlignment;
+
 	bool _sthChanged;
+
+	void RefreshAlignment();
 public:
 	Label();
 	Label(Label& other);
@@ -26,6 +32,9 @@ public:
 	const sf::Color& GetOutlineColor() const;
 	float GetOutlineThickness() const;
 	sf::Vector2f FindCharacterPos(size_t index) const;
+	sf::FloatRect GetTextGlobalBounds() const;
+	UIElement::Align GetVerticalAlignment() const;
+	UIElement::Align GetHorizontalAlignment() const;
 
 	//Text setters
 	void SetText(const std::string& string);
@@ -37,12 +46,14 @@ public:
 	void SetFillColor(const sf::Color& color);
 	void SetOutlineColor(const sf::Color& color);
 	void SetOutlineThickness(float thickness);
+	void SetVerticalAlignment(UIElement::Align align);
+	void SetHorizontalAlignment(UIElement::Align align);
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
 	virtual void Update(bool, float) override;
 	virtual void RedrawElement() override;
 	virtual void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
-	virtual sf::FloatRect GetGlobalBounds() const override;
+	//virtual sf::FloatRect GetGlobalBounds() const override;
 };
 

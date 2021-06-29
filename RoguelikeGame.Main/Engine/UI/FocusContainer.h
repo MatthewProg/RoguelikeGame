@@ -31,6 +31,9 @@ public:
 	UIElement* GetElement(const std::string& name);
 	const std::map<std::string, UIElement*>& GetElements() const;
 
+	void AutoAlignElementsHorizontally(Align align);
+	void AutoAlignElementsVertically(Align align);
+
 	//Setters
 	void SetPassHover(bool pass);
 	void SetPassClick(bool pass);
@@ -51,5 +54,7 @@ public:
 	virtual void Update(bool tick, float delta) override;
 	virtual void RedrawElement() override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
+	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;
 };
 

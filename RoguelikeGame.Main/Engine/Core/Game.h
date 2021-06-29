@@ -54,6 +54,7 @@ private:
 	void UpdateGame();
 	void CheckButtons();
 	void SaveSettings();
+	void ApplySettings();
 	void LoadLevel(std::string path, std::string playerTemplate);
 
 	bool Tick();
