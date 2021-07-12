@@ -28,7 +28,7 @@ public:
 	std::shared_ptr<sf::Texture> CreateTmpTexture(const std::string& name, const std::string& source, const sf::IntRect& area = sf::IntRect());
 
 	sf::Texture* GetTexture(const std::string& name);
-	sf::Texture* GetTmpTexture(const std::string& name);
+	std::shared_ptr<sf::Texture> GetTmpTexture(const std::string& name);
 	
 	bool Exists(const std::string& name) const;
 	bool TmpExists(const std::string& name) const;

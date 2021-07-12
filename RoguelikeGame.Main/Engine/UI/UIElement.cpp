@@ -100,10 +100,9 @@ bool UIElement::GetInFocus() const
 
 sf::FloatRect UIElement::GetGlobalBounds() const
 {
-	auto &scale = getScale();
 	sf::Vector2f size((float)_render.getSize().x, (float)_render.getSize().y);
-	sf::Vector2f output(size.x * scale.x, size.y * scale.y);
-	return sf::FloatRect(getPosition(), output);
+	sf::FloatRect output(0.f, 0.f, size.x, size.y);
+	return getTransform().transformRect(output);
 }
 
 std::vector<sf::Vector2f> UIElement::GetAllBoundsPoints() const

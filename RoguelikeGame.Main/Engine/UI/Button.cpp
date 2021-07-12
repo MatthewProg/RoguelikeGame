@@ -66,21 +66,16 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		_lmbUp = false;
 		auto bounds = GetGlobalBounds();
 
-		if (ev->type == sf::Event::MouseMoved)
+		if (ev->type == sf::Event::MouseMoved && _buttonWasHolded == false)
 			if (bounds.contains(mousePos))
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-				{
-					newState = "click";
-					SetInFocus(true);
-				}
-				else
+				if(_lmbWasDown == false)
 					newState = "hover";
 			}
-			else
+			else if(Holding() == false)
 				newState = "none";
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _buttonWasHolded == false)
 			if (bounds.contains(mousePos))
 			{
 				_lmbWasDown = true;
@@ -102,8 +97,14 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 				newState = "hover";
 			}
 			else
+			{
 				_lmbUp = false;
+				_lmbWasDown = false;
+				newState = "none";
+			}
 		}
+
+		_buttonWasHolded = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 	}
 	if (_keyboardInput == true)
 	{
@@ -179,6 +180,7 @@ Button::Button()
 	_keyboardInput = false;
 	_mouseInput = true;
 	_holdingKey = false;
+	_buttonWasHolded = false;
 }
 
 Button::Button(Button& other) : UIElement(other)
@@ -191,6 +193,7 @@ Button::Button(Button& other) : UIElement(other)
 	_lmbWasDown = other._lmbWasDown;
 	_lmbUp = other._lmbUp;
 	_holdingKey = other._holdingKey;
+	_buttonWasHolded = other._buttonWasHolded;
 }
 
 Button::~Button()
@@ -260,6 +263,13 @@ std::tuple<std::string, sf::FloatRect>* Button::EditBackgroundState(const std::s
 bool Button::Clicked() const
 {
 	return _lmbUp;
+}
+
+bool Button::Holding() const
+{
+	if (_lmbWasDown == true || _holdingKey == true)
+		return true;
+	return false;
 }
 
 void Button::SetBackgroundSize(const sf::Vector2f& size)

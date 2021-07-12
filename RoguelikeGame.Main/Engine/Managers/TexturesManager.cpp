@@ -103,13 +103,13 @@ sf::Texture* TexturesManager::GetTexture(const std::string& name)
 		return nullptr;
 }
 
-sf::Texture* TexturesManager::GetTmpTexture(const std::string& name)
+std::shared_ptr<sf::Texture> TexturesManager::GetTmpTexture(const std::string& name)
 {
 	auto found = _tmpTextures.find(name);
 	if (found != _tmpTextures.end())
 	{
 		if (found->second.use_count() > 1)
-			return found->second.get();
+			return found->second;
 		else
 			return nullptr;
 	}

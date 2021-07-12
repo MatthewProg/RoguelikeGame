@@ -18,6 +18,7 @@ private:
 	bool _lmbWasDown;
 	bool _lmbUp;
 	bool _holdingKey;
+	bool _buttonWasHolded;
 public:
 	Button();
 	Button(Button& other);
@@ -34,6 +35,7 @@ public:
 	std::tuple<std::string, sf::FloatRect>* EditBackgroundState(const std::string& name);
 
 	bool Clicked() const;
+	bool Holding() const;
 
 	void SetBackgroundSize(const sf::Vector2f& size);
 	void ApplyText(const std::string& string);

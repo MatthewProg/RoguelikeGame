@@ -24,6 +24,8 @@ void Utilities::Generate(unsigned int width, unsigned int height)
 	sf::Image img;
 	img.create(width, height, pixels.data());
 	_noTxt16x16.loadFromImage(img);
+	_noTxt16x16.setRepeated(true);
+	_noTxt16x16.setSmooth(false);
 }
 
 sf::Texture* Utilities::NoTexture16x16()

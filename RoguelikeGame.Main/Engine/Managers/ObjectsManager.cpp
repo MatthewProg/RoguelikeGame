@@ -44,6 +44,8 @@ ObjectsManager::ObjectsManager()
 
 	_listSelects["options"] = nullptr;
 
+	_scrollBars["default"] = nullptr;
+
 	_checkBoxes["default"] = nullptr;
 
 	_buttons["default_red"] = nullptr;
@@ -79,6 +81,10 @@ ObjectsManager::~ObjectsManager()
 			delete v.second;
 
 	for (auto& v : _listSelects)
+		if (v.second != nullptr)
+			delete v.second;
+
+	for (auto& v : _scrollBars)
 		if (v.second != nullptr)
 			delete v.second;
 
@@ -217,6 +223,23 @@ ListSelect* ObjectsManager::GetListSelect(const std::string& name)
 		}
 
 		ListSelect* obj = new ListSelect(*(found->second));
+		obj->RedrawElement();
+		return obj;
+	}
+	return nullptr;
+}
+
+ScrollBar* ObjectsManager::GetScrollBar(const std::string& name)
+{
+	auto found = _scrollBars.find(name);
+	if (found != _scrollBars.end())
+	{
+		if (found->second == nullptr)
+		{
+			if (name == "default") found->second = CreateScrollBarDefault();
+		}
+
+		ScrollBar* obj = new ScrollBar(*(found->second));
 		obj->RedrawElement();
 		return obj;
 	}
@@ -640,7 +663,39 @@ ListSelect* ObjectsManager::CreateListSelectOptions()
 	ls->SetHorizontalAlignment(UIElement::Align::MIDDLE);
 
 	ls->setPosition(150.f, 400.f);
+	ls->setScale(_settings->SCALE_RATIO, _settings->SCALE_RATIO);
 	return ls;
+}
+
+ScrollBar* ObjectsManager::CreateScrollBarDefault()
+{
+	ScrollBar* sb = new ScrollBar(_sounds, _textures);
+
+	sb->setPosition(10.f, 10.f);
+	sb->setRotation(-90.f);
+	sb->setOrigin(163.f, 0.f);
+	sb->setScale(3.f * _settings->SCALE_RATIO, 3.f * _settings->SCALE_RATIO);
+	sb->Init(sf::Vector2u(163, 11));
+
+	sb->SetMouseInput(true);
+	sb->SetKeyboardInput(true);
+
+	sb->SetHorizontalSource(true);
+	sb->SetHorizontalInput(false);
+	sb->SetTrackLength(150.f);
+	sb->SetScroll(0.5f);
+	sb->SetScrollAmount(0.05f);
+
+	sb->SetTrackTexture("default_track", "ui", sf::FloatRect(134.f, 136.f, 10.f, 9.f));
+	sb->SetBeginningTexture("ui", sf::FloatRect(128.f, 136.f, 5.f, 9.f));
+	sb->SetEndingTexture("ui", sf::FloatRect(145.f, 136.f, 6.f, 9.f));
+	sb->ThumbAddState("none", "ui", sf::FloatRect(100.f, 135.f, 13.f, 11.f));
+	sb->ThumbAddState("hover", "ui", sf::FloatRect(86.f, 135.f, 13.f, 11.f));
+	sb->ThumbAddState("click", "ui", sf::FloatRect(114.f, 135.f, 13.f, 11.f));
+	sb->SetThumbBackgroundSize(sf::Vector2f(13.f, 11.f));
+	sb->SetTrackOffset(sf::Vector2f(1.f, 1.f));
+
+	return sb;
 }
 
 CheckBox* ObjectsManager::CreateCheckBoxDefault()
@@ -858,6 +913,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	saveBtn->setScale(0.75f, 0.75f);
 
 	//Add
+	auto test = GetScrollBar("default");
+	sc->AddElement("test", test);
 	sc->AddElement("sound_volume", sounds);
 	sc->AddElement("music_volume", music);
 	sc->AddElement("vsync", vsync);

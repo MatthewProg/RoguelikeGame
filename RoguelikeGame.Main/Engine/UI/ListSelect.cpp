@@ -334,7 +334,7 @@ void ListSelect::RedrawElement()
 
 void ListSelect::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
-    auto relMouse = mousePos - getPosition();
+    auto relMouse = getTransform().getInverse().transformPoint(mousePos);
     _leftArrow.ProcessEvent(ev, relMouse);
     _rightArrow.ProcessEvent(ev, relMouse);
     _currSelectionLabel.ProcessEvent(ev, relMouse);
