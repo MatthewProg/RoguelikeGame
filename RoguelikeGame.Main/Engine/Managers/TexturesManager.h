@@ -1,7 +1,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
+#include "../Helpers/CollisionHelper.h"
 #include "../Core/Logger.h"
 
 #include "SFML/Graphics/Texture.hpp"
@@ -11,7 +13,7 @@ class TexturesManager
 {
 private:
 	std::map<std::string, sf::Texture> _textures;
-	unsigned short _expectedSize; //for logging purposes
+	std::map<std::string, std::shared_ptr<sf::Texture>> _tmpTextures;
 
 	Logger* _logger;
 public:
@@ -23,11 +25,13 @@ public:
 	void LoadFromMemory(const std::string& name, const void* data, size_t size, const sf::IntRect& area = sf::IntRect());
 	void LoadFromStream(const std::string& name, sf::InputStream& stream, const sf::IntRect& area = sf::IntRect());
 
+	std::shared_ptr<sf::Texture> CreateTmpTexture(const std::string& name, const std::string& source, const sf::IntRect& area = sf::IntRect());
+
 	sf::Texture* GetTexture(const std::string& name);
+	sf::Texture* GetTmpTexture(const std::string& name);
 	
 	bool Exists(const std::string& name) const;
-
-	void SetExpectedSize(unsigned short size);
+	bool TmpExists(const std::string& name) const;
 
 	void ApplySmooth(bool smooth);
 	void ApplyRepeat(bool repeat);

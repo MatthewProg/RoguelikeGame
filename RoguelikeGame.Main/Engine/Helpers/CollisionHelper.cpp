@@ -78,6 +78,18 @@ bool CollisionHelper::CheckTileCollision(const sf::Vector2f& center, float radiu
     return false;
 }
 
+bool CollisionHelper::CheckRectContains(const sf::IntRect& outer, const sf::IntRect& inner)
+{
+    return (inner.left >= outer.left && inner.left + inner.width <= outer.left + outer.width &&
+        inner.top >= outer.top && inner.top + inner.height <= outer.top + outer.height);
+}
+
+bool CollisionHelper::CheckRectContains(const sf::FloatRect& outer, const sf::FloatRect& inner)
+{
+    return (inner.left >= outer.left && inner.left + inner.width <= outer.left + outer.width &&
+        inner.top >= outer.top && inner.top + inner.height <= outer.top + outer.height);
+}
+
 sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos, const MapLayerModel<bool>* tiles)
 {
     if (CheckTileCollision(endPos, tiles))

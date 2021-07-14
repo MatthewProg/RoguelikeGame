@@ -15,6 +15,8 @@ public:
 	static bool CheckCirclesIntersect(const sf::Vector2f& center1, float radius1, const sf::Vector2f& center2, float radius2);
 	static bool CheckTileCollision(const sf::FloatRect& obj, const MapLayerModel<bool> *tiles);
 	static bool CheckTileCollision(const sf::Vector2f& center, float radius, const MapLayerModel<bool>* tiles);
+	static bool CheckRectContains(const sf::IntRect& outer, const sf::IntRect& inner);
+	static bool CheckRectContains(const sf::FloatRect& outer, const sf::FloatRect& inner);
 
 	static sf::Vector2f GetTileLimitPosition(const sf::FloatRect& startPos, const sf::FloatRect& endPos, const MapLayerModel<bool>* tiles);
 	static sf::Vector2f GetTileLimitPosition(const sf::Vector2f& startPos, const sf::Vector2f& endPos, float radius, const MapLayerModel<bool>* tiles);

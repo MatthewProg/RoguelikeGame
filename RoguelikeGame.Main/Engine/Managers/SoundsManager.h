@@ -11,17 +11,14 @@ class SoundsManager
 private:
 	std::map<std::string, std::tuple<sf::SoundBuffer, sf::Sound>> _sounds;
 	std::list<sf::Sound> _playQueue;
-	unsigned short _expectedSize; //for logging purposes
 
 	Logger* _logger;
-	std::string GetLogMessage();
 public:
 	SoundsManager();
 	~SoundsManager();
 
 	void Update();
 	bool Exists(const std::string& name) const;
-	void SetExpectedSize(uint16_t size);
 
 	void LoadFromFile(const std::string& name, const std::string& path);
 	void LoadFromMemory(const std::string& name, const void* data, std::size_t sizeInBytes);

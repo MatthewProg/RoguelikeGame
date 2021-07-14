@@ -117,9 +117,9 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	//Game map
 	_logger->Log(Logger::LogType::INFO, "Loading map components");
 	if (_gameMap.LoadFromFile(path) == false)
-		_logger->Log(Logger::LogType::ERROR, "Data (1/1): ERROR");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load map data!");
 	else
-		_logger->Log(Logger::LogType::INFO, "Data (1/1): OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded map data");
 
 	_gameMap.AutoSetTilesTextures(&_textures);
 	_gameMap.PrepareFrame();
@@ -163,7 +163,6 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
 
 	//Sounds
-	_sounds.SetExpectedSize(12);
 	_sounds.LoadFromFile("entities_dmg4", "./res/sounds/entities/dmg4.wav");
 	_sounds.LoadFromFile("entities_dmg5", "./res/sounds/entities/dmg5.wav");
 	_sounds.LoadFromFile("entities_dmg6", "./res/sounds/entities/dmg6.wav");
@@ -203,11 +202,11 @@ void Game::Start()
 
 	//Settings
 	if (_settings->LoadSettings("./settings.json"))
-		_logger->Log(Logger::LogType::INFO, "Loading settings.. OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded settings");
 	else
 	{
-		_logger->Log(Logger::LogType::ERROR, "Loading settings.. ERROR");
-		_logger->Log(Logger::LogType::WARNING, "Starting with default settings");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load settings");
+		_logger->Log(Logger::LogType::WARNING, "Starting with default values");
 		if (_settings->SaveSettings("./settings.json"))
 			_logger->Log(Logger::LogType::INFO, "Created new settings file");
 		else
@@ -238,7 +237,6 @@ void Game::Start()
 	_window.setView(_camera);
 
 	//Textures
-	_textures.SetExpectedSize(4);
 	_textures.LoadFromFile("tiles1", "./res/img/tiles.png");
 	_textures.LoadFromFile("tiles2", "./res/img/tiles2.png");
 	_textures.LoadFromFile("players", "./res/img/players.png");
@@ -248,11 +246,9 @@ void Game::Start()
 	_textures.ApplyRepeat(false);
 
 	//Fonts
-	_fonts.SetExpectedSize(1);
 	_fonts.LoadFromFile("menu", "./res/fonts/menu.ttf");
 
 	//Sounds
-	_sounds.SetExpectedSize(5);
 	_sounds.LoadFromFile("ui_click", "./res/sounds/ui/click.wav");
 	_sounds.LoadFromFile("ui_coin", "./res/sounds/ui/coin.wav");
 	_sounds.LoadFromFile("ui_hit", "./res/sounds/ui/hit.wav");

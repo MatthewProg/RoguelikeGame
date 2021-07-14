@@ -1,20 +1,9 @@
 #include "SoundsManager.h"
 
-std::string SoundsManager::GetLogMessage()
-{
-	std::string message = "Sounds ";
-	if (_expectedSize == 0)
-		message += "(" + std::to_string(_sounds.size()) + "): ";
-	else
-		message += "(" + std::to_string(_sounds.size()) + "/" + std::to_string(_expectedSize) + "): ";
-	return message;
-}
-
 SoundsManager::SoundsManager()
 {
 	_sounds.clear();
 	_playQueue.clear();
-	_expectedSize = 0;
 	_logger = Logger::GetInstance();
 }
 
@@ -43,68 +32,70 @@ bool SoundsManager::Exists(const std::string& name) const
 		return false;
 }
 
-void SoundsManager::SetExpectedSize(uint16_t size)
-{
-	_expectedSize = size;
-}
-
 void SoundsManager::LoadFromFile(const std::string& name, const std::string& path)
 {
+	std::string message = " sound No" + std::to_string(_sounds.size() + 1) + " (" + name + ") from \"" + path + "\"";
 	if (std::get<0>(_sounds[name]).loadFromFile(path) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
 		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
-		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded" + message);
 	}
 	else
 	{
 		_sounds.erase(name);
-		_logger->Log(Logger::LogType::ERROR, GetLogMessage() + "ERROR");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load" + message);
 	}
 }
 
 void SoundsManager::LoadFromMemory(const std::string& name, const void* data, std::size_t sizeInBytes)
 {
+	std::string message = " sound No" + std::to_string(_sounds.size() + 1) + " (" + name + ") from memory";
+
 	if (std::get<0>(_sounds[name]).loadFromMemory(data, sizeInBytes) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
 		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
-		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded" + message);
 	}
 	else
 	{
 		_sounds.erase(name);
-		_logger->Log(Logger::LogType::ERROR, GetLogMessage() + "ERROR");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load" + message);
 	}
 }
 
 void SoundsManager::LoadFromSamples(const std::string& name, const short* samples, uint64_t sampleCount, unsigned int channelCount, unsigned int sampleRate)
 {
+	std::string message = " sound No" + std::to_string(_sounds.size() + 1) + " (" + name + ") from samples";
+
 	if (std::get<0>(_sounds[name]).loadFromSamples(samples, sampleCount, channelCount, sampleRate) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
 		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
-		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded" + message);
 	}
 	else
 	{
 		_sounds.erase(name);
-		_logger->Log(Logger::LogType::ERROR, GetLogMessage() + "ERROR");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load" + message);
 	}
 }
 
 void SoundsManager::LoadFromStream(const std::string& name, sf::InputStream& stream)
 {
+	std::string message = " sound No" + std::to_string(_sounds.size() + 1) + " (" + name + ") from stream";
+
 	if (std::get<0>(_sounds[name]).loadFromStream(stream) == true)
 	{
 		std::get<1>(_sounds[name]).setBuffer(std::get<0>(_sounds[name]));
 		std::get<1>(_sounds[name]).setVolume(Settings::GetInstance()->SOUNDS_VOLUME);
-		_logger->Log(Logger::LogType::INFO, GetLogMessage() + "OK");
+		_logger->Log(Logger::LogType::INFO, "Loaded" + message);
 	}
 	else
 	{
 		_sounds.erase(name);
-		_logger->Log(Logger::LogType::ERROR, GetLogMessage() + "ERROR");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load" + message);
 	}
 }
 

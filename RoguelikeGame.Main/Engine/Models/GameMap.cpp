@@ -27,7 +27,7 @@ bool GameMap<T>::LoadFromFile(const std::string& path)
 	input.open(path, std::ios::in);
 	if (!input.is_open() || !input.good())
 	{
-		_logger->Log(Logger::LogType::ERROR, "Unable to load game map!");
+		_logger->Log(Logger::LogType::ERROR, "Unable to load game map from \""+path+"\"");
 		return false;
 	}
 
@@ -102,14 +102,14 @@ bool GameMap<T>::AutoSetTilesTextures(TexturesManager* manager)
 	{
 		if (manager->Exists(mapTiles[tile]) == false)
 		{
-			_logger->Log(Logger::LogType::ERROR, "Graphics (" + std::to_string(tile + 1) + "/" + std::to_string(mapTiles.size()) + "): ERROR");
+			_logger->Log(Logger::LogType::ERROR, "Unable to load map graphics \""+mapTiles[tile]+"\"");
 			allOk = false;
 			continue;
 		}
 		else
 		{
 			SetTilesTexture(mapTiles[tile], manager->GetTexture(mapTiles[tile]));
-			_logger->Log(Logger::LogType::INFO, "Graphics (" + std::to_string(tile + 1) + "/" + std::to_string(mapTiles.size()) + "): OK");
+			_logger->Log(Logger::LogType::INFO, "Loaded map graphics \"" + mapTiles[tile] + "\"");
 		}
 	}
 	return allOk;

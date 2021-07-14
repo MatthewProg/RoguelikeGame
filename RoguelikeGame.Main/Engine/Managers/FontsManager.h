@@ -8,7 +8,6 @@ class FontsManager
 {
 private:
 	std::map<std::string, sf::Font> _fonts;
-	unsigned short _expectedSize; //for logging purposes
 
 	Logger* _logger;
 public:
@@ -22,7 +21,5 @@ public:
 	const sf::Font* GetFont(const std::string& name);
 
 	bool Exists(const std::string& name) const;
-
-	void SetExpectedSize(unsigned short size);
 };
 
