@@ -106,6 +106,8 @@ void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		ChangeColor(_hoverColor);
 	else if (GetInFocus() == false)
 		ChangeColor(sf::Color::Transparent);
+	else if (GetInFocus() == true)
+		ChangeColor(_focusColor);
 
 	for (auto& e : _uiElements)
 	{

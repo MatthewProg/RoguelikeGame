@@ -872,34 +872,47 @@ Scene* ObjectsManager::CreateSceneOptions()
 	auto music = GetFocusContainer("option_bar");
 	auto vsync = GetFocusContainer("option_checkbox");
 	auto displayMode = GetFocusContainer("option_listselect");
+	auto scrollBar = GetScrollBar("default");
+	auto scrollView = new ScrollView();
 	auto saveBtn = GetButton("default_red");
 
 	//Sounds
 	((Label*)sounds->GetElement("label"))->SetText("Sound volume");
-	sounds->setPosition(50.f * _settings->SCALE_RATIO, 50.f * _settings->SCALE_RATIO);
-	sounds->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	sounds->Init(sf::Vector2u(914, 70));
 	sounds->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Music
 	((Label*)music->GetElement("label"))->SetText("Music volume");
-	auto prevBounds = sounds->GetGlobalBounds();
-	music->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
-	music->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	music->Init(sf::Vector2u(914, 70));
 	music->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Vsync
 	((Label*)vsync->GetElement("label"))->SetText("V-Sync");
-	prevBounds = music->GetGlobalBounds();
-	vsync->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
-	vsync->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	vsync->Init(sf::Vector2u(914, 70));
 	vsync->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Display mode
 	((Label*)displayMode->GetElement("label"))->SetText("Display mode");
-	prevBounds = vsync->GetGlobalBounds();
-	displayMode->setPosition(prevBounds.left, prevBounds.top + prevBounds.height);
-	displayMode->Init(sf::Vector2u(uint32_t(914.f * _settings->SCALE_RATIO), uint32_t(70.f * _settings->SCALE_RATIO)));
+	displayMode->Init(sf::Vector2u(914, 70));
 	displayMode->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//ScrollBar
+	scrollBar->setPosition(934.f, 0.f);
+	scrollBar->setOrigin(150.f, 0.f);
+	scrollBar->Init(sf::Vector2u(150, 11));
+	scrollBar->SetTrackLength(137.f);
+	scrollBar->SetScroll(1.f);
+
+	//ScrollView
+	scrollView->Init(sf::Vector2u(967, 450));
+	scrollView->setPosition(18.5f, 20.f);
+	scrollView->SetScrollBar(scrollBar);
+	scrollView->SetListSize(sf::Vector2f(914.f, 450.f));
+	scrollView->SetScrollHorizontaly(false);
+	scrollView->AddElement("sound_volume", sounds);
+	scrollView->AddElement("music_volume", music);
+	scrollView->AddElement("vsync", vsync);
+	scrollView->AddElement("display_mode", displayMode);
 
 	//Save button
 	saveBtn->ApplyText("Save");
@@ -913,12 +926,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	saveBtn->setScale(0.75f, 0.75f);
 
 	//Add
-	auto test = GetScrollBar("default");
-	sc->AddElement("test", test);
-	sc->AddElement("sound_volume", sounds);
-	sc->AddElement("music_volume", music);
-	sc->AddElement("vsync", vsync);
-	sc->AddElement("display_mode", displayMode);
+	sc->AddElement("view", scrollView);
 	sc->AddElement("save_button", saveBtn);
 	return sc;
 }

@@ -40,16 +40,16 @@ public:
 	std::tuple<std::string, sf::FloatRect>* ThumbEditBackgroundState(const std::string& name);
 	void SetThumbBackgroundSize(const sf::Vector2f& size);
 
-	bool Clicked();
+	bool Clicked() const;
 	const sf::Vector2f& GetThumbBackgroundSize() const;
 
-	float GetTrackLength();
-	const sf::Vector2f& GetThumbOffset();
-	const sf::Vector2f& GetTrackOffset();
-	float GetScroll();
-	float GetScrollAmount();
-	bool IsHorizontalSource();
-	bool IsHorizontalInput();
+	float GetTrackLength() const;
+	const sf::Vector2f& GetThumbOffset() const;
+	const sf::Vector2f& GetTrackOffset() const;
+	float GetScroll() const;
+	float GetScrollAmount() const;
+	bool IsHorizontalSource() const;
+	bool IsHorizontalInput() const;
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;

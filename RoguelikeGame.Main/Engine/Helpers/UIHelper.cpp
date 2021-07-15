@@ -1,27 +1,31 @@
 #include "UIHelper.h"
 
-float UIHelper::ExtractProgressBarValue(Scene* scene, const std::string& focusContainerName, const std::string& elementName)
+ProgressBar* UIHelper::ExtractProgressBar(Scene* scene, const std::string& scrollViewName, const std::string& focusContainerName, const std::string& elementName)
 {
-    if(scene == nullptr) return 0.f;
+    if(scene == nullptr) return nullptr;
 
-    auto fc = scene->GetElement(focusContainerName);
-    if (fc == nullptr) return 0.f;
+    auto sv = scene->GetElement(scrollViewName);
+    if (sv == nullptr) return nullptr;
+
+    auto fc = ((ScrollView*)sv)->GetElement(focusContainerName);
+    if (fc == nullptr) return nullptr;
 
     auto pb = ((FocusContainer*)fc)->GetElement(elementName);
-    if (pb == nullptr) return 0.f;
 
-    return ((ProgressBar*)pb)->GetCurrentValue();
+    return ((ProgressBar*)pb);
 }
 
-bool UIHelper::ExtractCheckBoxValue(Scene* scene, const std::string& focusContainerName, const std::string& elementName)
+CheckBox* UIHelper::ExtractCheckBox(Scene* scene, const std::string& scrollViewName, const std::string& focusContainerName, const std::string& elementName)
 {
-    if (scene == nullptr) return false;
+    if (scene == nullptr) return nullptr;
 
-    auto fc = scene->GetElement(focusContainerName);
-    if (fc == nullptr) return false;
+    auto sv = scene->GetElement(scrollViewName);
+    if (sv == nullptr) return nullptr;
+
+    auto fc = ((ScrollView*)sv)->GetElement(focusContainerName);
+    if (fc == nullptr) return nullptr;
 
     auto cb = ((FocusContainer*)fc)->GetElement(elementName);
-    if (cb == nullptr) return false;
 
-    return ((CheckBox*)cb)->IsChecked();
+    return ((CheckBox*)cb);
 }

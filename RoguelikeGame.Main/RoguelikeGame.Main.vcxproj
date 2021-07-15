@@ -188,6 +188,7 @@
     <ClCompile Include="Engine\UI\ProgressBar.cpp" />
     <ClCompile Include="Engine\UI\Scene.cpp" />
     <ClCompile Include="Engine\UI\ScrollBar.cpp" />
+    <ClCompile Include="Engine\UI\ScrollView.cpp" />
     <ClCompile Include="Engine\UI\UIElement.cpp" />
     <ClCompile Include="Engine\Utilities\Animation.cpp" />
     <ClCompile Include="Engine\Utilities\AnimationContainer.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Engine\UI\ProgressBar.h" />
     <ClInclude Include="Engine\UI\Scene.h" />
     <ClInclude Include="Engine\UI\ScrollBar.h" />
+    <ClInclude Include="Engine\UI\ScrollView.h" />
     <ClInclude Include="Engine\UI\UIElement.h" />
     <ClInclude Include="Engine\Utilities\Animation.h" />
     <ClInclude Include="Engine\Utilities\AnimationContainer.h" />

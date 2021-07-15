@@ -97,9 +97,13 @@ void Game::SaveSettings()
 	auto sc = _sceneManager.GetScene("options");
 	if (sc == nullptr) return;
 
-	_settings->SOUNDS_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "sound_volume", "bar"));
-	_settings->MUSIC_VOLUME.NewValue(UIHelper::ExtractProgressBarValue(sc, "music_volume", "bar"));
-	_settings->VSYNC_ENABLED.NewValue(UIHelper::ExtractCheckBoxValue(sc, "vsync", "checkbox"));
+	auto sound_volume = UIHelper::ExtractProgressBar(sc, "view", "sound_volume", "bar");
+	auto music_volume = UIHelper::ExtractProgressBar(sc, "view", "music_volume", "bar");
+	auto vsync = UIHelper::ExtractCheckBox(sc, "view", "vsync", "checkbox");
+
+	if(sound_volume != nullptr) _settings->SOUNDS_VOLUME.NewValue(sound_volume->GetCurrentValue());
+	if(music_volume != nullptr)_settings->MUSIC_VOLUME.NewValue(music_volume->GetCurrentValue());
+	if(vsync != nullptr) _settings->VSYNC_ENABLED.NewValue(vsync->IsChecked());
 
 	if (_settings->SaveSettings("./settings.json") == false)
 		_logger->Log(Logger::LogType::ERROR, "Unable to save settings");
@@ -270,9 +274,12 @@ void Game::Start()
 
 	//Update options scene
 	auto opt = _sceneManager.GetScene("options");
-	((ProgressBar*)((FocusContainer*)opt->GetElement("sound_volume"))->GetElement("bar"))->SetCurrentValue(_settings->SOUNDS_VOLUME);
-	((ProgressBar*)((FocusContainer*)opt->GetElement("music_volume"))->GetElement("bar"))->SetCurrentValue(_settings->MUSIC_VOLUME);
-	((CheckBox*)((FocusContainer*)opt->GetElement("vsync"))->GetElement("checkbox"))->SetChecked(_settings->VSYNC_ENABLED);
+	auto sound_volume = UIHelper::ExtractProgressBar(opt, "view", "sound_volume", "bar");
+	auto music_volume = UIHelper::ExtractProgressBar(opt, "view", "music_volume", "bar");
+	auto vsync = UIHelper::ExtractCheckBox(opt, "view", "vsync", "checkbox");
+	if (sound_volume != nullptr) sound_volume->SetCurrentValue(_settings->SOUNDS_VOLUME);
+	if (music_volume != nullptr) music_volume->SetCurrentValue(_settings->MUSIC_VOLUME);
+	if (vsync != nullptr)vsync->SetChecked(_settings->VSYNC_ENABLED);
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);

@@ -188,6 +188,9 @@
     <ClInclude Include="Engine\UI\ScrollBar.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\ScrollView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -315,6 +318,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\UI\ScrollBar.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\ScrollView.cpp">
       <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>

@@ -350,7 +350,7 @@ void ScrollBar::SetThumbBackgroundSize(const sf::Vector2f& size)
     _thumb.SetBackgroundSize(size);
 }
 
-bool ScrollBar::Clicked()
+bool ScrollBar::Clicked() const
 {
     return _thumb.Clicked();
 }
@@ -360,22 +360,22 @@ const sf::Vector2f& ScrollBar::GetThumbBackgroundSize() const
     return _thumb.GetBackgroundSize();
 }
 
-float ScrollBar::GetTrackLength()
+float ScrollBar::GetTrackLength() const
 {
     return _trackLength;
 }
 
-const sf::Vector2f& ScrollBar::GetThumbOffset()
+const sf::Vector2f& ScrollBar::GetThumbOffset() const
 {
     return _thumbOffset;
 }
 
-const sf::Vector2f& ScrollBar::GetTrackOffset()
+const sf::Vector2f& ScrollBar::GetTrackOffset() const
 {
     return _trackOffset;
 }
 
-float ScrollBar::GetScroll()
+float ScrollBar::GetScroll() const
 {
     if (_horizontalSource)
     {
@@ -389,17 +389,17 @@ float ScrollBar::GetScroll()
     }
 }
 
-float ScrollBar::GetScrollAmount()
+float ScrollBar::GetScrollAmount() const
 {
     return _scrollAmount;
 }
 
-bool ScrollBar::IsHorizontalSource()
+bool ScrollBar::IsHorizontalSource() const
 {
     return _horizontalSource;
 }
 
-bool ScrollBar::IsHorizontalInput()
+bool ScrollBar::IsHorizontalInput() const
 {
     return _horizontalInput;
 }

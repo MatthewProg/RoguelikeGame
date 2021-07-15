@@ -12,6 +12,7 @@
 #include "../UI/AnimationBox.h"
 #include "../UI/ProgressBar.h"
 #include "../UI/ListSelect.h"
+#include "../UI/ScrollView.h"
 #include "../UI/ScrollBar.h"
 #include "../UI/CheckBox.h"
 #include "../UI/Button.h"
