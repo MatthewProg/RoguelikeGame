@@ -6,7 +6,6 @@ ListSelect::ListSelect(SoundsManager* sounds, TexturesManager* textures)
     _texturesManager = textures;
     _selectedIndex = 0;
     _values.clear();
-    _sthChanged = true;
     _leftArrow.SetSoundsManager(_soundsManager);
     _leftArrow.SetTexturesManager(_texturesManager);
     _rightArrow.SetSoundsManager(_soundsManager);
@@ -23,7 +22,6 @@ ListSelect::ListSelect(ListSelect& other) : UIElement(other), _leftArrow(other._
 {
     _selectedIndex = other._selectedIndex;
     _values = other._values;
-    _sthChanged = other._sthChanged;
 }
 
 ListSelect::~ListSelect()
@@ -44,7 +42,6 @@ void ListSelect::SetLeftArrowSize(const sf::Vector2f& size)
 {
     _leftArrow.Init(sf::Vector2u((uint32_t)ceilf(size.x), (uint32_t)ceilf(size.y)));
     _leftArrow.SetBackgroundSize(size);
-    _sthChanged = true;
 }
 
 sf::Transformable* ListSelect::TransformLeftArrow()
@@ -67,7 +64,6 @@ void ListSelect::SetRightArrowSize(const sf::Vector2f& size)
 {
     _rightArrow.Init(sf::Vector2u((uint32_t)ceilf(size.x), (uint32_t)ceilf(size.y)));
     _rightArrow.SetBackgroundSize(size);
-    _sthChanged = true;
 }
 
 sf::Transformable* ListSelect::TransformRightArrow()
@@ -83,43 +79,36 @@ void ListSelect::SetTextSize(const sf::Vector2f& size)
 
 void ListSelect::SetFont(const sf::Font& font)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetFont(font);
 }
 
 void ListSelect::SetCharacterSize(uint32_t size)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetCharacterSize(size);
 }
 
 void ListSelect::SetLetterSpacing(float spacing)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetLetterSpacing(spacing);
 }
 
 void ListSelect::SetStyle(uint32_t style)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetStyle(style);
 }
 
 void ListSelect::SetFillColor(const sf::Color& color)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetFillColor(color);
 }
 
 void ListSelect::SetOutlineColor(const sf::Color& color)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetOutlineColor(color);
 }
 
 void ListSelect::SetOutlineThickness(float thickness)
 {
-    _sthChanged = true;
     _currSelectionLabel.SetOutlineThickness(thickness);
 }
 
@@ -144,6 +133,8 @@ void ListSelect::AddValue(const std::string& value)
 
     if (_values.size() == 1)
         SetCurrentIndex(0);
+
+    _sthChanged = true;
 }
 
 void ListSelect::RemoveValue(size_t index)
@@ -266,70 +257,82 @@ UIElement* ListSelect::clone()
 
 void ListSelect::Update(bool tick, float delta)
 {
+    if (_values.size() == 0 || _selectedIndex >= _values.size())
+        _currSelectionLabel.SetText("");
+    else
+        _currSelectionLabel.SetText(_values[_selectedIndex]);
+
     _leftArrow.Update(tick, delta);
     _rightArrow.Update(tick, delta);
     _currSelectionLabel.Update(tick, delta);
 
-    if (_sthChanged)
-    {
-        if (_values.size() == 0 || _selectedIndex >= _values.size())
-            _currSelectionLabel.SetText("");
-        else
-            _currSelectionLabel.SetText(_values[_selectedIndex]);
-
-        RedrawElement();
-        _sthChanged = false;
-    }
+    Redraw();
 }
 
-void ListSelect::RedrawElement()
+void ListSelect::ForceRedraw()
 {
-    _leftArrow.RedrawElement();
-    _rightArrow.RedrawElement();
-    _currSelectionLabel.RedrawElement();
+    _leftArrow.ForceRedraw();
+    _rightArrow.ForceRedraw();
+    _currSelectionLabel.ForceRedraw();
+    Redraw();
+}
 
-    _render.clear(sf::Color::Transparent);
+bool ListSelect::Redraw()
+{
+    if (_leftArrow.RedrawHappened() ||
+        _rightArrow.RedrawHappened() ||
+        _currSelectionLabel.RedrawHappened()) _sthChanged = true;
 
-    sf::VertexArray element(sf::PrimitiveType::Quads, 4);
-    sf::RenderStates rs;
-
-    for (unsigned short i = 0; i < 3; i++)
+    if (_sthChanged == true)
     {
-        const sf::RenderTexture* tex = nullptr;
-        sf::Vector2f pos = sf::Vector2f(0.f, 0.f);
+        _render.clear(sf::Color::Transparent);
 
-        if (i == 0)
-        {
-            tex = _leftArrow.GetTexture();
-            pos = _leftArrow.getPosition();
-        }
-        else if (i == 1)
-        {
-            tex = _rightArrow.GetTexture();
-            pos = _rightArrow.getPosition();
-        }
-        else
-        {
-            tex = _currSelectionLabel.GetTexture();
-            pos = _currSelectionLabel.getPosition();
-        }
-        auto sizeU = tex->getSize();
-        auto size = sf::Vector2f(float(sizeU.x), float(sizeU.y));
-        rs.texture = &tex->getTexture();
+        sf::VertexArray element(sf::PrimitiveType::Quads, 4);
+        sf::RenderStates rs;
 
-        element[0].position = sf::Vector2f(pos.x, pos.y);
-        element[1].position = sf::Vector2f(pos.x + size.x, pos.y);
-        element[2].position = sf::Vector2f(pos.x + size.x, pos.y + size.y);
-        element[3].position = sf::Vector2f(pos.x, pos.y + size.y);
-        element[0].texCoords = sf::Vector2f(0.f, 0.f);
-        element[1].texCoords = sf::Vector2f(size.x, 0.f);
-        element[2].texCoords = sf::Vector2f(size.x, size.y);
-        element[3].texCoords = sf::Vector2f(0.f, size.y);
+        for (unsigned short i = 0; i < 3; i++)
+        {
+            const sf::RenderTexture* tex = nullptr;
+            sf::Vector2f pos = sf::Vector2f(0.f, 0.f);
 
-        _render.draw(element, rs);
+            if (i == 0)
+            {
+                tex = _leftArrow.GetTexture();
+                pos = _leftArrow.getPosition();
+            }
+            else if (i == 1)
+            {
+                tex = _rightArrow.GetTexture();
+                pos = _rightArrow.getPosition();
+            }
+            else
+            {
+                tex = _currSelectionLabel.GetTexture();
+                pos = _currSelectionLabel.getPosition();
+            }
+            auto sizeU = tex->getSize();
+            auto size = sf::Vector2f(float(sizeU.x), float(sizeU.y));
+            rs.texture = &tex->getTexture();
+
+            element[0].position = sf::Vector2f(pos.x, pos.y);
+            element[1].position = sf::Vector2f(pos.x + size.x, pos.y);
+            element[2].position = sf::Vector2f(pos.x + size.x, pos.y + size.y);
+            element[3].position = sf::Vector2f(pos.x, pos.y + size.y);
+            element[0].texCoords = sf::Vector2f(0.f, 0.f);
+            element[1].texCoords = sf::Vector2f(size.x, 0.f);
+            element[2].texCoords = sf::Vector2f(size.x, size.y);
+            element[3].texCoords = sf::Vector2f(0.f, size.y);
+
+            _render.draw(element, rs);
+        }
+
+        _render.display();
+
+        _sthChanged = false;
+        _redrawHappened = true;
+        return true;
     }
-
-    _render.display();
+    return false;
 }
 
 void ListSelect::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
@@ -341,9 +344,6 @@ void ListSelect::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 
     if (_mouseInput)
     {
-        if (ev->type == sf::Event::MouseButtonPressed || ev->type == sf::Event::MouseButtonReleased ||
-            ev->type == sf::Event::MouseMoved || ev->type == sf::Event::KeyPressed || ev->type == sf::Event::KeyReleased)
-            _sthChanged = true;
         if (ev->type == sf::Event::MouseButtonPressed && _leftArrow.GetGlobalBounds().contains(relMouse) == false) _leftArrow.SetInFocus(false);
         if (ev->type == sf::Event::MouseButtonPressed && _rightArrow.GetGlobalBounds().contains(relMouse) == false)_rightArrow.SetInFocus(false);
     }

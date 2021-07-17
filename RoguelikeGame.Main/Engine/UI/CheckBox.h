@@ -30,7 +30,7 @@ public:
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
 	virtual void Update(bool, float) override;
-	virtual void RedrawElement() override;
+	virtual void ForceRedraw() override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 };
 

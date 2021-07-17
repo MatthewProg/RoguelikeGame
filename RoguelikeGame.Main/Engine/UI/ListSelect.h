@@ -11,7 +11,6 @@ private:
 	Label _currSelectionLabel;
 
 	sf::Text _dummyText;
-	bool _sthChanged;
 
 	size_t _selectedIndex;
 	std::vector<std::string> _values;
@@ -72,7 +71,8 @@ public:
 
 	virtual UIElement* clone() override;
 	virtual void Update(bool tick, float delta) override;
-	virtual void RedrawElement() override;
+	virtual void ForceRedraw() override;
+	virtual bool Redraw() override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
 	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;

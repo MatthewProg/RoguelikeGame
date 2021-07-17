@@ -7,9 +7,10 @@ UIElement* CheckBox::clone()
 
 void CheckBox::Update(bool, float)
 {
+	Redraw();
 }
 
-void CheckBox::RedrawElement()
+void CheckBox::ForceRedraw()
 {
 	_render.clear(sf::Color::Transparent);
 
@@ -35,6 +36,9 @@ void CheckBox::RedrawElement()
 	box[3].texCoords = sf::Vector2f(texRect.left, texRect.top + texRect.height);
 	_render.draw(box, tex);
 	_render.display();
+
+	_sthChanged = false;
+	_redrawHappened = true;
 }
 
 void CheckBox::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
@@ -85,7 +89,7 @@ void CheckBox::SetChecked(bool check)
 	if (check != _isChecked)
 	{
 		_isChecked = check;
-		RedrawElement();
+		_sthChanged = true;
 	}
 }
 
@@ -97,16 +101,19 @@ bool CheckBox::IsChecked() const
 void CheckBox::SetCheckedRect(const sf::FloatRect& rect)
 {
 	_checkedRect = rect;
+	_sthChanged = true;
 }
 
 void CheckBox::SetUncheckedRect(const sf::FloatRect& rect)
 {
 	_uncheckedRect = rect;
+	_sthChanged = true;
 }
 
 void CheckBox::SetTextureName(const std::string& name)
 {
 	_textureName = name;
+	_sthChanged = true;
 }
 
 const sf::FloatRect& CheckBox::GetCheckedRect() const

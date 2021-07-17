@@ -16,8 +16,6 @@ private:
 	float _currentValue;
 	float _step;
 	float _maxValue;
-
-	bool _sthChanged;
 public:
 	ProgressBar();
 	ProgressBar(ProgressBar& other);
@@ -54,7 +52,7 @@ public:
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
-	virtual void RedrawElement() override;
+	virtual void ForceRedraw() override;
 	virtual void Update(bool, float) override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;

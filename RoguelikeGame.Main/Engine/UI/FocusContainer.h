@@ -12,8 +12,6 @@ private:
 	bool _passClick;
 	bool _enabled;
 
-	bool _sthChanged;
-
 	sf::Color _hoverColor;
 	sf::Color _focusColor;
 	sf::VertexArray _background;
@@ -52,7 +50,8 @@ public:
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
 	virtual void Update(bool tick, float delta) override;
-	virtual void RedrawElement() override;
+	virtual void ForceRedraw() override;
+	virtual bool Redraw() override;
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
 	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;

@@ -188,7 +188,7 @@ FocusContainer* ObjectsManager::GetFocusContainer(const std::string& name)
 		}
 
 		FocusContainer* obj = new FocusContainer(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;
@@ -206,7 +206,7 @@ ProgressBar* ObjectsManager::GetProgressBar(const std::string& name)
 		}
 
 		ProgressBar* obj = new ProgressBar(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;
@@ -223,7 +223,7 @@ ListSelect* ObjectsManager::GetListSelect(const std::string& name)
 		}
 
 		ListSelect* obj = new ListSelect(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;
@@ -240,7 +240,7 @@ ScrollBar* ObjectsManager::GetScrollBar(const std::string& name)
 		}
 
 		ScrollBar* obj = new ScrollBar(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;
@@ -257,7 +257,7 @@ CheckBox* ObjectsManager::GetCheckBox(const std::string& name)
 		}
 
 		CheckBox* obj = new CheckBox(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;
@@ -274,7 +274,7 @@ Button* ObjectsManager::GetButton(const std::string& name)
 		}
 
 		Button* obj = new Button(*(found->second));
-		obj->RedrawElement();
+		obj->ForceRedraw();
 		return obj;
 	}
 	return nullptr;

@@ -20,6 +20,7 @@ AnimationBox::~AnimationBox()
 void AnimationBox::SetAnimation(const sf::Animation& anim)
 {
     _animation = anim;
+    _sthChanged = true;
 }
 
 sf::Animation* AnimationBox::GetAnimation()
@@ -35,15 +36,20 @@ UIElement* AnimationBox::clone()
 void AnimationBox::Update(bool tick, float)
 {
     _animation.Tick(tick);
-    if (_animation.IsFrameSwitched())
-        RedrawElement();
+    if (_animation.IsFrameSwitched()) _sthChanged = true;
+
+    Redraw();
 }
 
-void AnimationBox::RedrawElement()
+void AnimationBox::ForceRedraw()
 {
     _render.clear(sf::Color::Transparent);
-    _render.draw(_animation);
+    if(_isVisible)
+        _render.draw(_animation);
     _render.display();
+
+    _redrawHappened = true;
+    _sthChanged = false;
 }
 
 void AnimationBox::ProcessEvent(sf::Event*, const sf::Vector2f&)

@@ -18,6 +18,8 @@ protected:
 	bool _mouseInput;
 	bool _focusOnHover;
 	bool _inFocus;
+	bool _sthChanged;
+	bool _redrawHappened;
 
 	sf::Texture* _noTexture;
 	TexturesManager* _texturesManager;
@@ -32,7 +34,9 @@ public:
 
 	void Init(const sf::Vector2u& size);
 	virtual void Update(bool tick, float delta) = 0;
-	virtual void RedrawElement() = 0;
+	virtual void ForceRedraw() = 0;
+	virtual bool Redraw();
+	bool RedrawHappened();
 	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) = 0;
 
 	void SetVisibility(bool visible);

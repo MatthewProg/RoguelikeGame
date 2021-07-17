@@ -101,7 +101,7 @@ void Scene::Update(bool tick, float delta)
 void Scene::RefreshElements()
 {
 	for (auto& e : _uiElements)
-		e.second->RedrawElement();
+		e.second->ForceRedraw();
 }
 
 void Scene::AddElement(const std::string& name, UIElement* element)

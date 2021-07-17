@@ -42,11 +42,12 @@ void Label::RefreshAlignment()
 		auto box = GetGlobalBounds();
 		_text.setPosition(box.width - bounds.width, bounds.top);
 	}
+
+	_sthChanged = true;
 }
 
 Label::Label()
 {
-	_sthChanged = true;
 	_text.setString("");
 	_mouseInput = false;
 	_keyboardInput = false;
@@ -57,7 +58,6 @@ Label::Label()
 Label::Label(Label& other) : UIElement(other)
 {
 	_text = other._text;
-	_sthChanged = other._sthChanged;
 	_verticalAlignment = other._verticalAlignment;
 	_horizontalAlignment = other._horizontalAlignment;
 }
@@ -83,19 +83,18 @@ uint32_t Label::GetCharacterSize() const
 
 void Label::Update(bool, float)
 {
-	if (_sthChanged)
-	{
-		RedrawElement();
-		_sthChanged = false;
-	}
+	Redraw();
 }
 
-void Label::RedrawElement()
+void Label::ForceRedraw()
 {
 	RefreshAlignment();
 	_render.clear(sf::Color::Transparent);
 	_render.draw(_text);
 	_render.display();
+
+	_sthChanged = false;
+	_redrawHappened = true;
 }
 
 void Label::ProcessEvent(sf::Event*, const sf::Vector2f&)
@@ -165,8 +164,11 @@ UIElement::Align Label::GetHorizontalAlignment() const
 
 void Label::SetText(const std::string& string)
 {
-	_text.setString(string);
-	_sthChanged = true;
+	if (_text.getString() != string)
+	{
+		_text.setString(string);
+		_sthChanged = true;
+	}
 }
 
 void Label::SetFont(const sf::Font& font)

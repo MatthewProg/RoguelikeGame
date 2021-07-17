@@ -12,7 +12,6 @@ ProgressBar::ProgressBar()
 	_prevValue = _currentValue;
 	_prevMaxValue = _maxValue;
 
-	_sthChanged = true;
 	_keyboardInput = true;
 	_mouseInput = true;
 }
@@ -27,7 +26,6 @@ ProgressBar::ProgressBar(ProgressBar& other) : UIElement(other)
 	_progressBarSteps = other._progressBarSteps;
 	_backgroundLayers = other._backgroundLayers;
 	_progressBarStepsPos = other._progressBarStepsPos;
-	_sthChanged = other._sthChanged;
 }
 
 ProgressBar::~ProgressBar()
@@ -184,7 +182,7 @@ sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds() const
 	return sf::FloatRect(startPos, endPos - startPos);
 }
 
-void ProgressBar::RedrawElement()
+void ProgressBar::ForceRedraw()
 {
 	sf::RenderStates rs;
 
@@ -321,15 +319,14 @@ void ProgressBar::RedrawElement()
 	}
 
 	_render.display();
+
+	_sthChanged = false;
+	_redrawHappened = true;
 }
 
 void ProgressBar::Update(bool, float)
 {
-	if (_sthChanged)
-	{
-		RedrawElement();
-		_sthChanged = false;
-	}
+	Redraw();
 }
 
 void ProgressBar::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)

@@ -11,32 +11,43 @@ void FocusContainer::Update(bool tick, float delta)
 		if (e.second != nullptr)
 			e.second->Update(tick, delta);
 
-	if (_sthChanged)
-	{
-		RedrawElement();
-		_sthChanged = false;
-	}
+	Redraw();
 }
 
-void FocusContainer::RedrawElement()
+void FocusContainer::ForceRedraw()
 {
-	_render.clear(sf::Color::Transparent);
-	_render.draw(_background);
-	sf::RenderStates rs;
-	sf::VertexArray draw(sf::Quads, 4);
-
 	for (auto& e : _uiElements)
 		if (e.second != nullptr)
-		{
-			e.second->RedrawElement();
+			e.second->ForceRedraw();
+	Redraw();
+}
 
-			for (auto& element : _uiElements)
+bool FocusContainer::Redraw()
+{
+	for (auto& e : _uiElements)
+		if (e.second != nullptr)
+			if (e.second->RedrawHappened())
 			{
-				if (element.second->GetVisibility() == false) continue;
-				auto texture = element.second->GetTexture();
+				_sthChanged = true;
+				break;
+			}
+
+	if (_sthChanged)
+	{
+		_render.clear(sf::Color::Transparent);
+		_render.draw(_background);
+		sf::RenderStates rs;
+		sf::VertexArray draw(sf::Quads, 4);
+
+		for (auto& e : _uiElements)
+		{
+			if (e.second != nullptr)
+			{
+				if (e.second->GetVisibility() == false) continue;
+				auto texture = e.second->GetTexture();
 				auto size = texture->getSize();
 				rs.texture = &texture->getTexture();
-				rs.transform = element.second->getTransform();
+				rs.transform = e.second->getTransform();
 				draw[0].position = sf::Vector2f(0, 0);
 				draw[1].position = sf::Vector2f((float)size.x, 0);
 				draw[2].position = sf::Vector2f((float)size.x, (float)size.y);
@@ -49,19 +60,25 @@ void FocusContainer::RedrawElement()
 			}
 		}
 
-	if (_enabled == false)
-	{
-		for (size_t i = 0; i < _background.getVertexCount(); i++)
-			draw[i].color = sf::Color(0, 0, 0, 128);
+		if (_enabled == false)
+		{
+			for (size_t i = 0; i < _background.getVertexCount(); i++)
+				draw[i].color = sf::Color(0, 0, 0, 128);
 
-		auto b = GetGlobalBounds();
-		draw[0].position = sf::Vector2f(0.f, 0.f);
-		draw[1].position = sf::Vector2f(b.width, 0.f);
-		draw[2].position = sf::Vector2f(b.width, b.height);
-		draw[3].position = sf::Vector2f(0.f, b.height);
-		_render.draw(draw);
+			auto b = GetGlobalBounds();
+			draw[0].position = sf::Vector2f(0.f, 0.f);
+			draw[1].position = sf::Vector2f(b.width, 0.f);
+			draw[2].position = sf::Vector2f(b.width, b.height);
+			draw[3].position = sf::Vector2f(0.f, b.height);
+			_render.draw(draw);
+		}
+		_render.display();
+
+		_sthChanged = false;
+		_redrawHappened = true;
+		return true;
 	}
-	_render.display();
+	return false;
 }
 
 void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
@@ -109,10 +126,6 @@ void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		else
 			e.second->ProcessEvent(ev, mousePos - getPosition());
 	}
-
-	if (ev->type == sf::Event::MouseButtonPressed || ev->type == sf::Event::MouseButtonReleased ||
-		ev->type == sf::Event::KeyPressed || ev->type == sf::Event::KeyReleased || ev->type == sf::Event::MouseMoved)
-		_sthChanged = true;
 }
 
 std::vector<sf::Vector2f> FocusContainer::GetAllBoundsPoints() const
@@ -168,7 +181,6 @@ FocusContainer::FocusContainer()
 	_uiElements.clear();
 	_passFocus = true;
 	_passClick = true;
-	_sthChanged = true;
 	_hoverColor = sf::Color(0, 0, 0, 32);
 	_focusColor = sf::Color(0, 0, 0, 64);
 	_background.setPrimitiveType(sf::PrimitiveType::Quads);
@@ -189,7 +201,6 @@ FocusContainer::FocusContainer(FocusContainer& other) : UIElement(other)
 	_hoverColor = other._hoverColor;
 	_focusColor = other._focusColor;
 	_background = other._background;
-	_sthChanged = other._sthChanged;
 	_enabled = other._enabled;
 }
 
@@ -211,6 +222,7 @@ void FocusContainer::AddElement(const std::string& name, UIElement* element)
 	}
 
 	_uiElements[name] = element;
+	_sthChanged = true;
 }
 
 void FocusContainer::RemoveElement(UIElement* element)
@@ -221,6 +233,7 @@ void FocusContainer::RemoveElement(UIElement* element)
 			if (p.second != nullptr)
 				delete p.second;
 			_uiElements.erase(p.first);
+			_sthChanged = true;
 		}
 }
 
@@ -232,6 +245,7 @@ void FocusContainer::RemoveElement(const std::string& name)
 		if (found->second != nullptr)
 			delete found->second;
 		_uiElements.erase(found);
+		_sthChanged = true;
 	}
 }
 
@@ -301,6 +315,7 @@ void FocusContainer::AutoAlignElementsHorizontally(Align align)
 	default:
 		break;
 	}
+	_sthChanged = true;
 }
 
 void FocusContainer::AutoAlignElementsVertically(Align align)
@@ -344,6 +359,8 @@ void FocusContainer::AutoAlignElementsVertically(Align align)
 	default:
 		break;
 	}
+
+	_sthChanged = true;
 }
 
 void FocusContainer::SetPassHover(bool pass)
