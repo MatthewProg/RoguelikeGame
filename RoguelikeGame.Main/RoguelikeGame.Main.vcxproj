@@ -72,16 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -158,6 +161,7 @@
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\Helpers\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Helpers\DebugHelper.cpp" />
+    <ClCompile Include="Engine\Helpers\InputHelper.cpp" />
     <ClCompile Include="Engine\Helpers\MathHelper.cpp" />
     <ClCompile Include="Engine\Helpers\StringHelper.cpp" />
     <ClCompile Include="Engine\Helpers\TilesHelper.cpp" />
@@ -212,6 +216,7 @@
     <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h" />
     <ClInclude Include="Engine\Helpers\CollisionHelper.h" />
     <ClInclude Include="Engine\Helpers\DebugHelper.h" />
+    <ClInclude Include="Engine\Helpers\InputHelper.h" />
     <ClInclude Include="Engine\Helpers\MathHelper.h" />
     <ClInclude Include="Engine\Helpers\StringHelper.h" />
     <ClInclude Include="Engine\Helpers\TilesHelper.h" />

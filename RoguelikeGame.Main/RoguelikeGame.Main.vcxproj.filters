@@ -191,6 +191,9 @@
     <ClInclude Include="Engine\UI\ScrollView.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Helpers\InputHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -322,6 +325,9 @@
     </ClCompile>
     <ClCompile Include="Engine\UI\ScrollView.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helpers\InputHelper.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

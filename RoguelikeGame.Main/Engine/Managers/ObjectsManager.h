@@ -4,6 +4,7 @@
 #include "../Managers/SoundsManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Helpers/TilesHelper.h"
+#include "../Helpers/UIHelper.h"
 #include "../Models/HitboxWeapon.h"
 #include "../Models/MeleeWeapon.h"
 #include "../Models/Player.h"
@@ -58,6 +59,7 @@ private:
 	FocusContainer* CreateFocusContainerOptionBar();
 	FocusContainer* CreateFocusContainerOptionCheckBox();
 	FocusContainer* CreateFocusContainerOptionListSelect();
+	FocusContainer* CreateFocusContainerOptionText();
 
 	//ProgressBars
 	ProgressBar* CreateProgressBarHeart();

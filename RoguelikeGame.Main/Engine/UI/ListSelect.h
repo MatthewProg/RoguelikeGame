@@ -14,6 +14,8 @@ private:
 
 	size_t _selectedIndex;
 	std::vector<std::string> _values;
+
+	void UpdateArrowsState();
 public:
 	ListSelect(SoundsManager* sounds, TexturesManager* textures);
 	ListSelect(ListSelect& other);

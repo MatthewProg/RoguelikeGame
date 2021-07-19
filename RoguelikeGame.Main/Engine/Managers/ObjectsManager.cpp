@@ -38,6 +38,7 @@ ObjectsManager::ObjectsManager()
 	_focusContainers["option_bar"] = nullptr;
 	_focusContainers["option_checkbox"] = nullptr;
 	_focusContainers["option_listselect"] = nullptr;
+	_focusContainers["option_text"] = nullptr;
 
 	_progressBars["heart"] = nullptr;
 	_progressBars["options"] = nullptr;
@@ -185,6 +186,7 @@ FocusContainer* ObjectsManager::GetFocusContainer(const std::string& name)
 			if (name == "option_bar") found->second = CreateFocusContainerOptionBar();
 			else if (name == "option_checkbox") found->second = CreateFocusContainerOptionCheckBox();
 			else if (name == "option_listselect") found->second = CreateFocusContainerOptionListSelect();
+			else if (name == "option_text") found->second = CreateFocusContainerOptionText();
 		}
 
 		FocusContainer* obj = new FocusContainer(*(found->second));
@@ -583,6 +585,66 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionListSelect()
 	return obj;
 }
 
+FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
+{
+	FocusContainer* obj = new FocusContainer();
+
+	obj->SetFocusColor(sf::Color(0, 0, 0, 80));
+	obj->SetHoverColor(sf::Color(0, 0, 0, 48));
+	obj->SetKeyboardInput(true);
+	obj->SetMouseInput(true);
+	obj->SetPassHover(true);
+	obj->SetPassClick(false);
+	obj->setPosition(0.f, 0.f);
+
+	//Elements
+	auto label = new Label();
+	auto button = new Button();
+
+	label->SetFont(*_fonts->GetFont("menu"));
+	label->SetText("Move left");
+	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetFillColor(sf::Color::White);
+	label->SetMouseInput(false);
+	label->SetKeyboardInput(false);
+	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	auto bounds = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	button->SetSoundsManager(_sounds);
+	button->SetTexturesManager(_textures);
+	button->SetKeyboardInput(true);
+	button->SetMouseInput(true);
+	button->SetBackgroundSize(sf::Vector2f(0.f, 0.f));
+	sf::Text t;
+	t.setFont(*_fonts->GetFont("menu"));
+	t.setString("Left");
+	t.setCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	t.setFillColor(sf::Color::White);
+	button->AddState("none", t, "", sf::FloatRect(0.f, 0.f, 0.f, 0.f));
+	button->AddState("hover", t, "", sf::FloatRect(0.f, 0.f, 0.f, 0.f));
+	button->AddState("click", t, "", sf::FloatRect(0.f, 0.f, 0.f, 0.f));
+	button->SetHoverSound("");
+	button->SetPressSound("");
+	button->SetReleaseSound("");
+	button->SetBackgroundSize(sf::Vector2f(0.f, 0.f));
+	bounds = t.getGlobalBounds();
+	button->Init(sf::Vector2u(uint32_t(ceilf(bounds.left + bounds.width)), uint32_t(ceilf(bounds.top + bounds.height))));
+	button->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - button->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+
+	obj->AddElement("label", label);
+	obj->AddElement("text", button);
+
+	bounds = obj->GetElementsGlobalBounds();
+	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
+	auto bPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), button->GetGlobalBounds(), bounds);
+	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
+	button->setPosition(bounds.left + bounds.width - button->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), bPos.top);
+	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
+
+	return obj;
+}
+
 ProgressBar* ObjectsManager::CreateProgressBarHeart()
 {
 	ProgressBar* hb = new ProgressBar();
@@ -872,29 +934,145 @@ Scene* ObjectsManager::CreateSceneOptions()
 	auto music = GetFocusContainer("option_bar");
 	auto vsync = GetFocusContainer("option_checkbox");
 	auto displayMode = GetFocusContainer("option_listselect");
+	auto antialiasing = GetFocusContainer("option_listselect");
+	auto resolution = GetFocusContainer("option_listselect");
+	auto fps = GetFocusContainer("option_listselect");
+	auto mLeft = GetFocusContainer("option_text");
+	auto mRight = GetFocusContainer("option_text");
+	auto mUp = GetFocusContainer("option_text");
+	auto mDown = GetFocusContainer("option_text");
 	auto scrollBar = GetScrollBar("default");
 	auto scrollView = new ScrollView();
 	auto saveBtn = GetButton("default_red");
 
 	//Sounds
-	((Label*)sounds->GetElement("label"))->SetText("Sound volume");
+	auto label = ((Label*)sounds->GetElement("label"));
+	label->SetText("Sound volume");
+	auto labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	sounds->Init(sf::Vector2u(914, 70));
 	sounds->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Music
-	((Label*)music->GetElement("label"))->SetText("Music volume");
+	label = ((Label*)music->GetElement("label"));
+	label->SetText("Music volume");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	music->Init(sf::Vector2u(914, 70));
 	music->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Vsync
-	((Label*)vsync->GetElement("label"))->SetText("V-Sync");
+	label = ((Label*)vsync->GetElement("label"));
+	label->SetText("V-Sync");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	vsync->Init(sf::Vector2u(914, 70));
 	vsync->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
-	//Display mode
-	((Label*)displayMode->GetElement("label"))->SetText("Display mode");
+	//Display mod
+	label = ((Label*)displayMode->GetElement("label"));
+	label->SetText("Display mode");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	displayMode->Init(sf::Vector2u(914, 70));
 	displayMode->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Antialiasing
+	label = ((Label*)antialiasing->GetElement("label"));
+	label->SetText("Antialiasing level");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	auto antiLS = ((ListSelect*)antialiasing->GetElement("listselect"));
+	antiLS->ClearValues();
+	antiLS->AddValue("0");
+	antiLS->AddValue("2");
+	antiLS->AddValue("4");
+	antiLS->AddValue("8");
+	antiLS->AddValue("16");
+	antialiasing->Init(sf::Vector2u(914, 70));
+	antialiasing->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Resolution
+	label = ((Label*)resolution->GetElement("label"));
+	label->SetText("Resolution");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	auto resLS = ((ListSelect*)resolution->GetElement("listselect"));
+	resLS->ClearValues();
+	auto desktopMode = sf::VideoMode::getDesktopMode();
+	auto resVal = UIHelper::GetAllTypicalResolutions(desktopMode.width, desktopMode.height);
+	for (auto& r : resVal)
+		resLS->AddValue(std::to_string(r.x) + "x" + std::to_string(r.y));
+	resolution->Init(sf::Vector2u(914, 70));
+	resolution->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//FPS
+	label = ((Label*)fps->GetElement("label"));
+	label->SetText("Limit FPS");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	auto fpsLS = ((ListSelect*)fps->GetElement("listselect"));
+	fpsLS->ClearValues();
+	fpsLS->AddValue("25");
+	fpsLS->AddValue("29");
+	fpsLS->AddValue("30");
+	fpsLS->AddValue("50");
+	fpsLS->AddValue("59");
+	fpsLS->AddValue("60");
+	fpsLS->AddValue("75");
+	fpsLS->AddValue("120");
+	fpsLS->AddValue("144");
+	fpsLS->AddValue("240");
+	fps->Init(sf::Vector2u(914, 70));
+	fps->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Move left
+	label = ((Label*)mLeft->GetElement("label"));
+	label->SetText("Move left");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	((Button*)mLeft->GetElement("text"))->ApplyText("Left");
+	mLeft->Init(sf::Vector2u(914, 70));
+	mLeft->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Move right
+	label = ((Label*)mRight->GetElement("label"));
+	label->SetText("Move right");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	auto mrButton = ((Button*)mRight->GetElement("text"));
+	mrButton->ApplyText("Right");
+	auto btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
+	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	mRight->Init(sf::Vector2u(914, 70));
+	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
+	mRight->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Move up
+	label = ((Label*)mUp->GetElement("label"));
+	label->SetText("Move up");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	mrButton = ((Button*)mUp->GetElement("text"));
+	mrButton->ApplyText("Up");
+	btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
+	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	mUp->Init(sf::Vector2u(914, 70));
+	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
+	mUp->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+
+	//Move down
+	label = ((Label*)mDown->GetElement("label"));
+	label->SetText("Move down");
+	labelB = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
+	mrButton = ((Button*)mDown->GetElement("text"));
+	mrButton->ApplyText("Down");
+	btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
+	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	mDown->Init(sf::Vector2u(914, 70));
+	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
+	mDown->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//ScrollBar
 	scrollBar->setPosition(934.f, 0.f);
@@ -909,10 +1087,17 @@ Scene* ObjectsManager::CreateSceneOptions()
 	scrollView->SetScrollBar(scrollBar);
 	scrollView->SetListSize(sf::Vector2f(914.f, 450.f));
 	scrollView->SetScrollHorizontaly(false);
+	scrollView->AddElement("display_mode", displayMode);
+	scrollView->AddElement("resolution", resolution);
+	scrollView->AddElement("vsync", vsync);
+	scrollView->AddElement("fps", fps);
+	scrollView->AddElement("antialiasing", antialiasing);
 	scrollView->AddElement("sound_volume", sounds);
 	scrollView->AddElement("music_volume", music);
-	scrollView->AddElement("vsync", vsync);
-	scrollView->AddElement("display_mode", displayMode);
+	scrollView->AddElement("move_left", mLeft);
+	scrollView->AddElement("move_right", mRight);
+	scrollView->AddElement("move_up", mUp);
+	scrollView->AddElement("move_down", mDown);
 
 	//Save button
 	saveBtn->ApplyText("Save");

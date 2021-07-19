@@ -9,6 +9,7 @@
 #include "../Managers/FontsManager.h"
 #include "../Managers/SceneManager.h"
 #include "../Helpers/DebugHelper.h"
+#include "../Helpers/InputHelper.h"
 #include "../Helpers/UIHelper.h"
 #include "../Core/EntityMovement.h"
 #include "../Core/EnemiesAI.h"

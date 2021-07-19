@@ -1,5 +1,14 @@
 #include "ListSelect.h"
 
+void ListSelect::UpdateArrowsState()
+{
+    if (_selectedIndex == 0) _leftArrow.ForceState("click");
+    else _leftArrow.ResetForcedState();
+
+    if (_selectedIndex + 1 >= _values.size()) _rightArrow.ForceState("click");
+    else _rightArrow.ResetForcedState();
+}
+
 ListSelect::ListSelect(SoundsManager* sounds, TexturesManager* textures)
 {
     _soundsManager = sounds;
@@ -133,7 +142,7 @@ void ListSelect::AddValue(const std::string& value)
 
     if (_values.size() == 1)
         SetCurrentIndex(0);
-
+    UpdateArrowsState();
     _sthChanged = true;
 }
 
@@ -147,12 +156,14 @@ void ListSelect::RemoveValue(size_t index)
     
     if (index < _values.size())
         _values.erase(_values.begin() + index);
+    UpdateArrowsState();
 }
 
 void ListSelect::ClearValues()
 {
     _selectedIndex = 0;
     _values.clear();
+    UpdateArrowsState();
     _sthChanged = true;
 }
 
@@ -160,8 +171,12 @@ void ListSelect::SetCurrentIndex(size_t index)
 {
     if (index < _values.size())
     {
-        if (_selectedIndex != index) _sthChanged = true;
-        _selectedIndex = index;
+        if (_selectedIndex != index)
+        {
+            _selectedIndex = index;
+            UpdateArrowsState();
+            _sthChanged = true;
+        }
     }
 }
 
@@ -170,6 +185,7 @@ void ListSelect::NextSelection()
     if (_selectedIndex < _values.size() - 1)
     {
         _selectedIndex++;
+        UpdateArrowsState();
         _sthChanged = true;
     }
 }
@@ -179,6 +195,7 @@ void ListSelect::PreviousSelection()
     if (_selectedIndex > 0)
     {
         _selectedIndex--;
+        UpdateArrowsState();
         _sthChanged = true;
     }
 }

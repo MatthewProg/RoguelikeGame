@@ -53,10 +53,10 @@ void Game::UpdateUI()
 	auto ls = _sceneManager.GetLoadedScene();
 	if (ls != nullptr && _sceneManager.GetLoadedSceneName() == "options")
 	{
-		//if (UIHelper::ExtractCheckBoxValue(ls, "vsync", "checkbox") == true)
-		//	((FocusContainer*)ls->GetElement("music_volume"))->SetEnabled(false); //CHANGE TO FPS LIMIT WHEN ADDED
-		//else
-		//	((FocusContainer*)ls->GetElement("music_volume"))->SetEnabled(true); //CHANGE TO FPS LIMIT WHEN ADDED
+		if (UIHelper::ExtractCheckBox(ls, "view", "vsync", "checkbox")->IsChecked() == true)
+			(((ScrollView*)ls->GetElement("view"))->GetElement("fps"))->SetEnabled(false);
+		else
+			(((ScrollView*)ls->GetElement("view"))->GetElement("fps"))->SetEnabled(true);
 	}
 	CheckButtons();
 }
@@ -87,6 +87,11 @@ void Game::CheckButtons()
 		}
 		else if (_sceneManager.GetLoadedSceneName() == "options")
 		{
+			/*auto ml = UIHelper::ExtractButton(loaded, "view", "move_left", "text"); //USE WHEN CHANGING KEYS
+			auto mr = UIHelper::ExtractButton(loaded, "view", "move_right", "text");
+			auto mu = UIHelper::ExtractButton(loaded, "view", "move_up", "text");
+			auto md = UIHelper::ExtractButton(loaded, "view", "move_down", "text");*/
+
 			if (((Button*)loaded->GetElement("save_button"))->Clicked()) { SaveSettings(); ApplySettings(); _sceneManager.LoadScene("main_menu"); }
 		}
 	}
@@ -97,16 +102,46 @@ void Game::SaveSettings()
 	auto sc = _sceneManager.GetScene("options");
 	if (sc == nullptr) return;
 
+	auto displayMode = UIHelper::ExtractListSelect(sc, "view", "display_mode", "listselect");
+	auto resolution = UIHelper::ExtractListSelect(sc, "view", "resolution", "listselect");
+	auto vsync = UIHelper::ExtractCheckBox(sc, "view", "vsync", "checkbox");
+	auto fps = UIHelper::ExtractListSelect(sc, "view", "fps", "listselect");
+	auto antialiasing = UIHelper::ExtractListSelect(sc, "view", "antialiasing", "listselect");
 	auto sound_volume = UIHelper::ExtractProgressBar(sc, "view", "sound_volume", "bar");
 	auto music_volume = UIHelper::ExtractProgressBar(sc, "view", "music_volume", "bar");
-	auto vsync = UIHelper::ExtractCheckBox(sc, "view", "vsync", "checkbox");
+	auto mLeft = UIHelper::ExtractButton(sc, "view", "move_left", "text");
+	auto mRight = UIHelper::ExtractButton(sc, "view", "move_right", "text");
+	auto mUp = UIHelper::ExtractButton(sc, "view", "move_up", "text");
+	auto mDown = UIHelper::ExtractButton(sc, "view", "move_down", "text");
 
-	if(sound_volume != nullptr) _settings->SOUNDS_VOLUME.NewValue(sound_volume->GetCurrentValue());
-	if(music_volume != nullptr)_settings->MUSIC_VOLUME.NewValue(music_volume->GetCurrentValue());
-	if(vsync != nullptr) _settings->VSYNC_ENABLED.NewValue(vsync->IsChecked());
+	if (displayMode != nullptr)
+	{
+		if(displayMode->GetCurrentValue() == "Windowed") _settings->WINDOW_STYLE.NewValue(5);
+		else if(displayMode->GetCurrentValue() == "Borderless") _settings->WINDOW_STYLE.NewValue(0);
+		else if(displayMode->GetCurrentValue() == "Fullscreen") _settings->WINDOW_STYLE.NewValue(8);
+	}
+	if (resolution != nullptr)
+	{
+		auto s = resolution->GetCurrentValue();
+		auto index = s.find('x');
+		auto width = atoi(s.substr(0, index).c_str());
+		auto height = atoi(s.substr(index + 1).c_str());
+		_settings->WINDOW_SIZE.NewValue(sf::Vector2u(uint32_t(width), uint32_t(height)));
+	}
+	if (vsync != nullptr) _settings->VSYNC_ENABLED.NewValue(vsync->IsChecked());
+	if (fps != nullptr) _settings->FRAMERATE_LIMIT.NewValue(uint32_t(atoi(fps->GetCurrentValue().c_str())));
+	if (antialiasing != nullptr) _settings->ANTIALIASING_LEVEL.NewValue(uint32_t(atoi(antialiasing->GetCurrentValue().c_str())));
+	if (sound_volume != nullptr) _settings->SOUNDS_VOLUME.NewValue(sound_volume->GetCurrentValue());
+	if (music_volume != nullptr)_settings->MUSIC_VOLUME.NewValue(music_volume->GetCurrentValue());
+	if (mLeft != nullptr) _settings->MOVE_LEFT.NewValue(InputHelper::EncodeKey(mLeft->EditTextState("none")->getString()));
+	if (mRight != nullptr) _settings->MOVE_RIGHT.NewValue(InputHelper::EncodeKey(mRight->EditTextState("none")->getString()));
+	if (mUp != nullptr) _settings->MOVE_UP.NewValue(InputHelper::EncodeKey(mUp->EditTextState("none")->getString()));
+	if (mDown != nullptr) _settings->MOVE_DOWN.NewValue(InputHelper::EncodeKey(mDown->EditTextState("none")->getString()));
 
 	if (_settings->SaveSettings("./settings.json") == false)
 		_logger->Log(Logger::LogType::ERROR, "Unable to save settings");
+	else
+		_logger->Log(Logger::LogType::DEBUG, "Settings saved!");
 }
 
 void Game::ApplySettings()
@@ -274,12 +309,125 @@ void Game::Start()
 
 	//Update options scene
 	auto opt = _sceneManager.GetScene("options");
+	auto displayMode = UIHelper::ExtractListSelect(opt, "view", "display_mode", "listselect");
+	auto resolution = UIHelper::ExtractListSelect(opt, "view", "resolution", "listselect");
+	auto vsync = UIHelper::ExtractCheckBox(opt, "view", "vsync", "checkbox");
+	auto fps = UIHelper::ExtractListSelect(opt, "view", "fps", "listselect");
+	auto antialiasing = UIHelper::ExtractListSelect(opt, "view", "antialiasing", "listselect");
 	auto sound_volume = UIHelper::ExtractProgressBar(opt, "view", "sound_volume", "bar");
 	auto music_volume = UIHelper::ExtractProgressBar(opt, "view", "music_volume", "bar");
-	auto vsync = UIHelper::ExtractCheckBox(opt, "view", "vsync", "checkbox");
+	auto mLeft = UIHelper::ExtractButton(opt, "view", "move_left", "text");
+	auto mRight = UIHelper::ExtractButton(opt, "view", "move_right", "text");
+	auto mUp = UIHelper::ExtractButton(opt, "view", "move_up", "text");
+	auto mDown = UIHelper::ExtractButton(opt, "view", "move_down", "text");
+	if (displayMode != nullptr)
+	{
+		std::string toSet = "Windowed";
+		if (_settings->WINDOW_STYLE == 5U) toSet = "Windowed";
+		else if (_settings->WINDOW_STYLE == 0U) toSet = "Borderless";
+		else if (_settings->WINDOW_STYLE == 8U) toSet = "Fullscreen";
+		auto& values = displayMode->GetValues();
+		for (size_t i = 0; i < values.size(); i++)
+			if (values[i] == toSet)
+			{
+				displayMode->SetCurrentIndex(i);
+				break;
+			}
+	}
+	if (resolution != nullptr)
+	{
+		auto res = std::to_string(winSize.x) + "x" + std::to_string(winSize.y);
+		auto& values = resolution->GetValues();
+		bool done = false;
+		for (size_t i = 0; i < values.size(); i++)
+			if (values[i] == res)
+			{
+				resolution->SetCurrentIndex(i);
+				done = true;
+				break;
+			}
+		if (done == false)
+		{
+			resolution->AddValue(res);
+			resolution->SetCurrentIndex(resolution->GetValuesSize() - 1);
+		}
+	}
+	if (vsync != nullptr)vsync->SetChecked(_settings->VSYNC_ENABLED);
+	if (fps != nullptr)
+	{
+		auto limit = std::to_string(_settings->FRAMERATE_LIMIT);
+		if (limit != "0")
+		{
+			auto& values = fps->GetValues();
+			bool done = false;
+			for (size_t i = 0; i < values.size(); i++)
+				if (values[i] == limit)
+				{
+					fps->SetCurrentIndex(i);
+					done = true;
+					break;
+				}
+			if (done == false)
+			{
+				fps->AddValue(limit);
+				fps->SetCurrentIndex(fps->GetValuesSize() - 1);
+			}
+		}
+		else
+			fps->SetCurrentIndex(0U);
+	}
+	if (antialiasing != nullptr)
+	{
+		auto level = std::to_string(_settings->ANTIALIASING_LEVEL);
+		auto& values = antialiasing->GetValues();
+		bool done = false;
+		for (size_t i = 0; i < values.size(); i++)
+			if (values[i] == level)
+			{
+				antialiasing->SetCurrentIndex(i);
+				done = true;
+				break;
+			}
+		if (done == false)
+		{
+			antialiasing->AddValue(level);
+			antialiasing->SetCurrentIndex(antialiasing->GetValuesSize() - 1);
+		}
+	}
 	if (sound_volume != nullptr) sound_volume->SetCurrentValue(_settings->SOUNDS_VOLUME);
 	if (music_volume != nullptr) music_volume->SetCurrentValue(_settings->MUSIC_VOLUME);
-	if (vsync != nullptr)vsync->SetChecked(_settings->VSYNC_ENABLED);
+	if (mLeft != nullptr)
+	{
+		mLeft->ApplyText(InputHelper::DecodeKey(_settings->MOVE_LEFT));
+		auto btnBounds = mLeft->EditTextState("none")->getGlobalBounds();
+		mLeft->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+		mLeft->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		((ScrollView*)opt->GetElement("view"))->GetElement("move_left")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+	}
+	if (mRight != nullptr) 
+	{
+		mRight->ApplyText(InputHelper::DecodeKey(_settings->MOVE_RIGHT));
+		auto btnBounds = mRight->EditTextState("none")->getGlobalBounds();
+		mRight->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+		mRight->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		((ScrollView*)opt->GetElement("view"))->GetElement("move_right")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+	}
+	if (mUp != nullptr)
+	{
+		mUp->ApplyText(InputHelper::DecodeKey(_settings->MOVE_UP));
+		auto btnBounds = mUp->EditTextState("none")->getGlobalBounds();
+		mUp->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+		mUp->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		((ScrollView*)opt->GetElement("view"))->GetElement("move_up")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+	}
+	if (mDown != nullptr)
+	{
+		mDown->ApplyText(InputHelper::DecodeKey(_settings->MOVE_DOWN));
+		auto btnBounds = mDown->EditTextState("none")->getGlobalBounds();
+		mDown->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+		mDown->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		((ScrollView*)opt->GetElement("view"))->GetElement("move_down")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
+	}
 
 	//Debug
 	_gameMap.SetActionMapOpacity(0.25);

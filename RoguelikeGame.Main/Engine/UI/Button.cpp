@@ -140,9 +140,9 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 			if (_soundsManager != nullptr)
 			{
 				sf::Sound* sound = nullptr;
-				if (_currentState == "none" && newState == "hover") sound = _soundsManager->GetSound("ui_select");
-				else if (newState == "click") sound = _soundsManager->GetSound("ui_click");
-				else if (_currentState == "click") sound = _soundsManager->GetSound("ui_release");
+				if (_currentState == "none" && newState == "hover") sound = _soundsManager->GetSound(_hoverSound);
+				else if (newState == "click") sound = _soundsManager->GetSound(_pressSound);
+				else if (_currentState == "click") sound = _soundsManager->GetSound(_releaseSound);
 
 				if (sound != nullptr) sound->play();
 			}
@@ -178,6 +178,9 @@ Button::Button()
 	_backgroundStates.clear();
 	_forcedState = "";
 	_currentState = "none";
+	_hoverSound = "ui_select";
+	_pressSound = "ui_click";
+	_releaseSound = "ui_release";
 	_lmbWasDown = false;
 	_lmbUp = false;
 	_keyboardInput = false;
@@ -192,6 +195,9 @@ Button::Button(Button& other) : UIElement(other)
 	_backgroundStates = other._backgroundStates;
 	_forcedState = other._forcedState;
 	_currentState = other._currentState;
+	_hoverSound = other._hoverSound;
+	_pressSound = other._pressSound;
+	_releaseSound = other._releaseSound;
 	_backgroundSize = other._backgroundSize;
 	_lmbWasDown = other._lmbWasDown;
 	_lmbUp = other._lmbUp;
@@ -289,6 +295,21 @@ void Button::SetBackgroundSize(const sf::Vector2f& size)
 	_sthChanged = true;
 }
 
+void Button::SetHoverSound(const std::string& sound)
+{
+	_hoverSound = sound;
+}
+
+void Button::SetPressSound(const std::string& sound)
+{
+	_pressSound = sound;
+}
+
+void Button::SetReleaseSound(const std::string& sound)
+{
+	_releaseSound = sound;
+}
+
 void Button::ApplyText(const std::string& string)
 {
 	for (auto& t : _textStates)
@@ -355,4 +376,19 @@ void Button::ApplyOutlineThickness(float thickness)
 const sf::Vector2f& Button::GetBackgroundSize() const
 {
 	return _backgroundSize;
+}
+
+const std::string& Button::GetHoverSound() const
+{
+	return _hoverSound;
+}
+
+const std::string& Button::GetPressSound() const
+{
+	return _pressSound;
+}
+
+const std::string& Button::GetReleaseSound() const
+{
+	return _releaseSound;
 }

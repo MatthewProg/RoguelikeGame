@@ -13,6 +13,10 @@ private:
 	std::string _forcedState;
 	std::string _currentState;
 
+	std::string _hoverSound;
+	std::string _pressSound;
+	std::string _releaseSound;
+
 	sf::Vector2f _backgroundSize;
 
 	bool _lmbWasDown;
@@ -38,6 +42,10 @@ public:
 	bool Holding() const;
 
 	void SetBackgroundSize(const sf::Vector2f& size);
+	void SetHoverSound(const std::string& sound);
+	void SetPressSound(const std::string& sound);
+	void SetReleaseSound(const std::string& sound);
+
 	void ApplyText(const std::string& string);
 	void ApplyFont(const sf::Font* font);
 	void ApplyCharacterSize(uint32_t size);
@@ -49,6 +57,9 @@ public:
 	void ApplyOutlineThickness(float thickness);
 
 	const sf::Vector2f& GetBackgroundSize() const;
+	const std::string& GetHoverSound() const;
+	const std::string& GetPressSound() const;
+	const std::string& GetReleaseSound() const;
 
 	// Inherited via UIElement
 	virtual UIElement* clone() override;
