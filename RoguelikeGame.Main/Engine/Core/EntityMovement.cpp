@@ -12,10 +12,6 @@ EntityMovement::EntityMovement()
 	_noClip = false;
 }
 
-EntityMovement::~EntityMovement()
-{
-}
-
 void EntityMovement::Update(float deltaTime)
 {
 	if (_entity == nullptr || _lockMovement == true) return;
@@ -49,7 +45,7 @@ void EntityMovement::MoveBy(float x, float y, float deltaTime)
 {
 	if (_entity == nullptr) return;
 
-	auto pos = _entity->GetPosition();
+	auto& pos = _entity->GetPosition();
 	_entity->SetPosition(pos.x + (x * deltaTime * _entity->GetSpeed()), pos.y + (y * deltaTime * _entity->GetSpeed()));
 }
 

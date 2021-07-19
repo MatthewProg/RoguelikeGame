@@ -20,7 +20,7 @@ Weapon::Weapon(WeaponType type)
 	_sounds = nullptr;
 }
 
-Weapon::Weapon(Weapon& other)
+Weapon::Weapon(Weapon& other) : Weapon(other._weaponType)
 {
 	_cooldownCounter = other._cooldownCounter;
 	_weapon = other._weapon;

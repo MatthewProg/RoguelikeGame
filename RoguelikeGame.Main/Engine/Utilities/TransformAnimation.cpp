@@ -40,19 +40,19 @@ namespace sf
 
 	void TransformAnimation::UpdateTarget(float delta)
 	{
-		if (delta > _elapsedTime - (int)_elapsedTime) //correction
+		if (delta > _elapsedTime - truncf(_elapsedTime)) //correction
 		{
-			_target->setRotation(_prevStart->getRotation() + (_currentRotationDiff / _currentTransformTicks * (int)_elapsedTime));
+			_target->setRotation(_prevStart->getRotation() + (_currentRotationDiff / (float)_currentTransformTicks * truncf(_elapsedTime)));
 			
-			auto x = _prevStart->getPosition().x + (_currentPosDiff.x / _currentTransformTicks * (int)_elapsedTime);
-			auto y = _prevStart->getPosition().y + (_currentPosDiff.y / _currentTransformTicks * (int)_elapsedTime);
+			auto x = _prevStart->getPosition().x + (_currentPosDiff.x / (float)_currentTransformTicks * truncf(_elapsedTime));
+			auto y = _prevStart->getPosition().y + (_currentPosDiff.y / (float)_currentTransformTicks * truncf(_elapsedTime));
 			_target->setPosition(x, y);
 
-			auto factorX = _prevStart->getScale().x + (_currentScaleDiff.x / _currentTransformTicks * (int)_elapsedTime);
-			auto factorY = _prevStart->getScale().y + (_currentScaleDiff.y / _currentTransformTicks * (int)_elapsedTime);
+			auto factorX = _prevStart->getScale().x + (_currentScaleDiff.x / (float)_currentTransformTicks * truncf(_elapsedTime));
+			auto factorY = _prevStart->getScale().y + (_currentScaleDiff.y / (float)_currentTransformTicks * truncf(_elapsedTime));
 			_target->setScale(factorX, factorY);
 
-			delta = _elapsedTime - (int)_elapsedTime;
+			delta = _elapsedTime - truncf(_elapsedTime);
 		}
 
 
@@ -94,9 +94,6 @@ namespace sf
 		_currentRotationDiff = 0;
 	}
 
-	TransformAnimation::~TransformAnimation()
-	{
-	}
 
 	void TransformAnimation::SetTarget(sf::Transformable* target)
 	{
@@ -110,10 +107,10 @@ namespace sf
 
 		_elapsedTime += deltaTime;
 
-		if (_elapsedTime > _currentTransformTicks)
+		if (_elapsedTime > (float)_currentTransformTicks)
 		{
 			SetNextTransformDiff();
-			_elapsedTime = 0;
+			_elapsedTime = 0.f;
 		}
 
 		if (_paused == false)
@@ -122,7 +119,7 @@ namespace sf
 
 	void TransformAnimation::AddTransform(const sf::Transformable& transform, uint16_t ticks)
 	{
-		_transforms.push_back(std::make_tuple(transform, ticks));
+		_transforms.emplace_back(transform, ticks);
 	}
 
 	void TransformAnimation::AddTransform(const std::tuple<sf::Transformable, uint16_t>& tuple)

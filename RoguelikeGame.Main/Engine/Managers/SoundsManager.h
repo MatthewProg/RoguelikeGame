@@ -15,7 +15,7 @@ private:
 	Logger* _logger;
 public:
 	SoundsManager();
-	~SoundsManager();
+	~SoundsManager() = default;
 
 	void Update();
 	bool Exists(const std::string& name) const;

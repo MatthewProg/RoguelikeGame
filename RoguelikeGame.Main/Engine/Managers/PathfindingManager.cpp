@@ -42,7 +42,7 @@ std::vector<sf::Vector2f> PathfindingManager::SolveAStar(Cell* startCell, Cell* 
 
 
 		// Check each of this node's neighbours
-		for (auto nodeNeighbour : currentCell->neighbours)
+		for (auto& nodeNeighbour : currentCell->neighbours)
 		{
 			if (!nodeNeighbour.first->visited)
 				listNotTestedNodes.push_back(nodeNeighbour.first);
@@ -138,15 +138,11 @@ PathfindingManager::PathfindingManager()
 	_baseGraph.clear();
 }
 
-PathfindingManager::~PathfindingManager()
-{
-}
-
 void PathfindingManager::GenerateBaseGraph(const std::vector<sf::Vector2f>& points, CollisionsManager* collisions)
 {
 	_baseGraph.clear();
 
-	for (auto point : points)
+	for (auto& point : points)
 	{
 		Cell c;
 		c.visited = false;
@@ -210,7 +206,7 @@ std::vector<sf::Vector2f> PathfindingManager::GetAStarPath(const sf::Vector2f& s
 	last--;
 	auto endIt = last;
 	last--;
-	auto startIt = last;
+	auto &startIt = last;
 
 	for (auto cell = _baseGraph.begin(); cell != startIt; cell++)
 	{
@@ -228,9 +224,9 @@ std::vector<sf::Vector2f> PathfindingManager::GetAStarPath(const sf::Vector2f& s
 	auto output = SolveAStar(&(*startIt), &(*endIt));
 
 	//Remove addresses from neighbours and points
-	for (auto mapped : startIt->neighbours)
+	for (auto& mapped : startIt->neighbours)
 		mapped.first->neighbours.erase(mapped.first->neighbours.find(&(*startIt)));
-	for (auto mapped : endIt->neighbours)
+	for (auto &mapped : endIt->neighbours)
 		mapped.first->neighbours.erase(mapped.first->neighbours.find(&(*endIt)));
 
 	_baseGraph.erase(startIt, _baseGraph.end());
@@ -270,7 +266,7 @@ Paths PathfindingManager::GetDijkstrasPath(const sf::Vector2f& startPos, Collisi
 	auto output = SolveDijkstras(&(*startCell));
 
 	//Clean
-	for (auto n : startCell->neighbours)
+	for (auto &n : startCell->neighbours)
 		n.first->neighbours.erase(n.first->neighbours.find(&(*startCell)));
 
 	_baseGraph.erase(startCell);
@@ -295,7 +291,7 @@ sf::Vector2f PathfindingManager::GetClosestNode(const Paths& paths, const sf::Ve
 	nodesDistances.sort(sort);
 
 	//Check which hits
-	for (auto p : nodesDistances)
+	for (auto &p : nodesDistances)
 	{
 		float distance = 0.f;
 		if (collisions->RaycastHitsPoint(startPos, std::get<0>(p), &distance))
@@ -323,7 +319,7 @@ sf::Vector2f PathfindingManager::GetClosestVisibleNodeTo(const Paths& paths, con
 	nodesDistances.sort(sort);
 
 	//Check which hits
-	for (auto p : nodesDistances)
+	for (auto &p : nodesDistances)
 	{
 		float distance = 0.f;
 		if (collisions->RaycastHitsPoint(startPos, std::get<0>(p), &distance))

@@ -7,10 +7,6 @@ SoundsManager::SoundsManager()
 	_logger = Logger::GetInstance();
 }
 
-SoundsManager::~SoundsManager()
-{
-}
-
 void SoundsManager::Update()
 {
 	auto it = _playQueue.begin();

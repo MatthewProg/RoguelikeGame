@@ -6,10 +6,6 @@ FontsManager::FontsManager()
 	_logger = Logger::GetInstance();
 }
 
-FontsManager::~FontsManager()
-{
-}
-
 void FontsManager::LoadFromFile(const std::string& name, const std::string& path)
 {
 	std::string message = " font No" + std::to_string(_fonts.size() + 1) + " (" + name + ") from \"" + path + "\"";

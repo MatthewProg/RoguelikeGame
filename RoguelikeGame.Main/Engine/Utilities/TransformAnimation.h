@@ -31,7 +31,7 @@ namespace sf
 		void UpdateTarget(float delta);
 	public:
 		TransformAnimation();
-		~TransformAnimation();
+		~TransformAnimation() = default;
 
 		void SetTarget(sf::Transformable* target);
 		void Update(float deltaTime);

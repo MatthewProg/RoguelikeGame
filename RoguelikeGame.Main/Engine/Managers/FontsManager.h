@@ -12,7 +12,7 @@ private:
 	Logger* _logger;
 public:
 	FontsManager();
-	~FontsManager();
+	~FontsManager() = default;
 
 	void LoadFromFile(const std::string& name, const std::string& path);
 	void LoadFromMemory(const std::string& name, const void* data, size_t size);

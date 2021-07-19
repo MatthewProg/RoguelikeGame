@@ -5,8 +5,7 @@ void SceneManager::UpdateAllBoundsOutline()
 	if (_loadedScene == "") return;
 
 	auto found = _scenes.find(_loadedScene);
-	if (found == _scenes.end()) return;
-	else if (found->second == nullptr) return;
+	if (found == _scenes.end() || found->second == nullptr) return;
 
 	_allOutline.clear();
 	sf::Vertex v;
@@ -33,8 +32,7 @@ void SceneManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 	if (_loadedScene == "") return;
 
 	auto found = _scenes.find(_loadedScene);
-	if (found == _scenes.end()) return;
-	else if (found->second == nullptr) return;
+	if (found == _scenes.end() || found->second == nullptr) return;
 
 	target.draw(*found->second);
 	if (_showAllBounds)
@@ -72,14 +70,13 @@ void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 	if (_loadedScene == "") return;
 
 	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end()) return;
-	else if (loaded->second == nullptr) return;
+	if (loaded == _scenes.end() || loaded->second == nullptr) return;
 
 	loaded->second->UpdateFocus(mousePos, clicked);
 
 	if (_showFocused)
 	{
-		auto focus = loaded->second->GetFocused();
+		auto& focus = loaded->second->GetFocused();
 		if (std::get<1>(focus) != nullptr)
 		{
 			auto bounds = std::get<1>(focus)->GetDeepestInFocusBoundsPoints();
@@ -102,8 +99,7 @@ void SceneManager::UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 	if (_loadedScene == "") return;
 
 	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end()) return;
-	else if (loaded->second == nullptr) return;
+	if (loaded == _scenes.end() || loaded->second == nullptr) return;
 
 	loaded->second->UpdateEvent(ev, mousePos);
 }
@@ -113,8 +109,7 @@ void SceneManager::Update(bool tick, float delta)
 	if (_loadedScene == "") return;
 
 	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end()) return;
-	else if (loaded->second == nullptr) return;
+	if (loaded == _scenes.end() || loaded->second == nullptr) return;
 
 	if (_showAllBounds == true && tick == true)
 		UpdateAllBoundsOutline();

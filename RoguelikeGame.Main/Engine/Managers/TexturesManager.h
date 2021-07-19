@@ -18,7 +18,7 @@ private:
 	Logger* _logger;
 public:
 	TexturesManager();
-	~TexturesManager();
+	~TexturesManager() = default;
 
 	void LoadFromFile(const std::string& name, const std::string& path, const sf::IntRect& area = sf::IntRect());
 	void LoadFromImage(const std::string& name, const sf::Image& img, const sf::IntRect& area = sf::IntRect());

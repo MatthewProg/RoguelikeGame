@@ -32,7 +32,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	EnemiesAI();
-	~EnemiesAI();
+	~EnemiesAI() = default;
 
 	void Update(float deltaTime);
 	void ClearEnemiesPaths();

@@ -5,10 +5,6 @@ TexturesManager::TexturesManager()
 	_logger = Logger::GetInstance();
 }
 
-TexturesManager::~TexturesManager()
-{
-}
-
 void TexturesManager::LoadFromFile(const std::string& name, const std::string& path, const sf::IntRect& area)
 {
 	std::string message = " graphics No" + std::to_string(_textures.size() + 1) + " (" + name + ") from \"" + path + "\"";

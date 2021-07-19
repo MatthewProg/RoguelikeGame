@@ -19,7 +19,7 @@ private:
 public:
 	ListSelect(SoundsManager* sounds, TexturesManager* textures);
 	ListSelect(ListSelect& other);
-	~ListSelect();
+	~ListSelect() = default;
 
 	//Left arrow setters
 	void AddLeftArrowState(const std::string& name, const std::string& textureName, const sf::FloatRect& rect);
@@ -71,12 +71,12 @@ public:
 	size_t GetValuesSize() const;
 	const std::vector<std::string>& GetValues() const;
 
-	virtual UIElement* clone() override;
-	virtual void Update(bool tick, float delta) override;
-	virtual void ForceRedraw() override;
-	virtual bool Redraw() override;
-	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
-	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
-	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;
+	UIElement* clone() override;
+	void Update(bool tick, float delta) override;
+	void ForceRedraw() override;
+	bool Redraw() override;
+	void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
+	std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const override;
 };
 

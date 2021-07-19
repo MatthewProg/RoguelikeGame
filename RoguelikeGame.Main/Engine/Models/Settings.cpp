@@ -1,6 +1,6 @@
 #include "Settings.h"
 
-#define IF_EXIST_ASSIGN(doc, search, value) {auto found = doc.find(search); if(found != doc.end()) found->get_to(value);} 
+#define IF_EXIST_ASSIGN(doc, search, value) {auto found = (doc).find(search); if(found != (doc).end()) found->get_to(value);} 
 Settings* Settings::_settings = nullptr;
 
 Settings::Settings()

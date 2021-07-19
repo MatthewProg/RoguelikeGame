@@ -22,7 +22,7 @@ private:
 public:
 	ScrollBar(SoundsManager* sounds, TexturesManager* textures);
 	ScrollBar(ScrollBar& other);
-	~ScrollBar();
+	~ScrollBar() = default;
 
 	void SetTrackTexture(const std::string& tmpName, const std::string& textureName, const sf::FloatRect& rect);
 	void SetBeginningTexture(const std::string& name, const sf::FloatRect& rect);
@@ -52,12 +52,12 @@ public:
 	bool IsHorizontalInput() const;
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void Update(bool tick, float delta) override;
-	virtual void ForceRedraw() override;
-	virtual bool Redraw() override;
-	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
-	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
-	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const override;
+	UIElement* clone() override;
+	void Update(bool tick, float delta) override;
+	void ForceRedraw() override;
+	bool Redraw() override;
+	void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
+	std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const override;
 };
 

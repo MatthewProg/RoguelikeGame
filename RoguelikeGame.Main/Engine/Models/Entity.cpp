@@ -48,10 +48,6 @@ Entity::Entity(Entity& other) : sf::Collision(other)
 	_takingDmgSounds = other._takingDmgSounds;
 }
 
-Entity::~Entity()
-{
-}
-
 void Entity::TakeDmg(float dmg)
 {
 	_health -= dmg;

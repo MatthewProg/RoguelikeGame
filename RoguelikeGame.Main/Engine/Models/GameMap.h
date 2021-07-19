@@ -54,7 +54,7 @@ private:
 public:
 
 	GameMap();
-	~GameMap();
+	~GameMap() override = default;
 
 	bool LoadFromFile(const std::string& path);
 

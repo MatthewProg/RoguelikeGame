@@ -25,7 +25,7 @@ private:
 	Logger* _logger;
 public:
 	DebugHelper();
-	~DebugHelper();
+	~DebugHelper() = default;
 
 	void Status(bool tick);
 

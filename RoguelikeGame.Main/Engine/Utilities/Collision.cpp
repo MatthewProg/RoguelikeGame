@@ -18,10 +18,6 @@ sf::Collision::Collision(Collision& other)
 	_showHitbox = other._showHitbox;
 }
 
-sf::Collision::~Collision()
-{
-}
-
 sf::FloatRect sf::Collision::GetCollisionBox() const
 {
 	return _hitboxRecangle.getGlobalBounds();

@@ -127,8 +127,7 @@ std::string InputHelper::DecodeButton(sf::Mouse::Button button)
 
 sf::Keyboard::Key InputHelper::EncodeKey(const std::string& key)
 {
-	if (key == "Unknown") return sf::Keyboard::Unknown;
-	else if (key == "A") return sf::Keyboard::A;
+	if (key == "A") return sf::Keyboard::A;
 	else if (key == "B") return sf::Keyboard::B;
 	else if (key == "C") return sf::Keyboard::C;
 	else if (key == "D") return sf::Keyboard::D;
@@ -241,5 +240,6 @@ sf::Mouse::Button InputHelper::EncodeButton(const std::string& button)
 	else if (button == "Mouse 4") return sf::Mouse::XButton1;
 	else if (button == "Mouse 5") return sf::Mouse::XButton2;
 	else if (button == "Button Count") return sf::Mouse::ButtonCount;
-	else return sf::Mouse::Left;
+	
+	return sf::Mouse::Left;
 }

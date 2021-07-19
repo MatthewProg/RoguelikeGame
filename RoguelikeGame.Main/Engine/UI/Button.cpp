@@ -70,13 +70,15 @@ void Button::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		auto bounds = GetGlobalBounds();
 
 		if (ev->type == sf::Event::MouseMoved && _buttonWasHolded == false)
+		{
 			if (bounds.contains(mousePos))
 			{
-				if(_lmbWasDown == false)
+				if (_lmbWasDown == false)
 					newState = "hover";
 			}
-			else if(Holding() == false)
+			else if (Holding() == false)
 				newState = "none";
+		}
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _buttonWasHolded == false)
 			if (bounds.contains(mousePos))
@@ -203,10 +205,6 @@ Button::Button(Button& other) : UIElement(other)
 	_lmbUp = other._lmbUp;
 	_holdingKey = other._holdingKey;
 	_buttonWasHolded = other._buttonWasHolded;
-}
-
-Button::~Button()
-{
 }
 
 void Button::ForceState(const std::string& state)

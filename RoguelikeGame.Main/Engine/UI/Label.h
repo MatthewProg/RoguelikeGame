@@ -17,7 +17,7 @@ private:
 public:
 	Label();
 	Label(Label& other);
-	~Label();
+	~Label() override = default;
 
 	//Text getters
 	std::string GetText() const;
@@ -48,10 +48,9 @@ public:
 	void SetHorizontalAlignment(UIElement::Align align);
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void Update(bool, float) override;
-	virtual void ForceRedraw() override;
-	virtual void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
-	//virtual sf::FloatRect GetGlobalBounds() const override;
+	UIElement* clone() override;
+	void Update(bool, float) override;
+	void ForceRedraw() override;
+	void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
 };
 

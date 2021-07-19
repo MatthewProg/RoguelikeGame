@@ -56,7 +56,7 @@ private:
 	void CheckButtons();
 	void SaveSettings();
 	void ApplySettings();
-	void LoadLevel(std::string path, std::string playerTemplate);
+	void LoadLevel(const std::string& path, const std::string& playerTemplate);
 
 	bool Tick();
 
@@ -77,7 +77,7 @@ private:
 #pragma endregion
 
 public:
-	Game(LogOptions options);
+	Game(LogOptions& options);
 	~Game();
 
 	void Start();

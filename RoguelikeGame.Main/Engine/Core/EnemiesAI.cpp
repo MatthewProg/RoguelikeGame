@@ -43,9 +43,8 @@ void EnemiesAI::PrepareVertex()
 	_pathfindLines.resize(0);
 
 	auto enemies = _enemies->GetEnemies();
-	for (size_t i = 0; i < enemies->size(); i++)
+	for (auto& e : *enemies)
 	{
-		auto e = enemies->at(i);
 		auto found = _enemyPath.find(e);
 		if (found == _enemyPath.end()) continue;
 
@@ -60,7 +59,7 @@ void EnemiesAI::PrepareVertex()
 
 			auto start = found->second.begin();
 			start++;
-			for (auto it = start;it!=found->second.end();it++)
+			for (auto& it = start;it!=found->second.end();it++)
 			{
 				v.position = *it;
 				_pathfindLines.append(v);
@@ -108,10 +107,6 @@ EnemiesAI::EnemiesAI()
 	_enemyPath.clear();
 	_allPaths.clear();
 	_lastNeighbours.clear();
-}
-
-EnemiesAI::~EnemiesAI()
-{
 }
 
 void EnemiesAI::Update(float deltaTime)
@@ -343,12 +338,12 @@ float EnemiesAI::GetBestAngle(float gotoAngle, const std::vector<float>& avoidAn
 	float maxWeight = -1.F;
 	float bestAngle = gotoAngle;
 
-	for (float add = 0; add < 2 * PI; add += (2 * float(PI)) / precision)
+	for (float add = 0; add < 2 * PI; add += (2 * float(PI)) / (float)precision)
 	{
 		float val = add + MathHelper::DegToRad(gotoAngle);
 		float weight = WeightFunction(add);
 		for (float angle : avoidAngle)
-			weight *= WeightFunction(MathHelper::DegToRad(180 - angle) + val);
+			weight *= WeightFunction(MathHelper::DegToRad(180.f - angle) + val);
 
 		if (weight >= maxWeight)
 		{

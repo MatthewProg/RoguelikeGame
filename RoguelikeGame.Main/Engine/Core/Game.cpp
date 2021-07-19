@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(LogOptions options) : _logger(Logger::GetInstance(options)), _keyboardHandler(this)
+Game::Game(LogOptions& options) : _logger(Logger::GetInstance(options)), _keyboardHandler(this)
 {
 	_settings = Settings::GetInstance();
 
@@ -18,7 +18,7 @@ Game::Game(LogOptions options) : _logger(Logger::GetInstance(options)), _keyboar
 	_event = sf::Event();
 	_player = nullptr;
 
-	srand((uint32_t)time(NULL));
+	srand((uint32_t)time(nullptr));
 }
 
 void Game::SetDeltaAndTick()
@@ -149,7 +149,7 @@ void Game::ApplySettings()
 	_sounds.ApplyVolume(_settings->SOUNDS_VOLUME);
 }
 
-void Game::LoadLevel(std::string path, std::string playerTemplate)
+void Game::LoadLevel(const std::string& path, const std::string& playerTemplate)
 {
 	_logger->Log(Logger::LogType::INFO, "Loading level: " + path);
 
@@ -189,17 +189,17 @@ void Game::LoadLevel(std::string path, std::string playerTemplate)
 	//Enemies
 	_enemies.SetPlayer(_player);
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	/*_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.Add(_objTemplates.GetEnemy("devil"));
-	_enemies.Add(_objTemplates.GetEnemy("devil"));*/
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
+	_enemies.Add(_objTemplates.GetEnemy("devil"));
 	_enemies.GetEnemies()->at(0)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	/*_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
+	_enemies.GetEnemies()->at(1)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(2)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
-	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));*/
+	_enemies.GetEnemies()->at(3)->SetWeapon(_objTemplates.GetHitboxWeapon("bite"));
 	_enemies.GetEnemies()->at(0)->SetPosition(500, 290);
-	/*_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
+	_enemies.GetEnemies()->at(1)->SetPosition(580, 300);
 	_enemies.GetEnemies()->at(2)->SetPosition(590, 310);
-	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);*/
+	_enemies.GetEnemies()->at(3)->SetPosition(610, 300);
 
 	//Sounds
 	_sounds.LoadFromFile("entities_dmg4", "./res/sounds/entities/dmg4.wav");
@@ -435,14 +435,14 @@ void Game::Start()
 	//Keybinds
 	if (_settings->DEBUG)
 	{
-		sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true };
-		sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true };
-		sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true };
-		sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true };
-		sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true };
-		sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true };
-		sf::Event::KeyEvent ctrlAltN = { sf::Keyboard::N, true, true };
-		sf::Event::KeyEvent ctrlAltU = { sf::Keyboard::U, true, true };
+		sf::Event::KeyEvent ctrlAltG = { sf::Keyboard::G, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltA = { sf::Keyboard::A, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltH = { sf::Keyboard::H, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltD = { sf::Keyboard::D, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltR = { sf::Keyboard::R, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltP = { sf::Keyboard::P, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltN = { sf::Keyboard::N, true, true, false, false };
+		sf::Event::KeyEvent ctrlAltU = { sf::Keyboard::U, true, true, false, false };
 		_keyboardHandler.NewOn(ctrlAltG, &Game::ToggleGridVisibility);
 		_keyboardHandler.NewOn(ctrlAltA, &Game::ToggleActionMapVisibility);
 		_keyboardHandler.NewOn(ctrlAltH, &Game::ToggleHitboxVisibility);

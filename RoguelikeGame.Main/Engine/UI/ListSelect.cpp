@@ -33,10 +33,6 @@ ListSelect::ListSelect(ListSelect& other) : UIElement(other), _leftArrow(other._
     _values = other._values;
 }
 
-ListSelect::~ListSelect()
-{
-}
-
 void ListSelect::AddLeftArrowState(const std::string& name, const std::string& textureName, const sf::FloatRect& rect)
 {
     _leftArrow.AddState(name, _dummyText, textureName, rect);

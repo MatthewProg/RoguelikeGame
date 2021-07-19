@@ -23,7 +23,7 @@ namespace sf
 	public:
 		Collision();
 		Collision(Collision& other);
-		~Collision();
+		~Collision() = default;
 
 		sf::FloatRect GetCollisionBox() const;
 		sf::FloatRect GetCollisionBoxOffset() const;

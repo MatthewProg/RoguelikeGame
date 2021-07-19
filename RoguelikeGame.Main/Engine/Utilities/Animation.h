@@ -42,10 +42,10 @@ namespace sf
 		void NextFrame();
 
 		// Inherited via Drawable
-		virtual void draw(RenderTarget& target, RenderStates states) const override;
+		void draw(RenderTarget& target, RenderStates states) const override;
 	public:
 		Animation();
-		~Animation();
+		~Animation() = default;
 
 		//Animation
 		void Start();

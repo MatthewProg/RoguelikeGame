@@ -17,7 +17,7 @@ bool CollisionHelper::CheckCircleCollision(const sf::Vector2f& point, const sf::
         return (normalPointAngle >= normalCircleAngleL && normalPointAngle <= normalCircleAngleR && pointRadius <= radius);
     else //Crossing 0deg
         return((normalPointAngle >= normalCircleAngleL && normalPointAngle <= 360 && pointRadius <= radius) ||
-                normalPointAngle <= normalCircleAngleR && normalPointAngle >= 0 && pointRadius <= radius);
+                (normalPointAngle <= normalCircleAngleR && normalPointAngle >= 0 && pointRadius <= radius));
 }
 
 bool CollisionHelper::CheckCircleCollision(const sf::Vector2f& point, const sf::Vector2f& center, float radius)
@@ -59,20 +59,20 @@ bool CollisionHelper::CheckTileCollision(const sf::Vector2f& center, float radiu
             if (x < 0 || y < 0 || x > (int)tiles->width - 1 || y > (int)tiles->height - 1) continue;
             if (tiles->data[y * tiles->width + x] == false) continue;
 
-            auto tileCenter = sf::Vector2f(x * tiles->tileWidth + (tiles->tileWidth / 2) - tiles->offsetX,
-                                           y * tiles->tileHeight + (tiles->tileHeight / 2) - tiles->offsetY);
+            auto tileCenter = sf::Vector2f((float)((float)x * tiles->tileWidth + ((float)tiles->tileWidth / 2.f)) - tiles->offsetX,
+                                           (float)((float)y * tiles->tileHeight + ((float)tiles->tileHeight / 2.f)) - tiles->offsetY);
             sf::Vector2f circleDistance;
             circleDistance.x = abs(center.x - tileCenter.x);
             circleDistance.y = abs(center.y - tileCenter.y);
 
-            if (circleDistance.x > (tiles->tileWidth / 2.f + radius)) { continue; }
-            if (circleDistance.y > (tiles->tileHeight / 2.f + radius)) { continue; }
+            if (circleDistance.x > ((float)tiles->tileWidth / 2.f + radius)) { continue; }
+            if (circleDistance.y > ((float)tiles->tileHeight / 2.f + radius)) { continue; }
 
-            if (circleDistance.x <= (tiles->tileWidth / 2.f)) { return true; }
-            if (circleDistance.y <= (tiles->tileHeight / 2.f)) { return true; }
+            if (circleDistance.x <= ((float)tiles->tileWidth / 2.f)) { return true; }
+            if (circleDistance.y <= ((float)tiles->tileHeight / 2.f)) { return true; }
 
-            auto cX = circleDistance.x - (tiles->tileWidth / 2.f);
-            auto cY = circleDistance.y - (tiles->tileHeight / 2.f);
+            auto cX = circleDistance.x - ((float)tiles->tileWidth / 2.f);
+            auto cY = circleDistance.y - ((float)tiles->tileHeight / 2.f);
             if (cX * cX + cY * cY <= radius * radius) return true;
         }
     return false;
@@ -108,7 +108,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos
             {
                 if (tiles->data[(pos.y - 1) * tiles->width + pos.x] || tiles->data[(pos.y - 1) * tiles->width + pos.z]) //Collision on top
                 {
-                    auto tileLowerY = ((pos.y - 1) * tiles->tileHeight) + tiles->tileHeight + tiles->offsetY;
+                    auto tileLowerY = (float)((pos.y - 1) * tiles->tileHeight) + (float)tiles->tileHeight + tiles->offsetY;
                     auto diff = startPos.top - tileLowerY;
                     if ((moveVector.y * -1) < diff)
                         outY += moveVector.y;
@@ -127,7 +127,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos
             {
                 if (tiles->data[(pos.w + 1) * tiles->width + pos.x] || tiles->data[(pos.w + 1) * tiles->width + pos.z]) //Collision on bottom
                 {
-                    auto tileUpperY = ((pos.w + 1) * tiles->tileHeight) + tiles->offsetY;
+                    auto tileUpperY = (float)((pos.w + 1) * tiles->tileHeight) + tiles->offsetY;
                     auto diff = tileUpperY - (startPos.top + startPos.height);
                     if (moveVector.y < diff)
                         outY += moveVector.y;
@@ -151,7 +151,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos
             {
                 if (tiles->data[pos.y * tiles->width + (pos.x - 1)] || tiles->data[pos.w * tiles->width + (pos.x - 1)]) //Collision on left
                 {
-                    auto tileRightX = ((pos.x-1) * tiles->tileWidth) + tiles->tileWidth + tiles->offsetX;
+                    auto tileRightX = (float)((pos.x-1) * tiles->tileWidth) + (float)tiles->tileWidth + tiles->offsetX;
                     auto diff = startPos.left - tileRightX;
                     if ((moveVector.x * -1) < diff)
                         outX += moveVector.x;
@@ -170,7 +170,7 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::FloatRect& startPos
             {
                 if (tiles->data[pos.y * tiles->width + (pos.z + 1)] || tiles->data[pos.w * tiles->width + (pos.z + 1)]) //Collision on right
                 {
-                    auto tileLeftX = ((pos.z + 1) * tiles->tileWidth) + tiles->offsetX;
+                    auto tileLeftX = (float)((pos.z + 1) * tiles->tileWidth) + tiles->offsetX;
                     auto diff = tileLeftX - (startPos.left + startPos.width);
                     if (moveVector.x < diff)
                         outX += moveVector.x;
@@ -204,10 +204,10 @@ sf::Vector2f CollisionHelper::GetTileLimitPosition(const sf::Vector2f& startPos,
             if (x < 0 || y < 0 || x > (int)tiles->width - 1 || y > (int)tiles->height - 1) continue;
             if (tiles->data[y * tiles->width + x] == false) continue;
 
-            auto tileLeft = x * tiles->tileWidth - tiles->offsetX - precision;
-            auto tileRight = x * tiles->tileWidth + tiles->tileWidth - tiles->offsetX + precision;
-            auto tileTop = y * tiles->tileHeight - tiles->offsetY - precision;
-            auto tileDown = y * tiles->tileHeight + tiles->tileHeight - tiles->offsetY + precision;
+            auto tileLeft = (float)x * (float)tiles->tileWidth - tiles->offsetX - precision;
+            auto tileRight = (float)x * (float)tiles->tileWidth + (float)tiles->tileWidth - tiles->offsetX + precision;
+            auto tileTop = (float)y * (float)tiles->tileHeight - tiles->offsetY - precision;
+            auto tileDown = (float)y * (float)tiles->tileHeight + (float)tiles->tileHeight - tiles->offsetY + precision;
 
 
             auto closestX = std::max(tileLeft, std::min(tileRight, output.x));
@@ -307,17 +307,17 @@ sf::Vector2f CollisionHelper::GetRectLimitPosition(const sf::FloatRect& startPos
 
 sf::Glsl::Ivec4 CollisionHelper::GetPosOnTiles(const sf::FloatRect& pos, const MapLayerModel<bool>* tiles)
 {
-    int y1 = (int)((pos.top - tiles->offsetY) / tiles->tileHeight);
+    int y1 = (int)((pos.top - tiles->offsetY) / (float)tiles->tileHeight);
     int y2 = (int)(((double)pos.top + pos.height - tiles->offsetY - .01) / tiles->tileHeight);
-    int x1 = (int)((pos.left - tiles->offsetX) / tiles->tileWidth);
+    int x1 = (int)((pos.left - tiles->offsetX) / (float)tiles->tileWidth);
     int x2 = (int)(((double)pos.left + pos.width - tiles->offsetX - .01) / tiles->tileWidth);
     return sf::Glsl::Ivec4(x1, y1, x2, y2);
 }
 
 sf::Vector2i CollisionHelper::GetPosOnTiles(const sf::Vector2f& pos, const MapLayerModel<bool>* tiles)
 {
-    int x = (int)((pos.x - tiles->offsetX) / tiles->tileWidth);
-    int y = (int)((pos.y - tiles->offsetY) / tiles->tileHeight);
+    int x = (int)((pos.x - tiles->offsetX) / (float)tiles->tileWidth);
+    int y = (int)((pos.y - tiles->offsetY) / (float)tiles->tileHeight);
     return sf::Vector2i(x, y);
 }
 

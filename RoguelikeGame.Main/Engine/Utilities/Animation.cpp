@@ -24,10 +24,6 @@ sf::Animation::Animation()
 	_vertices.resize(4);
 }
 
-sf::Animation::~Animation()
-{
-}
-
 void sf::Animation::Start()
 {
 	_paused = false;
@@ -84,7 +80,7 @@ const sf::Texture* sf::Animation::GetTexture() const
 sf::Color sf::Animation::GetFrameColor(size_t frame) const
 {
 	if(frame >= _frameColor.size())
-		return sf::Color();
+		return {};
 	return _frameColor[frame];
 }
 
@@ -141,9 +137,7 @@ void sf::Animation::UpdateVertices()
 	_vertices[3].position = sf::Vector2f(0, (float)_rectFrames[_currentFrame].height);
 
 	auto texRect = _rectFrames[_currentFrame];
-	if (_texture == nullptr)
-		texRect = sf::IntRect(0, 0, 16, 16);
-	else if (_texture->getSize().x == 0)
+	if (_texture == nullptr || _texture->getSize().x == 0)
 		texRect = sf::IntRect(0, 0, 16, 16);
 
 	_vertices[0].texCoords = sf::Vector2f((float)texRect.left, (float)texRect.top);
@@ -204,9 +198,9 @@ void sf::Animation::Tick(bool tick)
 
 	UpdateVertices();
 
-	if (_currentTick > _changeEveryTicks * _animationSpeed)
+	if ((float)_currentTick > (float)_changeEveryTicks * _animationSpeed)
 	{
-		_currentTick = 0;
+		_currentTick = 0U;
 		NextFrame();
 	}
 	else
@@ -219,7 +213,7 @@ void sf::Animation::Tick(bool tick)
 void sf::Animation::AddNewFrame(const sf::IntRect& rect)
 {
 	_rectFrames.push_back(rect);
-	_frameColor.push_back(sf::Color(255, 255, 255, 255));
+	_frameColor.emplace_back(255, 255, 255, 255);
 	Reset();
 }
 
@@ -246,7 +240,7 @@ void sf::Animation::SetFrames(const std::vector<sf::IntRect>& frames)
 	_rectFrames = frames;
 	_frameColor.clear();
 	for (size_t i = 0; i < _rectFrames.size(); i++)
-		_frameColor.push_back(sf::Color(255, 255, 255, 255));
+		_frameColor.emplace_back(255, 255, 255, 255);
 	Reset();
 }
 
@@ -305,9 +299,7 @@ sf::FloatRect sf::Animation::GetLocalBounds() const
 
 void sf::Animation::draw(RenderTarget& target, RenderStates states) const
 {
-	if (_texture == nullptr)
-		states.texture = _noTexture;
-	else if (_texture->getSize() == sf::Vector2u())
+	if (_texture == nullptr || _texture->getSize() == sf::Vector2u())
 		states.texture = _noTexture;
 	else
 		states.texture = _texture;

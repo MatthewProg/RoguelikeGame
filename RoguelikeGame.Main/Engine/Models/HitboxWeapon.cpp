@@ -10,10 +10,6 @@ HitboxWeapon::HitboxWeapon(HitboxWeapon& other) : Weapon(other)
 	_hitSounds = other._hitSounds;
 }
 
-HitboxWeapon::~HitboxWeapon()
-{
-}
-
 bool HitboxWeapon::CanAttack() const
 {
     return (_cooldownCounter >= GetWeaponCooldown());

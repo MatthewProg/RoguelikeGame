@@ -70,23 +70,23 @@ void Logger::Log(LogType type, std::string message, bool ignoreDuplicants)
 
 std::string Logger::CurrentDate()
 {
-	time_t     now = time(0);
+	time_t     now = time(nullptr);
 	struct tm  tstruct;
-	char       buf[80];
+	std::array<char,80U> buf;
 	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), "%Y-%m-%d", &tstruct);
-	std::string out(buf);
+	strftime(buf.data(), sizeof(buf), "%Y-%m-%d", &tstruct);
+	std::string out(buf.data());
 	return out;
 }
 
 std::string Logger::CurrentTime()
 {
-	time_t     now = time(0);
+	time_t     now = time(nullptr);
 	struct tm  tstruct;
-	char       buf[80];
+	std::array<char,80U> buf;
 	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), "%X", &tstruct);
-	std::string out(buf);
+	strftime(buf.data(), sizeof(buf), "%X", &tstruct);
+	std::string out(buf.data());
 	return out;
 }
 

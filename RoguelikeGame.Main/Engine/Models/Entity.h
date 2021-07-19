@@ -30,11 +30,11 @@ protected:
 	void UpdateEntity(bool tick);
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	Entity();
 	Entity(Entity& other);
-	~Entity();
+	~Entity() = default;
 
 	void TakeDmg(float dmg);
 	bool IsDead() const;

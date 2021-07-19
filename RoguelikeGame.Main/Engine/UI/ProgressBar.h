@@ -19,7 +19,7 @@ private:
 public:
 	ProgressBar();
 	ProgressBar(ProgressBar& other);
-	~ProgressBar();
+	~ProgressBar() = default;
 
 	//Var setters
 	void SetCurrentValue(float value);
@@ -51,9 +51,9 @@ public:
 	sf::FloatRect GetProgressBarStepsGlobalBounds() const;
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void ForceRedraw() override;
-	virtual void Update(bool, float) override;
-	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
-	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
+	UIElement* clone() override;
+	void ForceRedraw() override;
+	void Update(bool, float) override;
+	void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
 };

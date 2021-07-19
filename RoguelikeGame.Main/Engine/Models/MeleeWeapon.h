@@ -16,17 +16,17 @@ private:
 	std::vector<std::string> _swingSounds;
 
 	// Inherited via Weapon::Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	MeleeWeapon();
 	MeleeWeapon(MeleeWeapon& other);
-	~MeleeWeapon();
+	~MeleeWeapon() override = default;
 
 	// Inherited via Weapon
 	bool CanAttack() const override;
 	void Attack() override;
 	void Update(bool tick, float deltaTime) override;
-	virtual Weapon* clone() override;
+	Weapon* clone() override;
 
 	void SetHitboxAccuracy(unsigned short steps);
 

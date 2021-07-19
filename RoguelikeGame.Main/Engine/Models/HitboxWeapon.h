@@ -11,15 +11,15 @@ private:
 public:
 	HitboxWeapon();
 	HitboxWeapon(HitboxWeapon& other);
-	~HitboxWeapon();
+	~HitboxWeapon() override = default;
 
 	// Inherited via Weapon
-	virtual bool CanAttack() const override;
-	virtual void Attack() override;
-	virtual void Update(bool tick, float) override;
-	virtual Weapon* clone() override;
+	bool CanAttack() const override;
+	void Attack() override;
+	void Update(bool tick, float) override;
+	Weapon* clone() override;
 
-	virtual void SetCurrentAngle(float) override;
+	void SetCurrentAngle(float) override;
 
 	//Sound getters
 	std::vector<std::string>* GetHitSounds();

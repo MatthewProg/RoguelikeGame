@@ -13,10 +13,6 @@ AnimationBox::AnimationBox(AnimationBox& other) : UIElement(other)
     _animation = other._animation;
 }
 
-AnimationBox::~AnimationBox()
-{
-}
-
 void AnimationBox::SetAnimation(const sf::Animation& anim)
 {
     _animation = anim;

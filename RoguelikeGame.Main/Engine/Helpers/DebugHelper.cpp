@@ -18,10 +18,6 @@ DebugHelper::DebugHelper()
 	Reset();
 }
 
-DebugHelper::~DebugHelper()
-{
-}
-
 void DebugHelper::Status(bool tick)
 {
 	if (_debug == false) return;

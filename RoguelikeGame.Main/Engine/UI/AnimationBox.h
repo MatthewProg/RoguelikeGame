@@ -11,7 +11,7 @@ private:
 public:
 	AnimationBox();
 	AnimationBox(AnimationBox& other);
-	~AnimationBox();
+	~AnimationBox() = default;
 
 	//Setters
 	void SetAnimation(const sf::Animation& anim);

@@ -253,10 +253,6 @@ ScrollBar::ScrollBar(ScrollBar& other) : UIElement(other), _thumb(other._thumb)
     _scrollAmount = other._scrollAmount;
 }
 
-ScrollBar::~ScrollBar()
-{
-}
-
 void ScrollBar::SetTrackTexture(const std::string& tmpName, const std::string& textureName, const sf::FloatRect& rect)
 {
     if (_texturesManager->TmpExists(tmpName))

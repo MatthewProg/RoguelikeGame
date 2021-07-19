@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <array>
 
 #include "../Core/Logger.h"
 
@@ -27,10 +28,10 @@ private:
 	bool _showCollisionLines;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	CollisionsManager();
-	~CollisionsManager();
+	~CollisionsManager() = default;
 
 	template<typename T>
 	void AddMap(const MapLayerModel<T>& map, const T& block);

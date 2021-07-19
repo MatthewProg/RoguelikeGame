@@ -30,7 +30,7 @@ private:
 	Paths SolveDijkstras(Cell* startCell);
 public:
 	PathfindingManager();
-	~PathfindingManager();
+	~PathfindingManager() = default;
 
 	void GenerateBaseGraph(const std::vector<sf::Vector2f>& points, CollisionsManager* collisions);
 	std::list<sf::Vector2f> GetNodesInSight(const sf::Vector2f& start, CollisionsManager* collisions);

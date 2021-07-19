@@ -14,7 +14,7 @@ UIElement::UIElement()
 	_redrawHappened = true;
 }
 
-UIElement::UIElement(UIElement& other)
+UIElement::UIElement(UIElement& other) : UIElement()
 {
 	auto size = other._render.getSize();
 	_render.create(size.x, size.y);

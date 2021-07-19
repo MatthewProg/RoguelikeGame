@@ -5,7 +5,7 @@ void MeleeWeapon::PrepareHitbox()
 	float step = _angle / (float)_hitboxAccuracy;
 	_hitbox[0].position = getOrigin();
 	for (size_t i = 1; i < _hitbox.getVertexCount(); i++)
-		_hitbox[i].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2) + ((i-1) * step), _range);
+		_hitbox[i].position = MathHelper::GetPointFromAngle(getOrigin(), _currentAngle - (_angle / 2.f) + ((float)(i-1U) * step), _range);
 }
 
 void MeleeWeapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -46,10 +46,6 @@ MeleeWeapon::MeleeWeapon(MeleeWeapon& other) : Weapon(other)
 	_range = other._range;
 	_hitboxAccuracy = other._hitboxAccuracy;
 	_swingSounds = other._swingSounds;
-}
-
-MeleeWeapon::~MeleeWeapon()
-{
 }
 
 bool MeleeWeapon::CanAttack() const

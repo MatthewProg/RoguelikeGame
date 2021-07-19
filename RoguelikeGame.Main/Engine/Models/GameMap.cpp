@@ -16,11 +16,6 @@ GameMap<T>::GameMap()
 }
 
 template<typename T>
-GameMap<T>::~GameMap()
-{
-}
-
-template<typename T>
 bool GameMap<T>::LoadFromFile(const std::string& path)
 {
 	std::ifstream input;
@@ -74,7 +69,7 @@ bool GameMap<T>::LoadFromFile(const std::string& path)
 	{
 		float x = vec["x"].get<float>();
 		float y = vec["y"].get<float>();
-		_pathfingingPoints.push_back(sf::Vector2f(x, y));
+		_pathfingingPoints.emplace_back(x, y);
 	}
 		
 	std::sort(_layersIds.begin(), _layersIds.end());
@@ -142,9 +137,13 @@ std::vector<std::string> GameMap<T>::GetLayersTilesNames() const
 	if(_actionMap.visible == true)
 		all[_actionMap.tilesName] = true;
 
-	std::vector<std::string> output;
-	for (auto& val : all)
-		output.push_back(val.first);
+	std::vector<std::string> output(all.size());
+	auto it = all.begin();
+	for (size_t i = 0U; i < all.size(); i++)
+	{
+		output[i] = it->first;
+		++it;
+	}
 	return output;
 }
 
@@ -379,11 +378,7 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		if (found->second.visible == false) continue;
 
 		auto texture = _tilesTextures.find(found->second.tilesName);
-		if (texture == _tilesTextures.end())
-			states.texture = _noTexture;
-		else if (texture->second == nullptr)
-			states.texture = _noTexture;
-		else if (texture->second->getSize() == sf::Vector2u())
+		if (texture == _tilesTextures.end() || texture->second == nullptr || texture->second->getSize() == sf::Vector2u())
 			states.texture = _noTexture;
 		else
 			states.texture = texture->second;
@@ -397,9 +392,7 @@ void GameMap<T>::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (_actionMap.visible)
 	{
 		auto texture = _tilesTextures.find(_actionMap.tilesName);
-		if (texture == _tilesTextures.end())
-			states.texture = _noTexture;
-		else if (texture->second->getSize() == sf::Vector2u())
+		if (texture == _tilesTextures.end() || texture->second->getSize() == sf::Vector2u())
 			states.texture = _noTexture;
 		else
 			states.texture = texture->second;
@@ -453,9 +446,7 @@ void GameMap<T>::PrepareFrame()
 		sf::Color opacity = sf::Color(255, 255, 255, (sf::Uint8)(layer->second.opacity * 255));
 
 		sf::Texture* texture = nullptr;
-		if (_tilesTextures.find(tilesName) == _tilesTextures.end())
-			texture = _noTexture;
-		else if (_tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
+		if (_tilesTextures.find(tilesName) == _tilesTextures.end() || _tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
 			texture = _noTexture;
 		else
 			texture = _tilesTextures[tilesName];
@@ -465,10 +456,10 @@ void GameMap<T>::PrepareFrame()
 		{
 			if (layer->second.data[no] == 0) continue; //if empty tile
 
-			vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-			vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-			vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
-			vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+			vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight));
+			vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight));
+			vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight + tileHeight));
+			vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight + tileHeight));
 
 			sf::IntRect rect;
 			if (texture == _noTexture)
@@ -511,13 +502,11 @@ void GameMap<T>::PrepareActionMapLayer()
 	auto tileWidth = layer->tileWidth;
 	auto tileHeight = layer->tileHeight;
 
-	auto tilesName = layer->tilesName;
+	auto& tilesName = layer->tilesName;
 	sf::Color opacity = sf::Color(255, 255, 255, (sf::Uint8)(layer->opacity * 255));
 
 	sf::Texture* texture = nullptr;
-	if (_tilesTextures.find(tilesName) == _tilesTextures.end())
-		texture = _noTexture;
-	else if (_tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
+	if (_tilesTextures.find(tilesName) == _tilesTextures.end() || _tilesTextures[tilesName]->getSize() == sf::Vector2u(0, 0))
 		texture = _noTexture;
 	else
 		texture = _tilesTextures[tilesName];
@@ -527,10 +516,10 @@ void GameMap<T>::PrepareActionMapLayer()
 	{
 		if (layer->data[no] == 0) continue; //if empty tile
 
-		vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-		vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-		vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
-		vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+		vertex->operator[]((no * 4) + 0).position = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight));
+		vertex->operator[]((no * 4) + 1).position = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight));
+		vertex->operator[]((no * 4) + 2).position = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight + tileHeight));
+		vertex->operator[]((no * 4) + 3).position = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight + tileHeight));
 
 		sf::IntRect rect;
 		if (texture == _noTexture)
@@ -564,10 +553,10 @@ void GameMap<T>::PrepareActionMapGrid()
 	auto tileHeight = _actionMap.tileHeight;
 	for (size_t no = 0; no < _actionMap.data.size(); no++)
 	{
-		auto pos1 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-		auto pos2 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight));
-		auto pos3 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth + tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
-		auto pos4 = sf::Vector2f((float)(((uint32_t)no % width) * tileWidth), (float)(((uint32_t)no / width) * tileHeight + tileHeight));
+		auto pos1 = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight));
+		auto pos2 = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight));
+		auto pos3 = sf::Vector2f((float)((no % width) * tileWidth + tileWidth), (float)((no / width) * tileHeight + tileHeight));
+		auto pos4 = sf::Vector2f((float)((no % width) * tileWidth), (float)((no / width) * tileHeight + tileHeight));
 
 		_actionMapGrid[(no * 8) + 0].position = pos1;
 		_actionMapGrid[(no * 8) + 1].position = pos2;
@@ -613,7 +602,6 @@ void GameMap<T>::SetLayerVertexOffset(unsigned int layerId, const sf::Vector2f& 
 #pragma region TemplateImplementationSigned
 template void GameMap<int>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<int>::GameMap();
-template GameMap<int>::~GameMap();
 template void GameMap<int>::PrepareFrame();
 template bool GameMap<int>::LoadFromFile(const std::string& path);
 template void GameMap<int>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
@@ -650,7 +638,6 @@ template void GameMap<int>::ToggleActionMapVisibility();
 
 template void GameMap<char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<char>::GameMap();
-template GameMap<char>::~GameMap();
 template void GameMap<char>::PrepareFrame();
 template bool GameMap<char>::LoadFromFile(const std::string& path);
 template void GameMap<char>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
@@ -687,7 +674,6 @@ template void GameMap<char>::ToggleActionMapVisibility();
 
 template void GameMap<short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<short>::GameMap();
-template GameMap<short>::~GameMap();
 template void GameMap<short>::PrepareFrame();
 template bool GameMap<short>::LoadFromFile(const std::string& path);
 template void GameMap<short>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
@@ -726,7 +712,6 @@ template void GameMap<short>::ToggleActionMapVisibility();
 #pragma region TemplateImplementationUnsigned
 template void GameMap<unsigned int>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned int>::GameMap();
-template GameMap<unsigned int>::~GameMap();
 template void GameMap<unsigned int>::PrepareFrame();
 template bool GameMap<unsigned int>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned int>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
@@ -763,7 +748,6 @@ template void GameMap<unsigned int>::ToggleActionMapVisibility();
 
 template void GameMap<unsigned char>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned char>::GameMap();
-template GameMap<unsigned char>::~GameMap();
 template void GameMap<unsigned char>::PrepareFrame();
 template bool GameMap<unsigned char>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned char>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);
@@ -800,7 +784,6 @@ template void GameMap<unsigned char>::ToggleActionMapVisibility();
 
 template void GameMap<unsigned short>::draw(sf::RenderTarget& target, sf::RenderStates states) const;
 template GameMap<unsigned short>::GameMap();
-template GameMap<unsigned short>::~GameMap();
 template void GameMap<unsigned short>::PrepareFrame();
 template bool GameMap<unsigned short>::LoadFromFile(const std::string& path);
 template void GameMap<unsigned short>::SetTilesTexture(const std::string& tilesName, sf::Texture* texture);

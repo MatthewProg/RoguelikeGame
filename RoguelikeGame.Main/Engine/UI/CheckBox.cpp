@@ -15,9 +15,7 @@ void CheckBox::ForceRedraw()
 	_render.clear(sf::Color::Transparent);
 
 	sf::Texture* tex = _texturesManager->GetTexture(_textureName);
-	if (tex == nullptr)
-		tex = _noTexture;
-	else if (tex->getSize().x == 0)
+	if (tex == nullptr || tex->getSize().x == 0)
 		tex = _noTexture;
 
 	auto rect = (_isChecked == true) ? _checkedRect : _uncheckedRect;

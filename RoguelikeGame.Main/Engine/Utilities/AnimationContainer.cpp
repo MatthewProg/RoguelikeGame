@@ -33,10 +33,6 @@ namespace sf
 		_noTextureVertex[3].texCoords = sf::Vector2f(16, 0);
 	}
 
-	AnimationContainer::~AnimationContainer()
-	{
-	}
-
 	void AnimationContainer::Tick(bool tick)
 	{
 		if (HasStateAndAnimation())
@@ -77,7 +73,8 @@ namespace sf
 
 		if (_smoothChangeState != "")
 		{
-			_currentAnimation->SetLoop(_smoothChangePrevLoop);
+			if(_currentAnimation != nullptr)
+				_currentAnimation->SetLoop(_smoothChangePrevLoop);
 			_smoothChangeState = "";
 		}
 
@@ -86,8 +83,11 @@ namespace sf
 		if (HasStateAndAnimation())
 		{
 			UpdateCurrentAnimationPtr();
-			_currentAnimation->Reset();
-			_currentAnimation->Start();
+			if (_currentAnimation != nullptr)
+			{
+				_currentAnimation->Reset();
+				_currentAnimation->Start();
+			}
 		}
 	}
 

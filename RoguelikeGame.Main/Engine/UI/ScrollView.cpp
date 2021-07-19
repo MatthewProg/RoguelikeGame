@@ -213,7 +213,7 @@ ScrollView::ScrollView()
 ScrollView::ScrollView(ScrollView& other) : UIElement(other)
 {
 	for (auto& e : other._elements)
-		_elements.push_back(Element((FocusContainer*)std::get<0>(e)->clone(), std::get<1>(e)));
+		_elements.emplace_back((FocusContainer*)std::get<0>(e)->clone(), std::get<1>(e));
 	auto size = other._elementsRender.getSize();
 	_elementsRender.create(size.x, size.y);
 	_currentIndex = other._currentIndex;
@@ -242,7 +242,7 @@ ScrollView::~ScrollView()
 void ScrollView::AddElement(const std::string& name, FocusContainer* container)
 {
 	if (container != nullptr)
-		_elements.push_back(Element(container, name));
+		_elements.emplace_back(container, name);
 	AlignElements();
 	_sthChanged = true;
 }
@@ -294,7 +294,7 @@ void ScrollView::RemoveElement(const std::string& name)
 		{
 			_elements.erase(it);
 
-			if (it - _elements.begin() <= _currentIndex)
+			if (size_t(it - _elements.begin()) <= _currentIndex)
 				PreviousElement();
 			AlignElements();
 			_sthChanged = true;

@@ -4,9 +4,10 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdio.h>
+#include <cstdio>
 #include <chrono>
 #include <ctime>
+#include <array>
 #include <map>
 
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
@@ -27,7 +28,7 @@ struct LogOptions
 class Logger
 {
 protected:
-	Logger(const LogOptions options) : _options(options)
+	Logger(const LogOptions& options) : _options(options)
 	{
 		TurnOnColorsSupport();
 

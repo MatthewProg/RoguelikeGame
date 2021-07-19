@@ -62,10 +62,6 @@ Label::Label(Label& other) : UIElement(other)
 	_horizontalAlignment = other._horizontalAlignment;
 }
 
-Label::~Label()
-{
-}
-
 std::string Label::GetText() const
 {
 	return _text.getString();
@@ -101,11 +97,6 @@ void Label::ProcessEvent(sf::Event*, const sf::Vector2f&)
 {
 	//Add TextBox mechanics at some point
 }
-
-//sf::FloatRect Label::GetGlobalBounds() const
-//{
-//	return getTransform().transformRect(_text.getGlobalBounds());
-//}
 
 UIElement* Label::clone()
 {

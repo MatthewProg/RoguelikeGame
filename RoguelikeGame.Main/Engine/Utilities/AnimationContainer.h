@@ -26,7 +26,7 @@ namespace sf
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	public:
 		AnimationContainer();
-		~AnimationContainer();
+		~AnimationContainer() = default;
 
 		void Tick(bool tick);
 		void UpdateCurrentAnimationPtr();

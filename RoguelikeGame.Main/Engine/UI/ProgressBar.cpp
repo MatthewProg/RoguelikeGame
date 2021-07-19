@@ -28,10 +28,6 @@ ProgressBar::ProgressBar(ProgressBar& other) : UIElement(other)
 	_progressBarStepsPos = other._progressBarStepsPos;
 }
 
-ProgressBar::~ProgressBar()
-{
-}
-
 void ProgressBar::SetCurrentValue(float value)
 {
 	_currentValue = value;
@@ -77,13 +73,13 @@ float ProgressBar::GetStep() const
 
 void ProgressBar::AddProgressBarStep(const sf::FloatRect& step, const std::string& textureName)
 {
-	_progressBarSteps.push_back(std::tuple<sf::FloatRect, std::string>(step, textureName));
+	_progressBarSteps.emplace_back(step, textureName);
 	_sthChanged = true;
 }
 
 void ProgressBar::AddBackgroundLayer(const sf::FloatRect& layer, const std::string& textureName)
 {
-	_backgroundLayers.push_back(std::tuple<sf::FloatRect, std::string>(layer, textureName));
+	_backgroundLayers.emplace_back(layer, textureName);
 	_sthChanged = true;
 }
 
@@ -192,9 +188,7 @@ void ProgressBar::ForceRedraw()
 	for (auto& layer : _backgroundLayers)
 	{
 		sf::Texture* texture = _texturesManager->GetTexture(std::get<1>(layer));
-		if (texture == nullptr)
-			texture = _noTexture;
-		else if (texture->getSize().x == 0 || texture->getSize().y == 0)
+		if (texture == nullptr || texture->getSize().x == 0 || texture->getSize().y == 0)
 			texture = _noTexture;
 
 		rs.texture = texture;
@@ -216,12 +210,10 @@ void ProgressBar::ForceRedraw()
 	}
 
 	//Draw full steps
-	auto fullStep = _progressBarSteps[_progressBarSteps.size() - 1];
+	auto& fullStep = _progressBarSteps[_progressBarSteps.size() - 1];
 
 	sf::Texture* tex = _texturesManager->GetTexture(std::get<1>(fullStep));
-	if (tex == nullptr)
-		tex = _noTexture;
-	else if (tex->getSize().x == 0 || tex->getSize().y == 0)
+	if (tex == nullptr || tex->getSize().x == 0 || tex->getSize().y == 0)
 		tex = _noTexture;
 
 	auto& size = std::get<0>(fullStep);
@@ -246,23 +238,21 @@ void ProgressBar::ForceRedraw()
 	{
 		fullSteps++;
 
-		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
+		t.setPosition(_progressBarStepsPos.x + (size.width * (float)fullSteps), _progressBarStepsPos.y);
 		rs.transform = t.getTransform();
 		rs.texture = tex;
 		_render.draw(step, rs);
 	}
 
 	//Draw partialy filled step
-	float rest = _currentValue - (valueStep * (fullSteps + 1));
+	float rest = _currentValue - (valueStep * (float)(fullSteps + 1));
 	if (rest > 0.f && _maxValue > 0.f && _currentValue > 0.f)
 	{
 		fullSteps++;
 		size_t id = (size_t)roundf((float)(_progressBarSteps.size() - 1) * (rest / valueStep));
 
 		tex = _texturesManager->GetTexture(std::get<1>(_progressBarSteps[id]));
-		if (tex == nullptr)
-			tex = _noTexture;
-		else if (tex->getSize().x == 0 || tex->getSize().y == 0)
+		if (tex == nullptr || tex->getSize().x == 0 || tex->getSize().y == 0)
 			tex = _noTexture;
 
 		auto& newSize = std::get<0>(_progressBarSteps[id]);
@@ -279,7 +269,7 @@ void ProgressBar::ForceRedraw()
 		step[2].texCoords = sf::Vector2f(newTexSize.left + newTexSize.width, newTexSize.top + newTexSize.height);
 		step[3].texCoords = sf::Vector2f(newTexSize.left, newTexSize.top + newTexSize.height);
 
-		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
+		t.setPosition(_progressBarStepsPos.x + (size.width * (float)fullSteps), _progressBarStepsPos.y);
 		rs.texture = tex;
 		rs.transform = t.getTransform();
 		_render.draw(step, rs);
@@ -290,9 +280,7 @@ void ProgressBar::ForceRedraw()
 	fullSteps++;
 
 	tex = _texturesManager->GetTexture(std::get<1>(_progressBarSteps[0]));
-	if (tex == nullptr)
-		tex = _noTexture;
-	else if (tex->getSize().x == 0 || tex->getSize().y == 0)
+	if (tex == nullptr || tex->getSize().x == 0 || tex->getSize().y == 0)
 		tex = _noTexture;
 
 	auto& emptyStep = std::get<0>(_progressBarSteps[0]);
@@ -311,7 +299,7 @@ void ProgressBar::ForceRedraw()
 
 	for (float j = (float)fullSteps * valueStep; j < _maxValue; j+=valueStep)
 	{
-		t.setPosition(_progressBarStepsPos.x + (size.width * fullSteps), _progressBarStepsPos.y);
+		t.setPosition(_progressBarStepsPos.x + (size.width * (float)fullSteps), _progressBarStepsPos.y);
 		rs.transform = t.getTransform();
 		rs.texture = tex;
 		_render.draw(step, rs);

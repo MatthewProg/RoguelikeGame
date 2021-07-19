@@ -20,7 +20,7 @@ private:
 	sf::FloatRect GetNextHitboxPosition(float deltaTime);
 public:
 	EntityMovement();
-	~EntityMovement();
+	~EntityMovement() = default;
 
 	void Update(float deltaTime);
 	bool IsKeyPressed() const;
