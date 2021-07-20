@@ -29,21 +29,30 @@ void SceneManager::UpdateAllBoundsOutline()
 
 void SceneManager::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
-	if (_loadedScene == "") return;
+	if (_loadedScene == "" && _loadedPopupName == "") return;
 
 	auto found = _scenes.find(_loadedScene);
 	if (found == _scenes.end() || found->second == nullptr) return;
 
 	target.draw(*found->second);
-	if (_showAllBounds)
-		target.draw(_allOutline);
-	if (_showFocused)
-		target.draw(_focusedOutline);
+	if (_loadedPopup == nullptr)
+	{
+		if (_showAllBounds)
+			target.draw(_allOutline);
+		if (_showFocused)
+			target.draw(_focusedOutline);
+	}
+	else
+	{
+		target.draw(*_loadedPopup);
+	}
 }
 
 SceneManager::SceneManager()
 {
 	_logger = Logger::GetInstance();
+	_loadedPopup = nullptr;
+	_loadedPopupName = "";
 	_scenes.clear();
 	_loadedScene = "";
 	_showFocused = false;
@@ -63,57 +72,77 @@ SceneManager::~SceneManager()
 	for (auto& p : _scenes)
 		if (p.second != nullptr)
 			delete p.second;
+
+	if (_loadedPopup != nullptr)
+		delete _loadedPopup;
 }
 
 void SceneManager::UpdateFocus(const sf::Vector2f& mousePos, bool clicked)
 {
 	if (_loadedScene == "") return;
 
-	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end() || loaded->second == nullptr) return;
-
-	loaded->second->UpdateFocus(mousePos, clicked);
-
-	if (_showFocused)
+	if (_loadedPopupName == "")
 	{
-		auto& focus = loaded->second->GetFocused();
-		if (std::get<1>(focus) != nullptr)
+		auto loaded = _scenes.find(_loadedScene);
+		if (loaded == _scenes.end() || loaded->second == nullptr) return;
+
+		loaded->second->UpdateFocus(mousePos, clicked);
+
+		if (_showFocused)
 		{
-			auto bounds = std::get<1>(focus)->GetDeepestInFocusBoundsPoints();
-			for (uint8_t i = 0; i < 4; i++)
+			auto& focus = loaded->second->GetFocused();
+			if (std::get<1>(focus) != nullptr)
 			{
-				_focusedOutline[i].position = bounds[i];
-				_focusedOutline[i + 1].position = bounds[(i + 1) % 4];
+				auto bounds = std::get<1>(focus)->GetDeepestInFocusBoundsPoints();
+				for (uint8_t i = 0; i < 4; i++)
+				{
+					_focusedOutline[i].position = bounds[i];
+					_focusedOutline[i + 1].position = bounds[(i + 1) % 4];
+				}
 			}
-		}
-		else
-		{
-			for (uint8_t i = 0; i < 5; i++)
-				_focusedOutline[i].position = sf::Vector2f(-1.f, -1.f);
+			else
+			{
+				for (uint8_t i = 0; i < 5; i++)
+					_focusedOutline[i].position = sf::Vector2f(-1.f, -1.f);
+			}
 		}
 	}
 }
 
 void SceneManager::UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 {
-	if (_loadedScene == "") return;
+	if (_loadedScene == "" && _loadedPopupName == "") return;
 
-	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end() || loaded->second == nullptr) return;
+	if (_loadedPopup == nullptr)
+	{
+		auto loaded = _scenes.find(_loadedScene);
+		if (loaded == _scenes.end() || loaded->second == nullptr) return;
 
-	loaded->second->UpdateEvent(ev, mousePos);
+		loaded->second->UpdateEvent(ev, mousePos);
+	}
+	else
+	{
+		_loadedPopup->UpdateEvent(ev, mousePos);
+	}
 }
 
 void SceneManager::Update(bool tick, float delta)
 {
-	if (_loadedScene == "") return;
+	if (_loadedScene == "" && _loadedPopupName == "") return;
 
-	auto loaded = _scenes.find(_loadedScene);
-	if (loaded == _scenes.end() || loaded->second == nullptr) return;
+	if (_loadedPopup == nullptr)
+	{
+		auto loaded = _scenes.find(_loadedScene);
+		if (loaded == _scenes.end() || loaded->second == nullptr) return;
 
-	if (_showAllBounds == true && tick == true)
-		UpdateAllBoundsOutline();
-	loaded->second->Update(tick, delta);
+		if (_showAllBounds == true && tick == true)
+			UpdateAllBoundsOutline();
+		loaded->second->Update(tick, delta);
+	}
+	else
+	{
+		_loadedPopup->Update(tick, delta);
+	}
 }
 
 void SceneManager::SetShowFocused(bool show)
@@ -183,6 +212,20 @@ const std::string& SceneManager::GetLoadedSceneName() const
 Scene* SceneManager::GetLoadedScene()
 {
 	return GetScene(_loadedScene);
+}
+
+void SceneManager::ClosePopup()
+{
+	if (_loadedPopup != nullptr)
+		delete _loadedPopup;
+
+	_loadedPopup = nullptr;
+	_loadedPopupName = "";
+}
+
+const std::string& SceneManager::GetLoadedPopupName() const
+{
+	return _loadedPopupName;
 }
 
 void SceneManager::AddScene(const std::string& name, Scene* element)

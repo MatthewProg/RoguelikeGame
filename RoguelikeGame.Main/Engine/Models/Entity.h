@@ -34,7 +34,7 @@ protected:
 public:
 	Entity();
 	Entity(Entity& other);
-	~Entity() = default;
+	~Entity() override = default;
 
 	void TakeDmg(float dmg);
 	bool IsDead() const;

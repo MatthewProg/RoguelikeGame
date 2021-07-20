@@ -7,7 +7,7 @@ private:
 	std::vector<std::string> _hitSounds;
 
 	// Inherited via Weapon
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	HitboxWeapon();
 	HitboxWeapon(HitboxWeapon& other);

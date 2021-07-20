@@ -2,6 +2,7 @@
 
 #include <map>
 
+
 #include "../UI/UIElement.h"
 
 #include "SFML/Graphics/Drawable.hpp"
@@ -15,15 +16,15 @@ private:
 	std::tuple<std::string, UIElement*> _inFocus;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	Scene();
 	Scene(Scene& other);
-	~Scene();
+	~Scene() override;
 
 	void UpdateFocus(const sf::Vector2f& mousePos, bool clicked);
-	void UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos);
-	void Update(bool tick, float delta);
+	virtual void UpdateEvent(sf::Event* ev, const sf::Vector2f& mousePos);
+	virtual void Update(bool tick, float delta);
 	void RefreshElements();
 
 	void AddElement(const std::string& name, UIElement* element);
@@ -43,4 +44,5 @@ public:
 	const std::map<std::string, UIElement*>& GetElements() const;
 	const std::tuple<std::string, UIElement*>& GetFocused() const;
 	size_t GetNoOfElements() const;
+	virtual sf::FloatRect GetElementsGlobalBounds() const;
 };

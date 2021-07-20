@@ -198,6 +198,7 @@
     <ClCompile Include="Engine\UI\AnimationBox.cpp" />
     <ClCompile Include="Engine\UI\Button.cpp" />
     <ClCompile Include="Engine\UI\CheckBox.cpp" />
+    <ClCompile Include="Engine\UI\Container.cpp" />
     <ClCompile Include="Engine\UI\FocusContainer.cpp" />
     <ClCompile Include="Engine\UI\Label.cpp" />
     <ClCompile Include="Engine\UI\ListSelect.cpp" />
@@ -225,7 +226,9 @@
     <ClInclude Include="Engine\Core\EntityMovement.h" />
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
-    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h" />
+    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.hpp" />
+    <ClInclude Include="Engine\Handlers\ResultHandler.hpp" />
+    <ClInclude Include="Engine\Handlers\ResultKeyHandler.hpp" />
     <ClInclude Include="Engine\Helpers\CollisionHelper.h" />
     <ClInclude Include="Engine\Helpers\DebugHelper.h" />
     <ClInclude Include="Engine\Helpers\InputHelper.h" />
@@ -254,9 +257,11 @@
     <ClInclude Include="Engine\UI\AnimationBox.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\UI\CheckBox.h" />
+    <ClInclude Include="Engine\UI\Container.h" />
     <ClInclude Include="Engine\UI\FocusContainer.h" />
     <ClInclude Include="Engine\UI\Label.h" />
     <ClInclude Include="Engine\UI\ListSelect.h" />
+    <ClInclude Include="Engine\UI\Popup.hpp" />
     <ClInclude Include="Engine\UI\ProgressBar.h" />
     <ClInclude Include="Engine\UI\Scene.h" />
     <ClInclude Include="Engine\UI\ScrollBar.h" />

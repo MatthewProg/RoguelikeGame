@@ -13,12 +13,12 @@ private:
 	Logger* _logger;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 
 	Player();
 	Player(Player& other);
-	~Player();
+	~Player() override;
 
 	//Player
 	void Update(bool tick, float delta);

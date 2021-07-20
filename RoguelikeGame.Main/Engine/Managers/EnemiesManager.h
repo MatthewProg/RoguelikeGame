@@ -18,10 +18,10 @@ private:
 	Player* _player;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	EnemiesManager();
-	~EnemiesManager();
+	~EnemiesManager() override;
 
 	void Update(bool tick, float deltaTime);
 	void CheckForHit();

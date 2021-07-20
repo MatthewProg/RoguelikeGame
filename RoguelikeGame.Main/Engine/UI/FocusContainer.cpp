@@ -7,18 +7,13 @@ UIElement* FocusContainer::clone()
 
 void FocusContainer::Update(bool tick, float delta)
 {
-	for (auto& e : _uiElements)
-		if (e.second != nullptr)
-			e.second->Update(tick, delta);
-
+	Container::Update(tick, delta);
 	Redraw();
 }
 
 void FocusContainer::ForceRedraw()
 {
-	for (auto& e : _uiElements)
-		if (e.second != nullptr)
-			e.second->ForceRedraw();
+	Container::ForceRedraw();
 	Redraw();
 }
 
@@ -109,6 +104,7 @@ void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 	else if (GetInFocus() == true)
 		ChangeColor(_focusColor);
 
+	auto transformedMouse = getInverseTransform().transformPoint(mousePos);
 	for (auto& e : _uiElements)
 	{
 		if (e.second == nullptr) continue;
@@ -117,8 +113,8 @@ void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 		if (_passClick == true && contains == true && (ev->type == sf::Event::MouseButtonPressed || ev->type == sf::Event::MouseButtonReleased))
 		{
 			auto b = e.second->GetGlobalBounds();
-			if (b.contains(mousePos - getPosition()))
-				e.second->ProcessEvent(ev, mousePos - getPosition());
+			if (b.contains(transformedMouse))
+				e.second->ProcessEvent(ev, transformedMouse);
 			else
 			{
 				sf::Vector2f newPos = ViewHelper::GetRectCenter(b);
@@ -126,40 +122,8 @@ void FocusContainer::ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos)
 			}
 		}
 		else
-			e.second->ProcessEvent(ev, mousePos - getPosition());
+			e.second->ProcessEvent(ev, transformedMouse);
 	}
-}
-
-std::vector<sf::Vector2f> FocusContainer::GetAllBoundsPoints() const
-{
-	std::vector<sf::Vector2f> output = UIElement::GetAllBoundsPoints();
-	for (auto& e : _uiElements)
-	{
-		auto vec = e.second->GetAllBoundsPoints();
-		output.insert(output.end(), std::make_move_iterator(vec.begin()), std::make_move_iterator(vec.end()));
-	}
-	for (size_t i = 4; i < output.size(); i++)
-		output[i] = getTransform().transformPoint(output[i]);
-	return output;
-}
-
-std::vector<sf::Vector2f> FocusContainer::GetDeepestInFocusBoundsPoints() const
-{
-	std::vector<sf::Vector2f> output;
-	for (auto& e : _uiElements)
-	{
-		if (e.second->GetInFocus() == true)
-		{
-			output = e.second->GetDeepestInFocusBoundsPoints();
-			break;
-		}
-	}
-	if (output.size() == 0)
-		output = UIElement::GetAllBoundsPoints();
-	else
-		for (auto& p : output)
-			p = getTransform().transformPoint(p);
-	return output;
 }
 
 void FocusContainer::ChangeColor(const sf::Color& col)
@@ -180,7 +144,6 @@ void FocusContainer::ChangeColor(const sf::Color& col)
 
 FocusContainer::FocusContainer()
 {
-	_uiElements.clear();
 	_passFocus = true;
 	_passClick = true;
 	_hoverColor = sf::Color(0, 0, 0, 32);
@@ -194,175 +157,14 @@ FocusContainer::FocusContainer()
 	_enabled = true;
 }
 
-FocusContainer::FocusContainer(FocusContainer& other) : UIElement(other)
+FocusContainer::FocusContainer(FocusContainer& other) : Container(other)
 {
-	for (auto& e : other._uiElements)
-		_uiElements[e.first] = e.second->clone();
 	_passFocus = other._passFocus;
 	_passClick = other._passClick;
 	_hoverColor = other._hoverColor;
 	_focusColor = other._focusColor;
 	_background = other._background;
 	_enabled = other._enabled;
-}
-
-FocusContainer::~FocusContainer()
-{
-	for (auto& p : _uiElements)
-		if (p.second != nullptr)
-			delete p.second;
-}
-
-void FocusContainer::AddElement(const std::string& name, UIElement* element)
-{
-	auto found = _uiElements.find(name);
-	if (found != _uiElements.end())
-	{
-		if (found->second != nullptr)
-			delete found->second;
-		_uiElements.erase(found);
-	}
-
-	_uiElements[name] = element;
-	_sthChanged = true;
-}
-
-void FocusContainer::RemoveElement(UIElement* element)
-{
-	for (auto& p : _uiElements)
-		if (p.second == element)
-		{
-			if (p.second != nullptr)
-				delete p.second;
-			_uiElements.erase(p.first);
-			_sthChanged = true;
-		}
-}
-
-void FocusContainer::RemoveElement(const std::string& name)
-{
-	auto found = _uiElements.find(name);
-	if (found != _uiElements.end())
-	{
-		if (found->second != nullptr)
-			delete found->second;
-		_uiElements.erase(found);
-		_sthChanged = true;
-	}
-}
-
-void FocusContainer::RenameElement(const std::string& oldName, const std::string& newName)
-{
-	auto found = _uiElements.find(oldName);
-	if (found != _uiElements.end())
-	{
-		RemoveElement(newName);
-		_uiElements.insert(*found);
-		_uiElements.erase(found);
-	}
-}
-
-UIElement* FocusContainer::GetElement(const std::string& name)
-{
-	auto found = _uiElements.find(name);
-	if (found != _uiElements.end())
-		return found->second;
-	else
-		return nullptr;
-}
-
-const std::map<std::string, UIElement*>& FocusContainer::GetElements() const
-{
-	return _uiElements;
-}
-
-void FocusContainer::AutoAlignElementsHorizontally(Align align)
-{
-	switch (align)
-	{
-	case UIElement::Align::START:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto pos = e.second->getPosition();
-			pos.x = 0.f;
-			e.second->setPosition(pos);
-		}
-		break;
-	case UIElement::Align::MIDDLE:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto &pos = e.second->getPosition();
-			auto newPos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.f, 1.f, 1.f), e.second->GetGlobalBounds(), GetGlobalBounds());
-			
-			e.second->setPosition(newPos.left - getPosition().x, pos.y);
-		}
-		break;
-	case UIElement::Align::END:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto pos = e.second->getPosition();
-			auto bounds = e.second->GetGlobalBounds();
-			auto size = GetGlobalBounds();
-
-			pos.x = size.width - bounds.width;
-			e.second->setPosition(pos);
-		}
-		break;
-	default:
-		break;
-	}
-	_sthChanged = true;
-}
-
-void FocusContainer::AutoAlignElementsVertically(Align align)
-{
-	switch (align)
-	{
-	case UIElement::Align::START:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto pos = e.second->getPosition();
-			pos.y = 0.f;
-			e.second->setPosition(pos);
-		}
-		break;
-	case UIElement::Align::MIDDLE:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto &pos = e.second->getPosition();
-			auto newPos = ViewHelper::GetScaled(sf::FloatRect(0.f, 0.5f, 1.f, 1.f), e.second->GetGlobalBounds(), GetGlobalBounds());
-
-			e.second->setPosition(pos.x, newPos.top - getPosition().y);
-		}
-		break;
-	case UIElement::Align::END:
-		for (auto& e : _uiElements)
-		{
-			if (e.second == nullptr) continue;
-
-			auto pos = e.second->getPosition();
-			auto bounds = e.second->GetGlobalBounds();
-			auto size = GetGlobalBounds();
-
-			pos.y = size.height - bounds.height;
-			e.second->setPosition(pos);
-		}
-		break;
-	default:
-		break;
-	}
-
-	_sthChanged = true;
 }
 
 void FocusContainer::SetPassHover(bool pass)
@@ -422,22 +224,6 @@ const sf::Color& FocusContainer::GetHoverColor() const
 const sf::Color& FocusContainer::GetFocusColor() const
 {
 	return _focusColor;
-}
-
-sf::FloatRect FocusContainer::GetElementsGlobalBounds() const
-{
-	sf::Vector2f size;
-	for (auto& e : _uiElements)
-	{
-		if (e.second == nullptr) continue;
-
-		auto b = e.second->GetGlobalBounds();
-		sf::Vector2f rd(b.left + b.width, b.top + b.height);
-		if (rd.x > size.x) size.x = rd.x;
-		if (rd.y > size.y) size.y = rd.y;
-	}
-
-	return sf::FloatRect(getPosition(), size);
 }
 
 bool FocusContainer::IsEnabled() const

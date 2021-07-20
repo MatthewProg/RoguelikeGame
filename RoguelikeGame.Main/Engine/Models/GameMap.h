@@ -44,7 +44,7 @@ private:
 	Logger* _logger;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void SetLayerVertexOpacity(unsigned int layerId, float opacity);
 	void SetLayerVertexOffset(unsigned int layerId, const sf::Vector2f& offset);

@@ -19,11 +19,11 @@ namespace sf
 		sf::Vector2f GetHitboxScale();
 
 		// Inherited via Drawable
-		virtual void draw(RenderTarget& target, RenderStates) const override;
+		void draw(RenderTarget& target, RenderStates) const override;
 	public:
 		Collision();
 		Collision(Collision& other);
-		~Collision() = default;
+		~Collision() override = default;
 
 		sf::FloatRect GetCollisionBox() const;
 		sf::FloatRect GetCollisionBoxOffset() const;

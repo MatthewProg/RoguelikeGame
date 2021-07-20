@@ -163,6 +163,24 @@ size_t Scene::GetNoOfElements() const
 	return _uiElements.size();
 }
 
+sf::FloatRect Scene::GetElementsGlobalBounds() const
+{
+	if (_uiElements.size() == 0)
+		return { 0.f,0.f,0.f,0.f };
+
+	sf::Vector2f min(float(INT_MAX), float(INT_MAX)), max(float(INT_MIN), float(INT_MIN));
+	for (auto& e : _uiElements)
+		if (e.second != nullptr)
+		{
+			auto bounds = CollisionHelper::GetRectPoints(e.second->GetGlobalBounds());
+			if (min.x > bounds[0].x) min.x = bounds[0].x;
+			if (min.y > bounds[0].y) min.y = bounds[0].y;
+			if (max.x < bounds[2].x) max.x = bounds[2].x;
+			if (max.y < bounds[2].y) max.y = bounds[2].y;
+		}
+	return sf::FloatRect(min, max - min);
+}
+
 void Scene::SetBackgroundColor(const sf::Color& color)
 {
 	_backgroundColor = color;

@@ -3,7 +3,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Window.hpp"
 
-#include "../Handlers/KeyboardEventHandler.h"
+#include "../Handlers/KeyboardEventHandler.hpp"
 #include "../Managers/ObjectsManager.h"
 #include "../Managers/SoundsManager.h"
 #include "../Managers/FontsManager.h"

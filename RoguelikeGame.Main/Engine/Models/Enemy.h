@@ -16,10 +16,10 @@ private:
 	float _avoidanceRadius;
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	Enemy();
-	~Enemy();
+	~Enemy() override;
 
 	void Update(bool tick, float delta);
 	void Attack();

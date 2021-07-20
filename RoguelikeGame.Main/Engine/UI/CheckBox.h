@@ -13,7 +13,7 @@ private:
 public:
 	CheckBox();
 	CheckBox(CheckBox& other);
-	~CheckBox();
+	~CheckBox() override = default;
 
 	void SetChecked(bool check);
 	bool IsChecked() const;
@@ -28,9 +28,9 @@ public:
 
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void Update(bool, float) override;
-	virtual void ForceRedraw() override;
-	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
+	UIElement* clone() override;
+	void Update(bool, float) override;
+	void ForceRedraw() override;
+	void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 };
 

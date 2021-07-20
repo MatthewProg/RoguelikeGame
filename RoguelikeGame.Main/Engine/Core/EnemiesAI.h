@@ -29,7 +29,7 @@ private:
 	float WeightFunction(float x);
 
 	// Inherited via Drawable
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates) const override;
 public:
 	EnemiesAI();
 	~EnemiesAI() = default;

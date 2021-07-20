@@ -11,7 +11,7 @@ private:
 public:
 	AnimationBox();
 	AnimationBox(AnimationBox& other);
-	~AnimationBox() = default;
+	~AnimationBox() override = default;
 
 	//Setters
 	void SetAnimation(const sf::Animation& anim);
@@ -20,9 +20,9 @@ public:
 	sf::Animation* GetAnimation();
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void Update(bool tick, float) override;
-	virtual void ForceRedraw() override;
-	virtual void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
+	UIElement* clone() override;
+	void Update(bool tick, float) override;
+	void ForceRedraw() override;
+	void ProcessEvent(sf::Event*, const sf::Vector2f&) override;
 };
 

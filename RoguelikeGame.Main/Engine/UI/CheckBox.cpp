@@ -77,11 +77,6 @@ CheckBox::CheckBox(CheckBox& other) : UIElement(other)
 	_textureName = other._textureName;
 }
 
-CheckBox::~CheckBox()
-{
-	;
-}
-
 void CheckBox::SetChecked(bool check)
 {
 	if (check != _isChecked)

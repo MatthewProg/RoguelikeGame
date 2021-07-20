@@ -82,15 +82,69 @@ void Game::CheckButtons()
 		if (_sceneManager.GetLoadedSceneName() == "main_menu")
 		{
 			if (((Button*)loaded->GetElement("exit"))->Clicked()) Close();
-			else if (((Button*)loaded->GetElement("options"))->Clicked()) { _sceneManager.LoadScene("options"); }
+			else if (((Button*)loaded->GetElement("options"))->Clicked()) { _sceneManager.LoadScene("options"); _sceneManager.GetLoadedScene()->GetElement("view")->SetInFocus(true); }
 			else if (((Button*)loaded->GetElement("play"))->Clicked()) { LoadLevel("./res/maps/map1.json", "male_elf"); }
 		}
 		else if (_sceneManager.GetLoadedSceneName() == "options")
 		{
-			/*auto ml = UIHelper::ExtractButton(loaded, "view", "move_left", "text"); //USE WHEN CHANGING KEYS
+			auto ml = UIHelper::ExtractButton(loaded, "view", "move_left", "text");
 			auto mr = UIHelper::ExtractButton(loaded, "view", "move_right", "text");
 			auto mu = UIHelper::ExtractButton(loaded, "view", "move_up", "text");
-			auto md = UIHelper::ExtractButton(loaded, "view", "move_down", "text");*/
+			auto md = UIHelper::ExtractButton(loaded, "view", "move_down", "text");
+
+			if (_sceneManager.GetLoadedPopupName() == "")
+			{
+				if (ml->Clicked()) _sceneManager.LoadPopup((Popup<sf::Keyboard::Key>*)_objTemplates.GetPopup("key"), "key_left");
+				else if (mr->Clicked()) _sceneManager.LoadPopup((Popup<sf::Keyboard::Key>*)_objTemplates.GetPopup("key"), "key_right");
+				else if (mu->Clicked()) _sceneManager.LoadPopup((Popup<sf::Keyboard::Key>*)_objTemplates.GetPopup("key"), "key_up");
+				else if (md->Clicked()) _sceneManager.LoadPopup((Popup<sf::Keyboard::Key>*)_objTemplates.GetPopup("key"), "key_down");
+
+				if (_sceneManager.GetLoadedPopupName() != "")
+					_event.type = sf::Event::MouseMoved; //Clear event
+			}
+			else
+			{
+				auto alignButton = [](Button* btn, Settings* set)
+				{
+					auto btnBounds = btn->EditTextState("none")->getGlobalBounds();
+					btn->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+					btn->setPosition(914.f - btnBounds.width - (10.f * set->SCALE_RATIO), btn->getPosition().y);
+				};
+
+				auto popup = _sceneManager.GetLoadedPopup<sf::Keyboard::Key>();
+				if (popup.first->HasResult() == true)
+				{
+					if (popup.second == "key_left") 
+					{
+						_settings->MOVE_LEFT.NewValue(*popup.first->GetResult()); 
+						ml->ApplyText(InputHelper::DecodeKey(_settings->MOVE_LEFT));
+						alignButton(ml, _settings);
+					}
+					else if (popup.second == "key_right")
+					{
+						_settings->MOVE_RIGHT.NewValue(*popup.first->GetResult());
+						mr->ApplyText(InputHelper::DecodeKey(_settings->MOVE_RIGHT));
+						alignButton(mr, _settings);
+					}
+					else if (popup.second == "key_up")
+					{
+						_settings->MOVE_UP.NewValue(*popup.first->GetResult());
+						mu->ApplyText(InputHelper::DecodeKey(_settings->MOVE_UP));
+						alignButton(mu, _settings);
+					}
+					else if (popup.second == "key_down")
+					{
+						_settings->MOVE_DOWN.NewValue(*popup.first->GetResult());
+						md->ApplyText(InputHelper::DecodeKey(_settings->MOVE_DOWN));
+						alignButton(md, _settings);
+					}
+					popup.first->SetCanClose(true);
+				}
+
+				if (popup.first != nullptr)
+					if (popup.first->CanClose())
+						_sceneManager.ClosePopup();
+			}
 
 			if (((Button*)loaded->GetElement("save_button"))->Clicked()) { SaveSettings(); ApplySettings(); _sceneManager.LoadScene("main_menu"); }
 		}
@@ -232,7 +286,8 @@ void Game::Close()
 
 Game::~Game()
 {
-	delete _player;
+	if (_player != nullptr)
+		delete _player;
 }
 
 void Game::Start()
@@ -299,6 +354,7 @@ void Game::Start()
 	_objTemplates.SetFontsManager(&_fonts);
 	_objTemplates.SetSoundsManager(&_sounds);
 	_objTemplates.SetWindowSize(_window.getSize());
+	_objTemplates.SetEvent(&_event);
 
 	//UI elements
 	_sceneManager.AddScene("game", _objTemplates.GetScene("game"));
@@ -306,7 +362,7 @@ void Game::Start()
 	_sceneManager.AddScene("options", _objTemplates.GetScene("options"));
 	_sceneManager.LoadScene("main_menu");
 	_sceneManager.SetShowFocused(false);
-
+	
 	//Update options scene
 	auto opt = _sceneManager.GetScene("options");
 	auto displayMode = UIHelper::ExtractListSelect(opt, "view", "display_mode", "listselect");
@@ -489,7 +545,6 @@ void Game::EventUpdate()
 			if (_inGame)
 				RecalcPlayerRays();
 		}
-
 		_sceneManager.UpdateEvent(&_event, mousePos);
 	}
 	_sceneManager.UpdateFocus(mousePos, LMB_Clicked);

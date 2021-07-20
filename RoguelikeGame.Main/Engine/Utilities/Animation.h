@@ -45,7 +45,7 @@ namespace sf
 		void draw(RenderTarget& target, RenderStates states) const override;
 	public:
 		Animation();
-		~Animation() = default;
+		~Animation() override = default;
 
 		//Animation
 		void Start();

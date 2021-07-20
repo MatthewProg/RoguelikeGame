@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Handlers/ResultKeyHandler.hpp"
 #include "../Managers/TexturesManager.h"
 #include "../Managers/SoundsManager.h"
 #include "../Managers/FontsManager.h"
@@ -16,6 +17,7 @@
 #include "../UI/ScrollView.h"
 #include "../UI/ScrollBar.h"
 #include "../UI/CheckBox.h"
+#include "../UI/Popup.hpp"
 #include "../UI/Button.h"
 #include "../UI/Label.h"
 #include "../UI/Scene.h"
@@ -28,12 +30,14 @@ private:
 	SoundsManager* _sounds;
 	Settings* _settings;
 	sf::Vector2u _windowSize;
+	sf::Event* _event;
 
 	std::map<std::string, HitboxWeapon*> _hitboxWeapons;
 	std::map<std::string, MeleeWeapon*> _meleeWeapons;
 	std::map<std::string, Enemy*> _enemies;
 	std::map<std::string, Player*> _players;
 
+	std::map<std::string, std::pair<Scene*, std::string>> _popups;
 	std::map<std::string, FocusContainer*> _focusContainers;
 	std::map<std::string, ProgressBar*> _progressBars;
 	std::map<std::string, ListSelect*> _listSelects;
@@ -77,6 +81,9 @@ private:
 	//Buttons
 	Button* CreateButtonDefaultRed();
 
+	//Popups
+	Scene* CreatePopupKey();
+
 	//Scenes
 	Scene* CreateSceneMainMenu();
 	Scene* CreateSceneOptions();
@@ -94,12 +101,14 @@ public:
 	ScrollBar* GetScrollBar(const std::string& name);
 	CheckBox* GetCheckBox(const std::string& name);
 	Button* GetButton(const std::string& name);
+	Scene* GetPopup(const std::string& name);
 	Scene* GetScene(const std::string& name);
 
 	void SetTexturesManager(TexturesManager* textures);
 	void SetFontsManager(FontsManager* fonts);
 	void SetSoundsManager(SoundsManager* sounds);
 	void SetWindowSize(const sf::Vector2u& size);
+	void SetEvent(sf::Event* e);
 
 	ObjectsManager();
 	~ObjectsManager();

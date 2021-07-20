@@ -20,11 +20,17 @@ void ObjectsManager::SetWindowSize(const sf::Vector2u& size)
 	_windowSize = size;
 }
 
+void ObjectsManager::SetEvent(sf::Event* e)
+{
+	_event = e;
+}
+
 ObjectsManager::ObjectsManager()
 {
 	_textures = nullptr;
 	_fonts = nullptr;
 	_sounds = nullptr;
+	_event = nullptr;
 	_settings = Settings::GetInstance();
 
 	_meleeWeapons["sword"] = nullptr;
@@ -50,6 +56,8 @@ ObjectsManager::ObjectsManager()
 	_checkBoxes["default"] = nullptr;
 
 	_buttons["default_red"] = nullptr;
+
+	_popups["key"].first = nullptr;
 
 	_scenes["main_menu"] = nullptr;
 	_scenes["options"] = nullptr;
@@ -96,6 +104,10 @@ ObjectsManager::~ObjectsManager()
 	for (auto& v : _buttons)
 		if (v.second != nullptr)
 			delete v.second;
+
+	for (auto& v : _popups)
+		if (v.second.first != nullptr)
+			delete v.second.first;
 
 	for (auto& v : _scenes)
 		if (v.second != nullptr)
@@ -277,6 +289,25 @@ Button* ObjectsManager::GetButton(const std::string& name)
 
 		Button* obj = new Button(*(found->second));
 		obj->ForceRedraw();
+		return obj;
+	}
+	return nullptr;
+}
+
+Scene* ObjectsManager::GetPopup(const std::string& name)
+{
+	auto found = _popups.find(name);
+	if (found != _popups.end())
+	{
+		if (found->second.first == nullptr)
+		{
+			if (name == "key") { found->second.first = CreatePopupKey(); found->second.second = "key"; };
+		}
+
+		Scene* obj = nullptr;
+		if (found->second.second == "key") obj = new Popup<sf::Keyboard::Key>(*((Popup<sf::Keyboard::Key>*)found->second.first));
+
+		if (obj != nullptr) obj->RefreshElements();
 		return obj;
 	}
 	return nullptr;
@@ -813,6 +844,44 @@ Button* ObjectsManager::CreateButtonDefaultRed()
 	return btn;
 }
 
+Scene* ObjectsManager::CreatePopupKey()
+{
+	auto p = new Popup<sf::Keyboard::Key>();
+	auto label = new Label();
+
+	p->SetBackgroundColor(sf::Color(0, 0, 0, 192));
+	
+	label->SetFont(*_fonts->GetFont("menu"));
+	label->SetCharacterSize(26U);
+	label->SetText("Press key...");
+	label->SetHorizontalAlignment(UIElement::Align::MIDDLE);
+	label->SetVerticalAlignment(UIElement::Align::MIDDLE);
+	auto b = label->GetTextGlobalBounds();
+	label->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
+
+	auto sub = new Label(*label);
+	sub->SetText("Esc - close");
+	b = sub->GetTextGlobalBounds();
+	sub->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
+	sub->setPosition(0.f, 2.f * b.height);
+
+	auto cont = new Container();
+	cont->AddElement("label1", label);
+	cont->AddElement("label2", sub);
+	b = cont->GetElementsGlobalBounds();
+	cont->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
+	cont->AutoAlignElementsHorizontally(UIElement::Align::MIDDLE);
+
+	p->AddElement("cont", cont);
+	b = p->GetElementsGlobalBounds();
+	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.5f, 1.f, 1.f), b, sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
+	p->setPosition(pos.left, pos.top);
+
+	auto handler = new ResultKeyHandler<sf::Keyboard::Key>(_event);
+	p->SetResultHandler((ResultHandler<sf::Keyboard::Key>*)handler);
+	return p;
+}
+
 Scene* ObjectsManager::CreateSceneMainMenu()
 {
 	Scene* sc = new Scene();
@@ -1026,6 +1095,13 @@ Scene* ObjectsManager::CreateSceneOptions()
 	fps->Init(sf::Vector2u(914, 70));
 	fps->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
+	auto alignButton = [](Button* btn, Settings* set)
+	{
+		auto btnBounds = btn->EditTextState("none")->getGlobalBounds();
+		btn->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+		btn->setPosition(914.f - btnBounds.width - (10.f * set->SCALE_RATIO), 0.f);
+	};
+
 	//Move left
 	label = ((Label*)mLeft->GetElement("label"));
 	label->SetText("Move left");
@@ -1042,10 +1118,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	auto mrButton = ((Button*)mRight->GetElement("text"));
 	mrButton->ApplyText("Right");
-	auto btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
-	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	alignButton(mrButton, _settings);
 	mRight->Init(sf::Vector2u(914, 70));
-	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
 	mRight->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Move up
@@ -1055,10 +1129,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	mrButton = ((Button*)mUp->GetElement("text"));
 	mrButton->ApplyText("Up");
-	btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
-	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	alignButton(mrButton, _settings);
 	mUp->Init(sf::Vector2u(914, 70));
-	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
 	mUp->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Move down
@@ -1068,10 +1140,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	mrButton = ((Button*)mDown->GetElement("text"));
 	mrButton->ApplyText("Down");
-	btnBounds = mrButton->EditTextState("none")->getGlobalBounds();
-	mrButton->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
+	alignButton(mrButton, _settings);
 	mDown->Init(sf::Vector2u(914, 70));
-	mrButton->setPosition(914.f - btnBounds.width - (10.f * _settings->SCALE_RATIO), 0.f);
 	mDown->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//ScrollBar
@@ -1094,10 +1164,10 @@ Scene* ObjectsManager::CreateSceneOptions()
 	scrollView->AddElement("antialiasing", antialiasing);
 	scrollView->AddElement("sound_volume", sounds);
 	scrollView->AddElement("music_volume", music);
-	scrollView->AddElement("move_left", mLeft);
-	scrollView->AddElement("move_right", mRight);
 	scrollView->AddElement("move_up", mUp);
 	scrollView->AddElement("move_down", mDown);
+	scrollView->AddElement("move_left", mLeft);
+	scrollView->AddElement("move_right", mRight);
 
 	//Save button
 	saveBtn->ApplyText("Save");

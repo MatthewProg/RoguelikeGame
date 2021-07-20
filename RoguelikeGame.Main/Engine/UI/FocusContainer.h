@@ -1,13 +1,10 @@
 #pragma once
 
-#include "../UI/UIElement.h"
-#include "../Helpers/ViewHelper.h"
+#include "../UI/Container.h"
 
-class FocusContainer : public UIElement
+class FocusContainer : public Container
 {
 private:
-	std::map<std::string, UIElement*> _uiElements;
-
 	bool _passFocus;
 	bool _passClick;
 	bool _enabled;
@@ -20,17 +17,7 @@ private:
 public:
 	FocusContainer();
 	FocusContainer(FocusContainer& other);
-	~FocusContainer();
-
-	void AddElement(const std::string& name, UIElement* element);
-	void RemoveElement(UIElement* element);
-	void RemoveElement(const std::string& name);
-	void RenameElement(const std::string& oldName, const std::string& newName);
-	UIElement* GetElement(const std::string& name);
-	const std::map<std::string, UIElement*>& GetElements() const;
-
-	void AutoAlignElementsHorizontally(Align align);
-	void AutoAlignElementsVertically(Align align);
+	~FocusContainer() = default;
 
 	//Setters
 	void SetPassHover(bool pass);
@@ -44,16 +31,13 @@ public:
 	bool GetPassClick() const;
 	const sf::Color& GetHoverColor() const;
 	const sf::Color& GetFocusColor() const;
-	sf::FloatRect GetElementsGlobalBounds() const;
 	bool IsEnabled() const;
 
 	// Inherited via UIElement
-	virtual UIElement* clone() override;
-	virtual void Update(bool tick, float delta) override;
-	virtual void ForceRedraw() override;
-	virtual bool Redraw() override;
-	virtual void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
-	virtual std::vector<sf::Vector2f> GetAllBoundsPoints() const override;
-	virtual std::vector<sf::Vector2f> GetDeepestInFocusBoundsPoints() const;
+	UIElement* clone() override;
+	void Update(bool tick, float delta) override;
+	void ForceRedraw() override;
+	bool Redraw() override;
+	void ProcessEvent(sf::Event* ev, const sf::Vector2f& mousePos) override;
 };
 

@@ -56,7 +56,7 @@
     <None Include="settings.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.h">
+    <ClInclude Include="Engine\Handlers\KeyboardEventHandler.hpp">
       <Filter>Handlers</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Helpers\CollisionHelper.h">
@@ -194,6 +194,18 @@
     <ClInclude Include="Engine\Helpers\InputHelper.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Popup.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Handlers\ResultKeyHandler.hpp">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Handlers\ResultHandler.hpp">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Container.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -328,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Helpers\InputHelper.cpp">
       <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Container.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
