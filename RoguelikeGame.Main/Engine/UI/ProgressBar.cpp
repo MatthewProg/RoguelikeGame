@@ -168,14 +168,16 @@ const sf::Vector2f& ProgressBar::GetProgressBarStepsPos() const
 
 sf::FloatRect ProgressBar::GetProgressBarStepsGlobalBounds() const
 {
-	auto bounds = GetGlobalBounds();
 	if (_progressBarSteps.size() == 0)
-		return bounds;
+		return GetGlobalBounds();
 
-	auto startPos = sf::Vector2f(bounds.left + (_progressBarStepsPos.x * getScale().x), bounds.top + (_progressBarStepsPos.y * getScale().y));
-	auto width = (_maxValue / GetStep()) * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width * getScale().x;
-	auto endPos = startPos + sf::Vector2f(width, std::get<0>(_progressBarSteps[0]).height * getScale().y);
-	return sf::FloatRect(startPos, endPos - startPos);
+	float width = 0.f;
+	if(_step == 0.f)
+		width = ceilf(_maxValue) * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width;
+	else
+		width = ceilf((_maxValue / GetStep()) / float(_progressBarSteps.size()-1)) * std::get<0>(_progressBarSteps[_progressBarSteps.size() - 1]).width;
+	auto endPos = _progressBarStepsPos + sf::Vector2f(width, std::get<0>(_progressBarSteps[0]).height);
+	return getTransform().transformRect(sf::FloatRect(_progressBarStepsPos, endPos - _progressBarStepsPos));
 }
 
 void ProgressBar::ForceRedraw()

@@ -2,7 +2,7 @@
 
 void Scene::draw(sf::RenderTarget& target, sf::RenderStates) const
 {
-	auto size = target.getSize();
+	auto size = sf::Vector2u(1024U, 576U);
 	sf::VertexArray _background(sf::PrimitiveType::Quads, 4);
 	_background[0].position = sf::Vector2f(0.f, 0.f);
 	_background[1].position = sf::Vector2f(float(size.x), 0.f);

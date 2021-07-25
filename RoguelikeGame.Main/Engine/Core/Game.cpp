@@ -108,7 +108,7 @@ void Game::CheckButtons()
 				{
 					auto btnBounds = btn->EditTextState("none")->getGlobalBounds();
 					btn->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-					btn->setPosition(914.f - btnBounds.width - (10.f * set->SCALE_RATIO), btn->getPosition().y);
+					btn->setPosition(914.f - btnBounds.width - 10.f, btn->getPosition().y);
 				};
 
 				auto popup = _sceneManager.GetLoadedPopup<sf::Keyboard::Key>();
@@ -327,7 +327,8 @@ void Game::Start()
 	//Cameras
 	_camera.setSize(256.f, 144.f);
 	_gui.setCenter(((float)winSize.x / 2.f), ((float)winSize.y / 2.f));
-	_gui.setSize((float)winSize.x, (float)winSize.y);
+	_gui.setCenter(512.f, 288.f);
+	_gui.setSize(1024.f, 576.f);
 	_window.setView(_camera);
 
 	//Textures
@@ -457,7 +458,7 @@ void Game::Start()
 		mLeft->ApplyText(InputHelper::DecodeKey(_settings->MOVE_LEFT));
 		auto btnBounds = mLeft->EditTextState("none")->getGlobalBounds();
 		mLeft->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-		mLeft->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		mLeft->setPosition(914.f - btnBounds.width - btnBounds.left - 10.f, 0.f);
 		((ScrollView*)opt->GetElement("view"))->GetElement("move_left")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 	}
 	if (mRight != nullptr) 
@@ -465,7 +466,7 @@ void Game::Start()
 		mRight->ApplyText(InputHelper::DecodeKey(_settings->MOVE_RIGHT));
 		auto btnBounds = mRight->EditTextState("none")->getGlobalBounds();
 		mRight->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-		mRight->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		mRight->setPosition(914.f - btnBounds.width - btnBounds.left - 10.f, 0.f);
 		((ScrollView*)opt->GetElement("view"))->GetElement("move_right")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 	}
 	if (mUp != nullptr)
@@ -473,7 +474,7 @@ void Game::Start()
 		mUp->ApplyText(InputHelper::DecodeKey(_settings->MOVE_UP));
 		auto btnBounds = mUp->EditTextState("none")->getGlobalBounds();
 		mUp->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-		mUp->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		mUp->setPosition(914.f - btnBounds.width - btnBounds.left - 10.f, 0.f);
 		((ScrollView*)opt->GetElement("view"))->GetElement("move_up")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 	}
 	if (mDown != nullptr)
@@ -481,7 +482,7 @@ void Game::Start()
 		mDown->ApplyText(InputHelper::DecodeKey(_settings->MOVE_DOWN));
 		auto btnBounds = mDown->EditTextState("none")->getGlobalBounds();
 		mDown->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-		mDown->setPosition(914.f - btnBounds.width - btnBounds.left - (10.f * _settings->SCALE_RATIO), 0.f);
+		mDown->setPosition(914.f - btnBounds.width - btnBounds.left - 10.f, 0.f);
 		((ScrollView*)opt->GetElement("view"))->GetElement("move_down")->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 	}
 
@@ -525,10 +526,10 @@ void Game::EventUpdate()
 	while (_window.pollEvent(_event))
 	{
 		if (_event.type == sf::Event::Closed)
-			Close();	
-		if (_event.type == sf::Event::KeyPressed)
+			Close();
+		else if (_event.type == sf::Event::KeyPressed)
 			_keyboardHandler.Rise(_event.key);
-		if (_event.type == sf::Event::MouseButtonPressed && _event.mouseButton.button == sf::Mouse::Left)
+		else if (_event.type == sf::Event::MouseButtonPressed && _event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (_inGame)
 			{
@@ -540,7 +541,7 @@ void Game::EventUpdate()
 			}
 			LMB_Clicked = true;
 		}
-		if (_event.type == sf::Event::MouseMoved)
+		else if (_event.type == sf::Event::MouseMoved)
 		{
 			if (_inGame)
 				RecalcPlayerRays();

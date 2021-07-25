@@ -339,7 +339,7 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 	sf::Animation weapon;
 	weapon.SetTexture(_textures->GetTexture("tiles1"));
 	weapon.AddNewFrame(sf::IntRect(208, 32, 16, 32));
-	weapon.setScale(0.6F, 0.6F);
+	weapon.setScale(0.6f, 0.6f);
 
 	sword->SetAnimation(weapon);
 
@@ -347,23 +347,23 @@ MeleeWeapon* ObjectsManager::CreateMeleeWeaponSword()
 	attack.SetTarget(sword->GetAnimation()->ExternalTransform());
 
 	sf::Transformable start;
-	start.setRotation(-30);
-	start.setOrigin(8, 42);
+	start.setRotation(-30.f);
+	start.setOrigin(8.f, 42.f);
 	attack.AddTransform(start, 0);
 
 	sf::Transformable second;
-	second.setRotation(-0.000000001F);
-	second.setOrigin(8, 42);
+	second.setRotation(-0.000000001f);
+	second.setOrigin(8.f, 42.f);
 	attack.AddTransform(second, 5);
 
 	sf::Transformable third;
-	third.setRotation(0);
-	third.setOrigin(8, 42);
+	third.setRotation(0.f);
+	third.setOrigin(8.f, 42.f);
 	attack.AddTransform(third, 0);
 
 	sf::Transformable swing;
-	swing.setRotation(30);
-	swing.setOrigin(8, 42);
+	swing.setRotation(30.f);
+	swing.setOrigin(8.f, 42.f);
 	attack.AddTransform(swing, 5);
 	attack.SetLoop(false);
 
@@ -382,7 +382,7 @@ HitboxWeapon* ObjectsManager::CreateHitboxWeaponBite()
 	HitboxWeapon* bite = new HitboxWeapon();
 
 	bite->SetWeaponCooldown(60);
-	bite->SetWeaponDMG(0.25F);
+	bite->SetWeaponDMG(0.25f);
 	bite->SetSoundsManager(_sounds);
 	bite->GetHitSounds()->push_back("weapons_bite1");
 
@@ -396,23 +396,23 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	//Graphics
 	sf::Animation idle;
 	idle.SetTexture(_textures->GetTexture("tiles2"));
-	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16, 32, 344));
-	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16, 32, 345));
-	idle.SetChangeFrameEvery(15);
+	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16U, 32U, 344));
+	idle.AddNewFrame(TilesHelper::GetTileRect(idle.GetTexture()->getSize(), 16U, 32U, 345));
+	idle.SetChangeFrameEvery(15U);
 
 	sf::Animation move;
 	move.SetTexture(_textures->GetTexture("tiles2"));
-	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 347));
-	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 348));
-	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 349));
-	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 350));
-	move.SetChangeFrameEvery(3);
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 347));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 348));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 349));
+	move.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 350));
+	move.SetChangeFrameEvery(3U);
 
 	sf::Animation attack;
 	attack.SetTexture(_textures->GetTexture("tiles2"));
-	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 346));
-	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16, 32, 344));
-	attack.SetChangeFrameEvery(20);
+	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 346));
+	attack.AddNewFrame(TilesHelper::GetTileRect(move.GetTexture()->getSize(), 16U, 32U, 344));
+	attack.SetChangeFrameEvery(20U);
 
 	sf::AnimationContainer container;
 	container.SetStateAnimation("idle", idle);
@@ -421,9 +421,9 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 
 	devil->SetAnimations(container);
 	devil->SetState("idle");
-	devil->SetScale(0.6F, 0.6F);
-	devil->SetCollisionBoxOffset(sf::FloatRect(3.F, 17.F, 10.F, 12.F));
-	devil->SetPosition(0.F, 0.F);
+	devil->SetScale(0.6f, 0.6f);
+	devil->SetCollisionBoxOffset(sf::FloatRect(3.f, 17.f, 10.f, 12.f));
+	devil->SetPosition(0.f, 0.f);
 
 	//Sounds
 	devil->SetSoundsManager(_sounds);
@@ -434,12 +434,12 @@ Enemy* ObjectsManager::CreateEnemyDevil()
 	//Pathfinding
 	auto box = devil->GetCollisionBox();
 	auto upperLeft = sf::Vector2f(box.left, box.top);
-	auto center = sf::Vector2f(box.left + (box.width / 2), box.top + (box.height / 2));
+	auto center = sf::Vector2f(box.left + (box.width / 2.f), box.top + (box.height / 2.f));
 	devil->SetAvoidanceRadius(MathHelper::GetDistanceBetweenPoints(upperLeft, center));
 
 	//Stats
-	devil->SetHealth(.5F);
-	devil->SetSpeed(.5F);
+	devil->SetHealth(.5f);
+	devil->SetSpeed(.5f);
 
 	return devil;
 }
@@ -453,19 +453,19 @@ Player* ObjectsManager::CreatePlayerMaleElf()
 
 	sf::Animation idle;
 	idle.SetTexture(_textures->GetTexture("players"));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 8));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 9));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 10));
-	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 11));
-	idle.SetChangeFrameEvery(7);
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 8));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 9));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 10));
+	idle.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 11));
+	idle.SetChangeFrameEvery(7U);
 
 	sf::Animation move;
 	move.SetTexture(_textures->GetTexture("players"));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 12));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 13));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 14));
-	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16, 22, 15));
-	move.SetChangeFrameEvery(3);
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 12));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 13));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 14));
+	move.AddNewFrame(TilesHelper::GetTileRect(_textures->GetTexture("players")->getSize(), 16U, 22U, 15));
+	move.SetChangeFrameEvery(3U);
 
 	playerAnimations.SetStateAnimation("idle", idle);
 	playerAnimations.SetStateAnimation("move", move);
@@ -508,17 +508,17 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("Sound volume");
-	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetCharacterSize(26U);
 	label->SetFillColor(sf::Color::White);
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
-	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	label->setPosition(10.f, 10.f);
 	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	pb->SetKeyboardInput(true);
 	pb->SetMouseInput(true);
-	pb->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - pb->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+	pb->setPosition(914.f - pb->GetGlobalBounds().width, 20.f);
 
 	obj->AddElement("label", label);
 	obj->AddElement("bar", pb);
@@ -526,8 +526,8 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionBar()
 	bounds = obj->GetElementsGlobalBounds();
 	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto pbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), pb->GetGlobalBounds(), bounds);
-	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
-	pb->setPosition(bounds.left + bounds.width - pb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), pbPos.top);
+	label->setPosition(10.f, labelPos.top);
+	pb->setPosition(bounds.left + bounds.width - pb->GetGlobalBounds().width - 10.f, pbPos.top);
 	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
@@ -550,17 +550,17 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionCheckBox()
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("V-Sync");
-	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetCharacterSize(26U);
 	label->SetFillColor(sf::Color::White);
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
-	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	label->setPosition(10.f, 10.f);
 	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	cb->SetKeyboardInput(true);
 	cb->SetMouseInput(true);
-	cb->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - cb->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+	cb->setPosition(914.f - cb->GetGlobalBounds().width, 20.f);
 
 	obj->AddElement("label", label);
 	obj->AddElement("checkbox", cb);
@@ -568,8 +568,8 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionCheckBox()
 	bounds = obj->GetElementsGlobalBounds();
 	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto cbPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), cb->GetGlobalBounds(), bounds);
-	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
-	cb->setPosition(bounds.left + bounds.width - cb->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), cbPos.top);
+	label->setPosition(10.f, labelPos.top);
+	cb->setPosition(bounds.left + bounds.width - cb->GetGlobalBounds().width - 10.f, cbPos.top);
 	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
@@ -593,15 +593,15 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionListSelect()
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("Display mode");
-	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetCharacterSize(26U);
 	label->SetFillColor(sf::Color::White);
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
-	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	label->setPosition(10.f, 10.f);
 	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
-	ls->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - ls->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+	ls->setPosition(914.f - ls->GetGlobalBounds().width, 20.f);
 
 	obj->AddElement("label", label);
 	obj->AddElement("listselect", ls);
@@ -609,8 +609,8 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionListSelect()
 	bounds = obj->GetElementsGlobalBounds();
 	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto lsPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), ls->GetGlobalBounds(), bounds);
-	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
-	ls->setPosition(bounds.left + bounds.width - ls->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), lsPos.top);
+	label->setPosition(10.f, labelPos.top);
+	ls->setPosition(bounds.left + bounds.width - ls->GetGlobalBounds().width - 10.f, lsPos.top);
 	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
@@ -634,11 +634,11 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
 
 	label->SetFont(*_fonts->GetFont("menu"));
 	label->SetText("Move left");
-	label->SetCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	label->SetCharacterSize(26U);
 	label->SetFillColor(sf::Color::White);
 	label->SetMouseInput(false);
 	label->SetKeyboardInput(false);
-	label->setPosition(10.f * _settings->SCALE_RATIO, 10.f * _settings->SCALE_RATIO);
+	label->setPosition(10.f, 10.f);
 	auto bounds = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
@@ -650,7 +650,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
 	sf::Text t;
 	t.setFont(*_fonts->GetFont("menu"));
 	t.setString("Left");
-	t.setCharacterSize(uint32_t(float(26) * _settings->SCALE_RATIO));
+	t.setCharacterSize(26U);
 	t.setFillColor(sf::Color::White);
 	button->AddState("none", t, "", sf::FloatRect(0.f, 0.f, 0.f, 0.f));
 	button->AddState("hover", t, "", sf::FloatRect(0.f, 0.f, 0.f, 0.f));
@@ -661,7 +661,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
 	button->SetBackgroundSize(sf::Vector2f(0.f, 0.f));
 	bounds = t.getGlobalBounds();
 	button->Init(sf::Vector2u(uint32_t(ceilf(bounds.left + bounds.width)), uint32_t(ceilf(bounds.top + bounds.height))));
-	button->setPosition(_windowSize.x - (110.f * _settings->SCALE_RATIO) - button->GetGlobalBounds().width, 20.f * _settings->SCALE_RATIO);
+	button->setPosition(914.f - button->GetGlobalBounds().width, 20.f);
 
 	obj->AddElement("label", label);
 	obj->AddElement("text", button);
@@ -669,8 +669,8 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
 	bounds = obj->GetElementsGlobalBounds();
 	auto labelPos = ViewHelper::GetScaled(sf::FloatRect(0.05f, 0.5f, 1.f, 1.f), label->GetTextGlobalBounds(), bounds);
 	auto bPos = ViewHelper::GetScaled(sf::FloatRect(0.9f, 0.5f, 1.f, 1.f), button->GetGlobalBounds(), bounds);
-	label->setPosition(10.f * _settings->SCALE_RATIO, labelPos.top);
-	button->setPosition(bounds.left + bounds.width - button->GetGlobalBounds().width - (10.f * _settings->SCALE_RATIO), bPos.top);
+	label->setPosition(10.f, labelPos.top);
+	button->setPosition(bounds.left + bounds.width - button->GetGlobalBounds().width - 10.f, bPos.top);
 	obj->Init(sf::Vector2u(uint32_t(bounds.width), uint32_t(bounds.height)));
 
 	return obj;
@@ -679,7 +679,7 @@ FocusContainer* ObjectsManager::CreateFocusContainerOptionText()
 ProgressBar* ObjectsManager::CreateProgressBarHeart()
 {
 	ProgressBar* hb = new ProgressBar();
-	hb->SetCurrentValue(3.F);
+	hb->SetCurrentValue(3.f);
 	hb->SetMaxValue(3.f);
 	hb->setPosition(sf::Vector2f(0.f, 0.f));
 
@@ -693,8 +693,8 @@ ProgressBar* ObjectsManager::CreateProgressBarHeart()
 	hb->SetMouseInput(false);
 	hb->SetKeyboardInput(false);
 
-	hb->Init(sf::Vector2u(45, 15));
-	hb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
+	hb->Init(sf::Vector2u(45U, 15U));
+	hb->setScale(sf::Vector2f(4.f, 4.f));
 
 	return hb;
 }
@@ -718,8 +718,8 @@ ProgressBar* ObjectsManager::CreateProgressBarOptions()
 	pb->SetMouseInput(true);
 	pb->SetKeyboardInput(true);
 	
-	pb->Init(sf::Vector2u(49, 10));
-	pb->setScale(sf::Vector2f(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO));
+	pb->Init(sf::Vector2u(49U, 10U));
+	pb->setScale(sf::Vector2f(4.f, 4.f));
 
 	return pb;
 }
@@ -728,7 +728,7 @@ ListSelect* ObjectsManager::CreateListSelectOptions()
 {
 	ListSelect* ls = new ListSelect(_sounds, _textures);
 
-	ls->Init(sf::Vector2u(250, 29));
+	ls->Init(sf::Vector2u(250U, 29U));
 	ls->SetMouseInput(true);
 	ls->SetKeyboardInput(true);
 
@@ -746,7 +746,7 @@ ListSelect* ObjectsManager::CreateListSelectOptions()
 
 	ls->SetTextSize(sf::Vector2f(208.f, 20.f));
 	ls->SetFont(*_fonts->GetFont("menu"));
-	ls->SetCharacterSize(20);
+	ls->SetCharacterSize(20U);
 	ls->TransformText()->setPosition(21.f, 4.f);
 
 	ls->AddValue("Windowed");
@@ -756,7 +756,6 @@ ListSelect* ObjectsManager::CreateListSelectOptions()
 	ls->SetHorizontalAlignment(UIElement::Align::MIDDLE);
 
 	ls->setPosition(150.f, 400.f);
-	ls->setScale(_settings->SCALE_RATIO, _settings->SCALE_RATIO);
 	return ls;
 }
 
@@ -767,8 +766,8 @@ ScrollBar* ObjectsManager::CreateScrollBarDefault()
 	sb->setPosition(10.f, 10.f);
 	sb->setRotation(-90.f);
 	sb->setOrigin(163.f, 0.f);
-	sb->setScale(3.f * _settings->SCALE_RATIO, 3.f * _settings->SCALE_RATIO);
-	sb->Init(sf::Vector2u(163, 11));
+	sb->setScale(3.f, 3.f);
+	sb->Init(sf::Vector2u(163U, 11U));
 
 	sb->SetMouseInput(true);
 	sb->SetKeyboardInput(true);
@@ -796,11 +795,11 @@ CheckBox* ObjectsManager::CreateCheckBoxDefault()
 	CheckBox* cb = new CheckBox();
 
 	//Init
-	cb->Init(sf::Vector2u(24, 24));
+	cb->Init(sf::Vector2u(24U, 24U));
 	cb->SetTexturesManager(_textures);
 	cb->SetSoundsManager(_sounds);
 	cb->setPosition(0.f, 0.f);
-	cb->setScale(2.f * _settings->SCALE_RATIO, 2.f * _settings->SCALE_RATIO);
+	cb->setScale(2.f, 2.f);
 
 	cb->SetTextureName("ui");
 	cb->SetUncheckedRect(sf::FloatRect(108.f, 40.f, 24.f, 24.f));
@@ -815,29 +814,29 @@ Button* ObjectsManager::CreateButtonDefaultRed()
 	Button* btn = new Button();
 
 	//Init
-	btn->Init(sf::Vector2u(uint32_t(170.f * _settings->SCALE_RATIO) + 1, uint32_t(96.f * _settings->SCALE_RATIO) + 1));
+	btn->Init(sf::Vector2u(170U, 96U));
 	btn->SetTexturesManager(_textures);
 	btn->SetSoundsManager(_sounds);
-	btn->SetBackgroundSize(sf::Vector2f(170.f * _settings->SCALE_RATIO, 96.f * _settings->SCALE_RATIO));
+	btn->SetBackgroundSize(sf::Vector2f(170.f, 96.f));
 	btn->setPosition(0.f, 0.f);
 
 	//text general
 	sf::Text text;
 	text.setFont(*_fonts->GetFont("menu"));
-	text.setCharacterSize(uint32_t(17.f * _settings->SCALE_RATIO));
+	text.setCharacterSize(17U);
 	text.setFillColor(sf::Color::White);
 	text.setString("[default]");
 
 	//none
-	text.setPosition(roundf(5.f * _settings->SCALE_RATIO), roundf(36.f * _settings->SCALE_RATIO));
+	text.setPosition(5.f, 36.f);
 	btn->AddState("none", text, "ui", sf::FloatRect(15.f, 159.f, 34.f, 24.f));
 
 	//hover
-	text.setPosition(roundf(5.f * _settings->SCALE_RATIO), roundf(36.f * _settings->SCALE_RATIO));
+	text.setPosition(5.f, 36.f);
 	btn->AddState("hover", text, "ui", sf::FloatRect(15.f, 186.f, 34.f, 24.f));
 
 	//click
-	text.setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(40.f * _settings->SCALE_RATIO));
+	text.setPosition(10.f, 40.f);
 	text.setFillColor(sf::Color(230, 230, 230, 255));
 	btn->AddState("click", text, "ui", sf::FloatRect(15.f, 210.f, 34.f, 24.f));
 
@@ -856,26 +855,21 @@ Scene* ObjectsManager::CreatePopupKey()
 	label->SetText("Press key...");
 	label->SetHorizontalAlignment(UIElement::Align::MIDDLE);
 	label->SetVerticalAlignment(UIElement::Align::MIDDLE);
-	auto b = label->GetTextGlobalBounds();
-	label->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
+	label->Init(sf::Vector2u(299U, 27U));
 
 	auto sub = new Label(*label);
 	sub->SetText("Esc - close");
-	b = sub->GetTextGlobalBounds();
-	sub->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
-	sub->setPosition(0.f, 2.f * b.height);
+	sub->Init(sf::Vector2u(283U, 27U));
+	sub->setPosition(0.f, 54.f);
 
 	auto cont = new Container();
 	cont->AddElement("label1", label);
 	cont->AddElement("label2", sub);
-	b = cont->GetElementsGlobalBounds();
-	cont->Init(sf::Vector2u(uint32_t(ceilf(b.width)), uint32_t(ceilf(b.height))));
+	cont->Init(sf::Vector2u(299U, 81U));
 	cont->AutoAlignElementsHorizontally(UIElement::Align::MIDDLE);
 
 	p->AddElement("cont", cont);
-	b = p->GetElementsGlobalBounds();
-	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.5f, 1.f, 1.f), b, sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	p->setPosition(pos.left, pos.top);
+	p->setPosition(362.f, 247.f);
 
 	auto handler = new ResultKeyHandler<sf::Keyboard::Key>(_event);
 	p->SetResultHandler((ResultHandler<sf::Keyboard::Key>*)handler);
@@ -896,11 +890,11 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	//leftCharacter
 	sf::Animation lc;
 	lc.SetAnimationSpeed(1.f);
-	lc.SetChangeFrameEvery(7);
+	lc.SetChangeFrameEvery(7U);
 	lc.SetLoop(true);
 	lc.SetTexture(_textures->GetTexture("players"));
 	lc.setPosition(0.f, 0.f);
-	lc.setScale(12.8f * _settings->SCALE_RATIO, 12.8f * _settings->SCALE_RATIO);
+	lc.setScale(12.8f, 12.8f);
 	lc.AddNewFrame(sf::IntRect(0, 112, 14, 20));
 	lc.AddNewFrame(sf::IntRect(16, 112, 14, 20));
 	lc.AddNewFrame(sf::IntRect(32, 112, 14, 20));
@@ -908,20 +902,19 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	lc.Start();
 
 	auto bounds = lc.GetGlobalBounds();
-	leftCharacter->Init(sf::Vector2u((uint32_t)bounds.width, (uint32_t)bounds.height));
+	leftCharacter->Init(sf::Vector2u((uint32_t)ceilf(bounds.width), (uint32_t)ceilf(bounds.height)));
 	leftCharacter->SetAnimation(lc);
-	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.2f, 0.6f, 1.f, 1.f), leftCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	leftCharacter->setPosition(pos.left, pos.top);
+	leftCharacter->setPosition(115.f, 218.f);
 
 
 	//rightCharacter
 	sf::Animation rc;
 	rc.SetAnimationSpeed(1.f);
-	rc.SetChangeFrameEvery(7);
+	rc.SetChangeFrameEvery(7U);
 	rc.SetLoop(true);
 	rc.SetTexture(_textures->GetTexture("tiles2"));
 	rc.setPosition(0.f, 0.f);
-	rc.setScale(9.6f * _settings->SCALE_RATIO, 9.6f * _settings->SCALE_RATIO);
+	rc.setScale(9.6f, 9.6f);
 	rc.AddNewFrame(sf::IntRect(22, 277, 20, 27));
 	rc.AddNewFrame(sf::IntRect(54, 277, 20, 27));
 	rc.AddNewFrame(sf::IntRect(86, 277, 20, 27));
@@ -929,10 +922,9 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	rc.Start();
 
 	bounds = rc.GetGlobalBounds();
-	rightCharacter->Init(sf::Vector2u((uint32_t)bounds.width, (uint32_t)bounds.height));
+	rightCharacter->Init(sf::Vector2u((uint32_t)ceilf(bounds.width), (uint32_t)ceilf(bounds.height)));
 	rightCharacter->SetAnimation(rc);
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.8f, 0.6f, 1.f, 1.f), rightCharacter->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	rightCharacter->setPosition(pos.left, pos.top);
+	rightCharacter->setPosition(723.f, 218.f);
 
 	//Labels
 	auto title = new Label();
@@ -941,10 +933,9 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 	title->SetFont(*_fonts->GetFont("menu"));
 	title->SetFillColor(sf::Color::White);
 	title->SetText("Rogue Maze");
-	title->SetCharacterSize(uint32_t(50.f * _settings->SCALE_RATIO));
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.15f, 1.f, 1.f), title->GetTextGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	title->setPosition(pos.left, pos.top);
-	title->Init(sf::Vector2u((uint32_t)pos.width, (uint32_t)pos.height));
+	title->SetCharacterSize(50U);
+	title->setPosition(265.f, 61.f);
+	title->Init(sf::Vector2u(494U, 51U));
 
 	//Buttons
 	auto playButton = GetButton("default_red");
@@ -953,33 +944,27 @@ Scene* ObjectsManager::CreateSceneMainMenu()
 
 	//playButton	
 	playButton->ApplyText("Play");
-	playButton->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
-	playButton->EditTextState("none")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	playButton->EditTextState("hover")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	playButton->EditTextState("click")->setPosition(roundf(38.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
-
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.4f, 1.f, 1.f), playButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	playButton->setPosition(pos.left, pos.top);
+	playButton->ApplyCharacterSize(24U);
+	playButton->EditTextState("none")->setPosition(33.f, 33.f);
+	playButton->EditTextState("hover")->setPosition(33.f, 33.f);
+	playButton->EditTextState("click")->setPosition(38.f, 37.f);
+	playButton->setPosition(427.f, 182.f);
 	
 	//optionsButton
 	optionsButton->ApplyText("Options");
-	optionsButton->ApplyCharacterSize(uint32_t(20.f * _settings->SCALE_RATIO));
-	optionsButton->EditTextState("none")->setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(35.f * _settings->SCALE_RATIO));
-	optionsButton->EditTextState("hover")->setPosition(roundf(10.f * _settings->SCALE_RATIO), roundf(35.f * _settings->SCALE_RATIO));
-	optionsButton->EditTextState("click")->setPosition(roundf(15.f * _settings->SCALE_RATIO), roundf(40.f * _settings->SCALE_RATIO));
-
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.6f, 1.f, 1.f), optionsButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	optionsButton->setPosition(pos.left, pos.top);
+	optionsButton->ApplyCharacterSize(20U);
+	optionsButton->EditTextState("none")->setPosition(10.f, 35.f);
+	optionsButton->EditTextState("hover")->setPosition(10.f, 35.f);
+	optionsButton->EditTextState("click")->setPosition(15.f, 40.f);
+	optionsButton->setPosition(427.f, 298.f);
 	
 	//exitButton
 	exitButton->ApplyText("Exit");
-	exitButton->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
-	exitButton->EditTextState("none")->setPosition(roundf(34.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	exitButton->EditTextState("hover")->setPosition(roundf(34.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	exitButton->EditTextState("click")->setPosition(roundf(39.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
-
-	pos = ViewHelper::GetScaled(sf::FloatRect(0.5f, 0.8f, 1.f, 1.f), exitButton->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	exitButton->setPosition(pos.left, pos.top);
+	exitButton->ApplyCharacterSize(24U);
+	exitButton->EditTextState("none")->setPosition(34.f, 33.f);
+	exitButton->EditTextState("hover")->setPosition(34.f, 33.f);
+	exitButton->EditTextState("click")->setPosition(39.f, 37.f);
+	exitButton->setPosition(427.f, 414.f);
 
 	//Add to scene
 	sc->AddElement("leftCharacter", leftCharacter);
@@ -1019,7 +1004,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->SetText("Sound volume");
 	auto labelB = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
-	sounds->Init(sf::Vector2u(914, 70));
+	sounds->Init(sf::Vector2u(914U, 70U));
 	sounds->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Music
@@ -1027,7 +1012,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->SetText("Music volume");
 	labelB = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
-	music->Init(sf::Vector2u(914, 70));
+	music->Init(sf::Vector2u(914U, 70U));
 	music->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Vsync
@@ -1035,7 +1020,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->SetText("V-Sync");
 	labelB = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
-	vsync->Init(sf::Vector2u(914, 70));
+	vsync->Init(sf::Vector2u(914U, 70U));
 	vsync->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Display mod
@@ -1043,7 +1028,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->SetText("Display mode");
 	labelB = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
-	displayMode->Init(sf::Vector2u(914, 70));
+	displayMode->Init(sf::Vector2u(914U, 70U));
 	displayMode->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Antialiasing
@@ -1058,7 +1043,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	antiLS->AddValue("4");
 	antiLS->AddValue("8");
 	antiLS->AddValue("16");
-	antialiasing->Init(sf::Vector2u(914, 70));
+	antialiasing->Init(sf::Vector2u(914U, 70U));
 	antialiasing->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Resolution
@@ -1072,7 +1057,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	auto resVal = UIHelper::GetAllTypicalResolutions(desktopMode.width, desktopMode.height);
 	for (auto& r : resVal)
 		resLS->AddValue(std::to_string(r.x) + "x" + std::to_string(r.y));
-	resolution->Init(sf::Vector2u(914, 70));
+	resolution->Init(sf::Vector2u(914U, 70U));
 	resolution->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//FPS
@@ -1092,14 +1077,14 @@ Scene* ObjectsManager::CreateSceneOptions()
 	fpsLS->AddValue("120");
 	fpsLS->AddValue("144");
 	fpsLS->AddValue("240");
-	fps->Init(sf::Vector2u(914, 70));
+	fps->Init(sf::Vector2u(914U, 70U));
 	fps->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
-	auto alignButton = [](Button* btn, Settings* set)
+	auto alignButton = [](Button* btn)
 	{
 		auto btnBounds = btn->EditTextState("none")->getGlobalBounds();
 		btn->Init(sf::Vector2u(uint32_t(ceilf(btnBounds.left + btnBounds.width)), uint32_t(ceilf(btnBounds.top + btnBounds.height))));
-		btn->setPosition(914.f - btnBounds.width - (10.f * set->SCALE_RATIO), 0.f);
+		btn->setPosition(914.f - btnBounds.width - 10.f, 0.f);
 	};
 
 	//Move left
@@ -1108,7 +1093,7 @@ Scene* ObjectsManager::CreateSceneOptions()
 	labelB = label->GetTextGlobalBounds();
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	((Button*)mLeft->GetElement("text"))->ApplyText("Left");
-	mLeft->Init(sf::Vector2u(914, 70));
+	mLeft->Init(sf::Vector2u(914U, 70U));
 	mLeft->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Move right
@@ -1118,8 +1103,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	auto mrButton = ((Button*)mRight->GetElement("text"));
 	mrButton->ApplyText("Right");
-	alignButton(mrButton, _settings);
-	mRight->Init(sf::Vector2u(914, 70));
+	alignButton(mrButton);
+	mRight->Init(sf::Vector2u(914U, 70U));
 	mRight->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Move up
@@ -1129,8 +1114,8 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	mrButton = ((Button*)mUp->GetElement("text"));
 	mrButton->ApplyText("Up");
-	alignButton(mrButton, _settings);
-	mUp->Init(sf::Vector2u(914, 70));
+	alignButton(mrButton);
+	mUp->Init(sf::Vector2u(914U, 70U));
 	mUp->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//Move down
@@ -1140,19 +1125,19 @@ Scene* ObjectsManager::CreateSceneOptions()
 	label->Init(sf::Vector2u(uint32_t(ceilf(labelB.width)), uint32_t(ceilf(labelB.height))));
 	mrButton = ((Button*)mDown->GetElement("text"));
 	mrButton->ApplyText("Down");
-	alignButton(mrButton, _settings);
-	mDown->Init(sf::Vector2u(914, 70));
+	alignButton(mrButton);
+	mDown->Init(sf::Vector2u(914U, 70U));
 	mDown->AutoAlignElementsVertically(UIElement::Align::MIDDLE);
 
 	//ScrollBar
 	scrollBar->setPosition(934.f, 0.f);
 	scrollBar->setOrigin(150.f, 0.f);
-	scrollBar->Init(sf::Vector2u(150, 11));
+	scrollBar->Init(sf::Vector2u(150U, 11U));
 	scrollBar->SetTrackLength(137.f);
 	scrollBar->SetScroll(1.f);
 
 	//ScrollView
-	scrollView->Init(sf::Vector2u(967, 450));
+	scrollView->Init(sf::Vector2u(967U, 450U));
 	scrollView->setPosition(18.5f, 20.f);
 	scrollView->SetScrollBar(scrollBar);
 	scrollView->SetListSize(sf::Vector2f(914.f, 450.f));
@@ -1171,13 +1156,11 @@ Scene* ObjectsManager::CreateSceneOptions()
 
 	//Save button
 	saveBtn->ApplyText("Save");
-	saveBtn->ApplyCharacterSize(uint32_t(24.f * _settings->SCALE_RATIO));
-	saveBtn->EditTextState("none")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	saveBtn->EditTextState("hover")->setPosition(roundf(33.f * _settings->SCALE_RATIO), roundf(33.f * _settings->SCALE_RATIO));
-	saveBtn->EditTextState("click")->setPosition(roundf(38.f * _settings->SCALE_RATIO), roundf(37.f * _settings->SCALE_RATIO));
-
-	auto pos = ViewHelper::GetScaled(sf::FloatRect(0.93f, 0.92f, 1.f, 1.f), saveBtn->GetGlobalBounds(), sf::FloatRect(0.f, 0.f, (float)_windowSize.x, (float)_windowSize.y));
-	saveBtn->setPosition(pos.left, pos.top);
+	saveBtn->ApplyCharacterSize(24U);
+	saveBtn->EditTextState("none")->setPosition(33.f, 33.f);
+	saveBtn->EditTextState("hover")->setPosition(33.f, 33.f);
+	saveBtn->EditTextState("click")->setPosition(38.f, 37.f);
+	saveBtn->setPosition(867.f, 482.f);
 	saveBtn->setScale(0.75f, 0.75f);
 
 	//Add
@@ -1202,12 +1185,12 @@ Scene* ObjectsManager::CreateSceneGameUI()
 	auto money = new Label();
 
 	//money
-	money->Init(sf::Vector2u(uint32_t(200.f * _settings->SCALE_RATIO) + 1, uint32_t(34.f * _settings->SCALE_RATIO) + 1));
+	money->Init(sf::Vector2u(200U, 34U));
 	money->SetFont(*_fonts->GetFont("menu"));
-	money->SetCharacterSize(uint32_t(32.f * _settings->SCALE_RATIO));
+	money->SetCharacterSize(32U);
 	money->SetText("000000");
 	money->SetFillColor(sf::Color::White);
-	money->setPosition((float)_windowSize.x - money->GetTextGlobalBounds().width - (8.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
+	money->setPosition(1016.f - money->GetTextGlobalBounds().width, 4.f);
 
 	//AnimationBoxes
 	auto coin = new AnimationBox();
@@ -1215,20 +1198,20 @@ Scene* ObjectsManager::CreateSceneGameUI()
 	//coin
 	sf::Animation c;
 	c.SetAnimationSpeed(1.f);
-	c.SetChangeFrameEvery(5);
+	c.SetChangeFrameEvery(5U);
 	c.SetLoop(true);
 	c.SetTexture(_textures->GetTexture("tiles2"));
 	c.setPosition(0.f, 0.f);
-	c.setScale(4.f * _settings->SCALE_RATIO, 4.f * _settings->SCALE_RATIO);
+	c.setScale(4.f, 4.f);
 	c.AddNewFrame(sf::IntRect(289, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(297, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(305, 273, 6, 7));
 	c.AddNewFrame(sf::IntRect(313, 273, 6, 7));
 	c.Start();
 
-	coin->Init(sf::Vector2u(uint32_t(24.f * _settings->SCALE_RATIO) + 1, uint32_t(28.f * _settings->SCALE_RATIO) + 1));
+	coin->Init(sf::Vector2u(24U, 28U));
 	coin->SetAnimation(c);
-	coin->setPosition((float)_windowSize.x - money->GetTextGlobalBounds().width - (40.f * _settings->SCALE_RATIO), 4.f * _settings->SCALE_RATIO);
+	coin->setPosition(984.f - money->GetTextGlobalBounds().width, 4.f);
 
 	//Add to scene
 	sc->AddElement("healthBar", heart);

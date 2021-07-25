@@ -221,6 +221,10 @@ void SceneManager::ClosePopup()
 
 	_loadedPopup = nullptr;
 	_loadedPopupName = "";
+
+	sf::Event e; //Clear "clicked" on buttons
+	e.type = sf::Event::MouseMoved;
+	UpdateEvent(&e, sf::Vector2f(0.f, 0.f));
 }
 
 const std::string& SceneManager::GetLoadedPopupName() const
