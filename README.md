@@ -1,7 +1,7 @@
 <h1 align="center">Roguelike Game (C++)</h1>
 
 <p align="center">
-    <a href="/./LICENSE"><img src="https://img.shields.io/github/license/VegetaTheKing/RoguelikeGame"></a>
+    <a href="/./LICENSE"><img src="https://img.shields.io/github/license/MatthewProg/RoguelikeGame"></a>
 </p>
 
 <details open="open">
@@ -9,6 +9,7 @@
   <ol>
     <li><a href="#about">About</a></li>
     <li><a href="#set-up">Set up</a></li>
+    <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -26,12 +27,30 @@ Graphics made by <a href="https://0x72.itch.io/">0x72</a>
 ## Set up
 
 1. Download SFML from <a href="https://www.sfml-dev.org/download.php">link</a> (v2.5.1 is fully supported)
-2. Clone repo using `git clone https://github.com/VegetaTheKing/RoguelikeGame.git`
+2. Clone repo using `git clone https://github.com/MatthewProg/RoguelikeGame.git`
 3. Run `setup.ps1` in PowerShell and follow instructions
 4. Open `RoguelikeGame.sln`
 
 `NOTE: If SFML doesn't work, check out config tutorials on https://www.sfml-dev.org/tutorials/2.5/`<br>
 `NOTE 2: Script create hooks which commit project files without direct SFML path, so please ignore *.vcxproj being modified after commit`
+
+## Screenshots
+
+<table>
+    <tr>
+        <th style="text-align:center"><a href="/./docs/img/menu.png"><img alt="menu" src="/./docs/img/menu.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/settings.png"><img alt="settings" src="/./docs/img/settings.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/game.png"><img alt="game" src="/./docs/img/game.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/debugging.png"><img alt="debugging" src="/./docs/img/debugging.png"></a></th>
+    </tr>
+    <tr>
+        <td align="center">Main menu</td>
+        <td align="center">Settings</td>
+        <td align="center">Game</td>
+        <td align="center">Debugging tools</td>
+    </tr>
+</table>
+
 ## TODO checklist
 
 Main features
